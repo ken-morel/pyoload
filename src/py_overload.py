@@ -187,4 +187,5 @@ def annotateClass(cls):
             return setter(self, name, value)
     cls.__setattr__ = new_setter
     return cls
-    
+
+__version__ = '1.0.0'
