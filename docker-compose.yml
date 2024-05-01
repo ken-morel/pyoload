@@ -10,22 +10,6 @@ services:
       - ./README.md:/src/README.md
       - ./LICENSE:/src/LICENSE
 
-  test37:
-    build:
-      context: .
-      dockerfile: dockerfiles/dev.dockerfile
-      args:
-        PYTHON_VERSION: '3.7'
-    command: pytest
-
-  test38:
-    build:
-      context: .
-      dockerfile: dockerfiles/dev.dockerfile
-      args:
-        PYTHON_VERSION: '3.8'
-    command: pytest
-
   test39:
     build:
       context: .
@@ -40,4 +24,20 @@ services:
       dockerfile: dockerfiles/dev.dockerfile
       args:
         PYTHON_VERSION: '3.10'
+    command: pytest
+
+  test311:
+    build:
+      context: .
+      dockerfile: dockerfiles/dev.dockerfile
+      args:
+        PYTHON_VERSION: '3.11'
+    command: pytest
+
+  test312:
+    build:
+      context: .
+      dockerfile: dockerfiles/dev.dockerfile
+      args:
+        PYTHON_VERSION: '3.12'
     command: pytest
