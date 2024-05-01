@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-from pip_package_template_docker import __version__
+from py_overload import __version__
 
 project_dir = Path(__file__).parent
 try:
@@ -36,13 +36,13 @@ extra_ci = (
 )
 
 setup(
-    name='pip-package-template-docker',
+    name='py_overload',
     version=__version__,
-    packages=find_packages(exclude=['tests', 'tests.*']),
+    py_modules=["py_overload"],
     url='https://github.com/MichaelKim0407/pip-package-template-docker',
     license='MIT',
-    author='Zheng Jin',
-    author_email='mkim0407@gmail.com',
+    author='ken-morel',
+    author_email='engonken8@gmail.com',
     description='Project template for Dockerized pip package development.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -75,6 +75,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
 
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
