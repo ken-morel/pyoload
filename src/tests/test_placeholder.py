@@ -1,4 +1,4 @@
-from pip_package_template_docker import __version__
+from py_overload import __version__
 
 
 def test_placeholder():
@@ -8,3 +8,4 @@ def test_placeholder():
     This is to ensure pytest can pass because it will report an error if it cannot find any test.
     """
     assert isinstance(__version__, str)
+    
