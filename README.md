@@ -1,10 +1,10 @@
 # pip-package-template-docker
 
-[![Release Status](https://github.com/MichaelKim0407/pip-package-template-docker/actions/workflows/python-publish.yml/badge.svg)](https://github.com/MichaelKim0407/pip-package-template-docker/releases)
+[![Release Status](https://github.com/ken-morel/py_overload/actions/workflows/python-publish.yml/badge.svg)](https://github.com/ken-morel/py_overload/releases)
 [![PyPI package](https://badge.fury.io/py/pip-package-template-docker.svg)](https://pypi.org/project/pip-package-template-docker)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/pip-package-template-docker)](https://pypi.org/project/pip-package-template-docker)
-[![Build Status](https://github.com/MichaelKim0407/pip-package-template-docker/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/MichaelKim0407/pip-package-template-docker/tree/main)
-[![Coverage Status](https://coveralls.io/repos/github/MichaelKim0407/pip-package-template-docker/badge.svg?branch=main)](https://coveralls.io/github/MichaelKim0407/pip-package-template-docker?branch=main)
+[![Build Status](https://github.com/ken-morel/py_overload/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/ken-morel/py_overload/tree/main)
+[![Coverage Status](https://coveralls.io/repos/github/ken-morel/py_overload/badge.svg?branch=main)](https://coveralls.io/github/ken-morel/py_overload?branch=main)
 
 Project template for Dockerized pip package development.
 
