@@ -38,12 +38,12 @@ extra_ci = (
 setup(
     name='py_overload',
     version=__version__,
-    py_modules=["py_overload"],
+    packages=find_packages(exclude=['tests', 'tests.*']),
     url='https://github.com/MichaelKim0407/pip-package-template-docker',
     license='MIT',
     author='ken-morel',
     author_email='engonken8@gmail.com',
-    description='Project template for Dockerized pip package development.',
+    description='Python package for function argument overload, typechecking and casting',
     long_description=long_description,
     long_description_content_type='text/markdown',
 
