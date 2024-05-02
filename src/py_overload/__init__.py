@@ -28,11 +28,11 @@ class AnnotationResolutionError(AnnotationError):
 
 
 class Values(tuple):
-    "wrapper class in case of several value"
-    
+    """wrapper class in case of several value"""
+
     def __call__(self, val):
         return val in self
-        
+    
     def __str__(self):
         return 'Values(' + ', '.join(map(repr, self)) + ')'
 
@@ -48,7 +48,7 @@ class TypeChecker:
         if not callable(func):
             raise TypeError(self.__class__.__init__.__qualname__)
         self.func = func
-        
+
     def __call__(self, val):
         try:
             return self.func()
@@ -62,7 +62,7 @@ class TypeChecker:
 class Cast:
     def __init__(self, type):
         self.type = type
-        
+
     def __call__(self, val):
         try:
             return self.type(val)
@@ -73,7 +73,7 @@ class Cast:
 
 
 def typeMatch(val, spec):
-    if spec == Any or spec == None:
+    if spec == Any or spec is None:
         return True
     if isinstance(spec, Values):
         return spec(val)
@@ -125,7 +125,7 @@ def annotate(func, oload=False):
             raise AnnotationError(
                 f'Was function {get_name(func)} properly annotated?'
             ) from e
-        
+
         errors = []
         for k, v in vals.items():
             if isinstance(anno[k], Cast):
@@ -143,7 +143,7 @@ def annotate(func, oload=False):
                 )
         if len(errors) > 0:
             raise AnnotationErrors(errors)
-        
+
         ret = func(**vals)
         if "return" in anno:
             if not typeMatch(ret, anno["return"]):
