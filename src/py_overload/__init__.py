@@ -2,29 +2,42 @@ from typing import Any, GenericAlias, Union
 from functools import wraps, partial
 from inspect import isclass
 
+
 class AnnotationError(ValueError):
     pass
+    
 class AnnotationErrors(AnnotationError):
     pass
+    
 class InternalAnnotationError(Exception):
     pass
+    
 class CastingError(TypeError):
     pass
+    
 class OverloadError(TypeError):
     pass
+    
 class AnnotationResolutionError(AnnotationError):
     _raise = False
-    
+
+
 class Values(tuple):
     "wrapper class in case of several value"
+    
     def __call__(self, val):
         return val in self
-    def __str__(self):
-        return "Values(" + ", ".join(map(repr, self)) + ")"
-    __repr__ = __str__
         
+    def __str__(self):
+        return 'Values(' + ', '.join(map(repr, self)) + ')'
+        
+    __repr__ = __str__
+
+
 def get_name(funcOrCls):
-    return funcOrCls.__module__+"."+funcOrCls.__qualname__
+    return funcOrCls.__module__+'.'+funcOrCls.__qualname__
+
+
 class TypeChecker:
     def __init__(self, func):
         if not callable(func):
@@ -35,18 +48,21 @@ class TypeChecker:
             return self.func()
         except Exception as e:
             raise AnnotationError(
-                f"{type(e)} while using typechecker method: {get_name(self.func)}"+
-                f"\n{e!s}"
+                f'{type(e)} while using typechecker method: {get_name(self.func)}'+
+                f'\n{e!s}'
             ) from e
+
+
 class Cast:
     def __init__(self, type):
         self.type = type
+        
     def __call__(self, val):
         try:
             return self.type(val)
         except Exception as e:
             raise CastingError(
-                f"Exception while casting: {val!r} to {self.type}"
+                f'Exception while casting: {val!r} to {self.type}'
             ) from e
 
 def typeMatch(val, spec):
@@ -67,6 +83,7 @@ def typeMatch(val, spec):
             return True
     else:
         return isinstance(val, spec)
+        
 def resolveAnnotations(anno, np, scope=None):
     for k, v in anno.items():
         if isinstance(v, str):
@@ -74,8 +91,9 @@ def resolveAnnotations(anno, np, scope=None):
                 anno[k] = eval(v, np, np)
             except Exception as e:
                 raise AnnotationResolutionError(
-                    f"Exception: {e!s} while resolving annotation {v!r} of {scope}"
+                    f'Exception: {e!s} while resolving annotation {v!r} of {scope}'
                 ) from e
+                
 def annotate(func, oload=False):
     "decorator annotates wrapped function"
     if isclass(func):
@@ -111,7 +129,7 @@ def annotate(func, oload=False):
                     raise InternalAnnotationError()
                 errors.append(
                     AnnotationError(
-                        f"Value: {v!r} does not match annotation: {anno[k]!r} for argument {k!r} of function {get_name(func)}"
+                        f'Value: {v!r} does not match annotation: {anno[k]!r} for argument {k!r} of function {get_name(func)}'
                     )
                 )
         if len(errors) > 0:
