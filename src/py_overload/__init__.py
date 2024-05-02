@@ -104,7 +104,7 @@ def resolveAnnotations(anno, np, scope=None):
 
 
 def annotate(func, oload=False):
-    "decorator annotates wrapped function"
+    """decorator annotates wrapped function"""
     if isclass(func):
         return annotateClass(func)
     anno = func.__annotations__
