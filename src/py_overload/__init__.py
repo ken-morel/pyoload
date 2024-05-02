@@ -32,7 +32,7 @@ class Values(tuple):
 
     def __call__(self, val):
         return val in self
-    
+
     def __str__(self):
         return 'Values(' + ', '.join(map(repr, self)) + ')'
 
@@ -40,7 +40,7 @@ class Values(tuple):
 
 
 def get_name(funcOrCls):
-    return funcOrCls.__module__+ '.' + funcOrCls.__qualname__
+    return funcOrCls.__module__ + '.' + funcOrCls.__qualname__
 
 
 class TypeChecker:
@@ -54,8 +54,8 @@ class TypeChecker:
             return self.func()
         except Exception as e:
             raise AnnotationError(
-                f'{type(e)} while using typechecker method: {get_name(self.func)}'+
-                f'\n{e!s}'
+                f'{type(e)} while using typechecker method: {get_name(self.func)}' +
+                f'\n{e!s}',
             ) from e
 
 
@@ -68,7 +68,7 @@ class Cast:
             return self.type(val)
         except Exception as e:
             raise CastingError(
-                f'Exception while casting: {val!r} to {self.type}'
+                f'Exception while casting: {val!r} to {self.type}',
             ) from e
 
 
@@ -99,7 +99,7 @@ def resolveAnnotations(anno, np, scope=None):
                 anno[k] = eval(v, np, np)
             except Exception as e:
                 raise AnnotationResolutionError(
-                    f'Exception: {e!s} while resolving annotation {v!r} of {scope}'
+                    f'Exception: {e!s} while resolving annotation {v!r} of {scope}',
                 ) from e
 
 
@@ -117,13 +117,13 @@ def annotate(func, oload=False):
         try:
             if func.__defaults__:
                 for i, v in enumerate(reversed(func.__defaults__)):
-                    vals[names[-1-i]] = v
+                    vals[names[-1 - i]] = v
             for i, v in enumerate(args):
                 vals[names[i]] = v
             vals.update(kw)
         except IndexError as e:
             raise AnnotationError(
-                f'Was function {get_name(func)} properly annotated?'
+                f'Was function {get_name(func)} properly annotated?',
             ) from e
 
         errors = []
@@ -138,7 +138,7 @@ def annotate(func, oload=False):
                 errors.append(
                     AnnotationError(
                         f'Value: {v!r} does not match annotation: {anno[k]!r}' +
-                        f' for argument {k!r} of function {get_name(func)}'
+                        f' for argument {k!r} of function {get_name(func)}',
                     )
                 )
         if len(errors) > 0:
@@ -148,7 +148,7 @@ def annotate(func, oload=False):
         if "return" in anno:
             if not typeMatch(ret, anno["return"]):
                 raise AnnotationError(
-                    f"return value {ret!r} does not match annotation: {anno['return']} of function {get_name(func)}"
+                    f'return value {ret!r} does not match annotation: {anno['return']} of function {get_name(func)}',
                 )
         return ret
     return wrapper
@@ -177,7 +177,7 @@ def overload(func, name=None):
                 break
         else:
             raise OverloadError(
-                f'No overload of function: {get_name(func)} matches types of arguments'
+                f'No overload of function: {get_name(func)} matches types of arguments',
             )
         return val
     return wrapper
@@ -198,8 +198,8 @@ def annotateClass(cls):
                     annotate(
                         getattr(
                             cls,
-                            x
-                        )
+                            x,
+                        ),
                     )
                 )
     def new_setter(self, name, value):
@@ -210,7 +210,7 @@ def annotateClass(cls):
             anno[name] = type(value)
         if not typeMatch(value, anno[name]):
             raise AnnotationError(
-                f'value {value!r} does not match annotation of attribute: {name!r}:{anno[name]!r} of object of class {get_name(cls)}'
+                f'value {value!r} does not match annotation of attribute: {name!r}:{anno[name]!r} of object of class {get_name(cls)}',
             )
         else:
             return setter(self, name, value)
