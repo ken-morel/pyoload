@@ -129,7 +129,8 @@ def annotate(func, oload=False):
                     raise InternalAnnotationError()
                 errors.append(
                     AnnotationError(
-                        f'Value: {v!r} does not match annotation: {anno[k]!r} for argument {k!r} of function {get_name(func)}'
+                        f'Value: {v!r} does not match annotation: {anno[k]!r}' +
+                        f' for argument {k!r} of function {get_name(func)}'
                     )
                 )
         if len(errors) > 0:
@@ -151,7 +152,7 @@ def overload(func, name=None):
     if name is None or not isinstance(name, str):
         name = get_name(func)
     
-    if not name in __overloads__:
+    if name not in __overloads__:
         __overloads__[name] = []
     
     __overloads__[name].append(annotate(func, True))
@@ -171,6 +172,7 @@ def overload(func, name=None):
             )
         return val
     return wrapper
+
 
 def annotateClass(cls):
     if isinstance(cls, bool):
@@ -195,15 +197,16 @@ def annotateClass(cls):
         if any(isinstance(x, str) for x in anno.values()):
             resolveAnnotations(anno, globals(), get_name(cls))
 
-        if not name in anno:
+        if name not in anno:
             anno[name] = type(value)
         if not typeMatch(value, anno[name]):
             raise AnnotationError(
-                f"value {value!r} does not match annotation of attribute: {name!r}:{anno[name]!r} of object of class {get_name(cls)}"
+                f'value {value!r} does not match annotation of attribute: {name!r}:{anno[name]!r} of object of class {get_name(cls)}'
             )
         else:
             return setter(self, name, value)
     cls.__setattr__ = new_setter
     return cls
+
 
 __version__ = '1.0.0'
