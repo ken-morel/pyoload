@@ -1,4 +1,4 @@
-from py_overload import __version__
+from pyoload import __version__
 
 
 def test_placeholder():
