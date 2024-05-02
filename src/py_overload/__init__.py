@@ -65,6 +65,7 @@ class Cast:
                 f'Exception while casting: {val!r} to {self.type}'
             ) from e
 
+
 def typeMatch(val, spec):
     if spec == Any or spec == None:
         return True
@@ -83,7 +84,8 @@ def typeMatch(val, spec):
             return True
     else:
         return isinstance(val, spec)
-        
+
+
 def resolveAnnotations(anno, np, scope=None):
     for k, v in anno.items():
         if isinstance(v, str):
@@ -93,7 +95,8 @@ def resolveAnnotations(anno, np, scope=None):
                 raise AnnotationResolutionError(
                     f'Exception: {e!s} while resolving annotation {v!r} of {scope}'
                 ) from e
-                
+
+
 def annotate(func, oload=False):
     "decorator annotates wrapped function"
     if isclass(func):
@@ -144,7 +147,10 @@ def annotate(func, oload=False):
                 )
         return ret
     return wrapper
+
+
 __overloads__ = {}
+
 
 def overload(func, name=None):
     if isinstance(func, str):
@@ -168,7 +174,7 @@ def overload(func, name=None):
                 break
         else:
             raise OverloadError(
-                f"No overload of function: {get_name(func)} matches types of arguments"
+                f'No overload of function: {get_name(func)} matches types of arguments'
             )
         return val
     return wrapper
@@ -177,12 +183,12 @@ def overload(func, name=None):
 def annotateClass(cls):
     if isinstance(cls, bool):
         return partial(annotate, recur=cls)
-    recur = not hasattr(cls, "__annotate_norecur__")
+    recur = not hasattr(cls, '__annotate_norecur__')
     setter = cls.__setattr__
     anno = cls.__annotations__
     if recur:
         for x in dir(cls):
-            if hasattr(getattr(cls, x), "__annotations__"):
+            if hasattr(getattr(cls, x), '__annotations__'):
                 setattr(
                     cls,
                     x,
