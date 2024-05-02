@@ -39,7 +39,7 @@ setup(
     name='py_overload',
     version=__version__,
     packages=find_packages(exclude=['tests', 'tests.*']),
-    url='https://github.com/MichaelKim0407/pip-package-template-docker',
+    url='https://github.com/ken-morel/py_overload',
     license='MIT',
     author='ken-morel',
     author_email='engonken8@gmail.com',
@@ -70,10 +70,6 @@ setup(
 
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
 
