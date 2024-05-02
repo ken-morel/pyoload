@@ -5,25 +5,35 @@ from inspect import isclass
 
 class AnnotationError(ValueError):
     pass
-    
+
+
+
 class AnnotationErrors(AnnotationError):
     pass
-    
+
+
+
 class InternalAnnotationError(Exception):
     pass
-    
+
+
+
 class CastingError(TypeError):
     pass
-    
+
+
+
 class OverloadError(TypeError):
     pass
-    
+
+
+
 class AnnotationResolutionError(AnnotationError):
     _raise = False
 
 
 class Values(tuple):
-    "wrapper class in case of several value"
+    'wrapper class in case of several value'
     
     def __call__(self, val):
         return val in self
