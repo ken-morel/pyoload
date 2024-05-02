@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-from py_overload import __version__
+from pyoload import __version__
 
 project_dir = Path(__file__).parent
 try:
@@ -36,10 +36,10 @@ extra_ci = (
 )
 
 setup(
-    name='py_overload',
+    name='pyoload',
     version=__version__,
     packages=find_packages(exclude=['tests', 'tests.*']),
-    url='https://github.com/ken-morel/py_overload',
+    url='https://github.com/ken-morel/pyoload',
     license='MIT',
     author='ken-morel',
     author_email='engonken8@gmail.com',
