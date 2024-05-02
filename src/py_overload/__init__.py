@@ -131,7 +131,6 @@ def annotate(func, oload=False):
         for k, v in vals.items():
             if isinstance(anno[k], Cast):
                 vals[k] = anno[k](v)
-                #("  casting", k, "to", anno[k])
                 continue
             if not typeMatch(v, anno[k]):
                 if oload:
@@ -140,7 +139,7 @@ def annotate(func, oload=False):
                     AnnotationError(
                         f'Value: {v!r} does not match annotation: {anno[k]!r}' +
                         f' for argument {k!r} of function {get_name(func)}',
-                    )
+                    ),
                 )
         if len(errors) > 0:
             raise AnnotationErrors(errors)
@@ -204,6 +203,7 @@ def annotateClass(cls):
                         ),
                     ),
                 )
+                
     def new_setter(self, name, value):
         if any(isinstance(x, str) for x in anno.values()):
             resolveAnnotations(anno, globals(), get_name(cls))
