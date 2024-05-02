@@ -35,12 +35,12 @@ class Values(tuple):
         
     def __str__(self):
         return 'Values(' + ', '.join(map(repr, self)) + ')'
-        
+
     __repr__ = __str__
 
 
 def get_name(funcOrCls):
-    return funcOrCls.__module__+'.'+funcOrCls.__qualname__
+    return funcOrCls.__module__+ '.' + funcOrCls.__qualname__
 
 
 class TypeChecker:
@@ -48,6 +48,7 @@ class TypeChecker:
         if not callable(func):
             raise TypeError(self.__class__.__init__.__qualname__)
         self.func = func
+        
     def __call__(self, val):
         try:
             return self.func()
@@ -122,12 +123,11 @@ def annotate(func, oload=False):
             vals.update(kw)
         except IndexError as e:
             raise AnnotationError(
-                f"Was function {get_name(func)} properly annotated?"
+                f'Was function {get_name(func)} properly annotated?'
             ) from e
         
         errors = []
         for k, v in vals.items():
-            #(k, v)
             if isinstance(anno[k], Cast):
                 vals[k] = anno[k](v)
                 #("  casting", k, "to", anno[k])
@@ -162,10 +162,8 @@ def overload(func, name=None):
         return partial(overload, name=func)
     if name is None or not isinstance(name, str):
         name = get_name(func)
-    
     if name not in __overloads__:
         __overloads__[name] = []
-    
     __overloads__[name].append(annotate(func, True))
     func.__overloads__ = __overloads__[name]
     @wraps(func)
