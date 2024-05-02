@@ -203,7 +203,7 @@ def annotateClass(cls):
                         ),
                     ),
                 )
-                
+
     def new_setter(self, name, value):
         if any(isinstance(x, str) for x in anno.values()):
             resolveAnnotations(anno, globals(), get_name(cls))
