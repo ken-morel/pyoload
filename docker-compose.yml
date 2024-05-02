@@ -10,21 +10,7 @@ services:
       - ./README.md:/src/README.md
       - ./LICENSE:/src/LICENSE
 
-  test39:
-    build:
-      context: .
-      dockerfile: dockerfiles/dev.dockerfile
-      args:
-        PYTHON_VERSION: '3.9'
-    command: pytest
 
-  test310:
-    build:
-      context: .
-      dockerfile: dockerfiles/dev.dockerfile
-      args:
-        PYTHON_VERSION: '3.10'
-    command: pytest
 
   test311:
     build:
