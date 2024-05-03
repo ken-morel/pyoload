@@ -6,3 +6,17 @@
 [![Build Status](https://github.com/ken-morel/pyoload/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/ken-morel/pyoload/tree/main)
 [![Coverage Status](https://coveralls.io/repos/github/ken-morel/pyoload/badge.svg?branch=main)](https://coveralls.io/github/ken-morel/pyoload?branch=main)
 
+pyoload has two main functions
+
+annotate
+========
+```python
+
+from pyoload import annotate
+
+@annotate
+def twice(a:int) -> int:
+    return a * 2
+
+b = twice(4)
+```
