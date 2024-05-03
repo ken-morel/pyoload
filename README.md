@@ -10,6 +10,7 @@ pyoload has two main functions
 
 annotate
 ========
+Is used as a decorator on the function.
 ```python
 
 from pyoload import annotate
@@ -19,4 +20,17 @@ def twice(a:int) -> int:
     return a * 2
 
 b = twice(4)
+```
+The annotate creates a wrapper over the decorated function which checks in for argument types over each function call using `pyoload.matchType(val, spec)`.
+The original function is kept in the `.__pyod_annotate__` attribute.
+
+overload
+========
+Implements function overloading in python via a simple decorator
+
+```python
+from pyoload import overload
+
+@overload
+def inverse(num:Values((0, 0.0)
 ```
