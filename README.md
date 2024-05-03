@@ -30,7 +30,18 @@ Implements function overloading in python via a simple decorator
 
 ```python
 from pyoload import overload
+import math
+cache = {}
+
+tan_is_real = lambda v: not (v + 90) % 180 == 0
 
 @overload
-def inverse(num:Values((0, 0.0)
+def tan(num:Validator(tan_is_real, opposite=True)):
+    raise ValueError(num)
+
+@overload
+def tan(num:int|float) -> float:
+    return math.tan(num(
+
+tan(6)
 ```
