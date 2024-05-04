@@ -45,3 +45,21 @@ def tan(num:int|float) -> float:
 
 tan(6)
 ```
+
+When an overload is registerred, the function name in the form `functionModuleName.functionQualName` is goten using `pyoload.get_name(funcOrClass)` an annotate is gotten using `pyoload.annotate(func, True)`
+and a new list of overloads is created and stored in `pyoload.__overloads__` dictionarry under it's name. A reference to the list of annotated overloads is stored in the functions `.__pyod_overloads__`.
+
+When the function is called, the wrapper tries all the functions registerred to that name to catch a `pyoload.InternalAnnotationError`. If none ran succesfully, it raises an `pyoload.OverloadError`.
+
+Accepted annotations
+====================
+
+In addition to supporting normal plain types,
+pyoload includes support for generic aliasses of iterable types and some other classes:
+
+- `pyoload.Values(iterable)`
+  e.g `Values("+-*/")` or `Values(range(6))`
+- `pyoload.Cast(type)`
+  Instructs pyoload to cast to the specified type
+- A string
+  The string contents will be evaluated as soon as first function call.
