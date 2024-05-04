@@ -43,7 +43,7 @@ def get_name(funcOrCls):
     return funcOrCls.__module__ + '.' + funcOrCls.__qualname__
 
 
-class TypeChecker:
+class Validator:
     def __init__(self, func):
         if not callable(func):
             raise TypeError(self.__class__.__init__.__qualname__)
@@ -54,18 +54,32 @@ class TypeChecker:
             return self.func()
         except Exception as e:
             raise AnnotationError(
-                f'{type(e)} while using typechecker method: {get_name(self.func)}' +
+                f'{type(e)} while using validator method: {get_name(self.func)}' +
                 f'\n{e!s}',
             ) from e
 
 
 class Cast:
+    @staticmethod
+    def cast(val, type):
+        if issubclass(type, Union):
+            type = type.__args__
+        if isinstance(type, tuple):
+            for x in type:
+                try:
+                    return Cast.cast(val, x)
+                except:
+                    pass
+            else:
+                raise CastingError()
+        return type(val) if not isinstance(val, type) else val
     def __init__(self, type):
         self.type = type
 
     def __call__(self, val):
+        
         try:
-            return self.type(val)
+            return Cast.cast(self.type, val)
         except Exception as e:
             raise CastingError(
                 f'Exception while casting: {val!r} to {self.type}',
@@ -75,6 +89,8 @@ class Cast:
 def typeMatch(val, spec):
     if spec == Any or spec is None:
         return True
+    if isinstance(val, tuple):
+        return isinstance(val, tuple)
     if isinstance(spec, Values):
         return spec(val)
     elif isinstance(spec, TypeChecker):
@@ -82,7 +98,7 @@ def typeMatch(val, spec):
     elif isinstance(spec, GenericAlias):
         if not isinstance(val, spec.__origin__):
             return False
-        sub = Union[*spec.__args__]
+        sub = spec.__args__
         for val in val:
             if not typeMatch(val, sub):
                 return False
