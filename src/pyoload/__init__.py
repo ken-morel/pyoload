@@ -68,16 +68,16 @@ class Cast:
             for x in type:
                 try:
                     return Cast.cast(val, x)
-                except:
+                except Exception:
                     pass
             else:
                 raise CastingError()
         return type(val) if not isinstance(val, type) else val
+
     def __init__(self, type):
         self.type = type
 
     def __call__(self, val):
-        
         try:
             return Cast.cast(self.type, val)
         except Exception as e:
@@ -93,7 +93,7 @@ def typeMatch(val, spec):
         return isinstance(val, tuple)
     if isinstance(spec, Values):
         return spec(val)
-    elif isinstance(spec, TypeChecker):
+    elif isinstance(spec, Validator):
         return spec(val)
     elif isinstance(spec, GenericAlias):
         if not isinstance(val, spec.__origin__):
