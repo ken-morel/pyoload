@@ -40,8 +40,14 @@ class Values(tuple):
     __repr__ = __str__
 
 
+Vs = Values
+
+
 def get_name(funcOrCls):
     return funcOrCls.__module__ + '.' + funcOrCls.__qualname__
+
+
+g_n = get_name
 
 
 class Validator:
@@ -58,6 +64,9 @@ class Validator:
                 f'{type(e)} while using validator method: {get_name(self.func)}' +
                 f'\n{e!s}',
             ) from e
+
+
+Vf = Validator
 
 
 class Cast:
