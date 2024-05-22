@@ -102,9 +102,19 @@ class Cast:
             return totype(val) if not isinstance(val, totype) else val
 
     def __init__(self, type):
+        """
+        creates a casting object for the specified type
+        """
         self.type = type
 
-    def __call__(self, val):
+    def __call__(self:'Cast', val: Any):
+        '''
+        Calls to the type specified in the object `.type` attribute
+        :param self: The cast onject
+        :param val: the value to be casted
+
+        :return: The casted value
+        '''
         try:
             return Cast.cast(val, self.type)
         except Exception as e:
@@ -113,7 +123,14 @@ class Cast:
             ) from e
 
 
-def typeMatch(val, spec):
+def typeMatch(val: Any, spec:type) -> bool:
+    '''
+    recursively checks if type matches
+    :param val: The value to typecheck
+    :param spec: The type specifier
+
+    :return: A boolean
+    '''
     if spec == Any or spec is None or val is None:
         return True
     if isinstance(spec, Values):
@@ -149,11 +166,22 @@ def typeMatch(val, spec):
 
 
 
-def get_module(obj):
+def get_module(obj: Any):
+    '''
+    gets the module to which an object, function or class belongs
+    :param obj: the object
+    :returns: the module
+    '''
     return sys.modules[obj.__module__]
 
 
-def resolveAnnotations(obj):
+def resolveAnnotations(obj: Any) -> None:
+    '''
+    Evaluates all the stringized annotations of the argument
+
+    :param obj: The object
+    :returns: None
+    '''
     if isclass(obj) or hasattr(obj, '__class__'):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
@@ -177,8 +205,15 @@ def resolveAnnotations(obj):
                     ) from e
 
 
-def annotate(func, oload=False):
-    """decorator annotates wrapped function"""
+def annotate(func:callable, oload:bool=False) -> callable:
+    '''
+    returns a wrapper over the passed function
+    which typechecks arguments on each call
+    :param func: the function to annotate
+    :param oload: internal
+
+    :return: the wrapper function
+    '''
     if isclass(func):
         return annotateClass(func)
     anno = func.__annotations__
@@ -227,13 +262,24 @@ def annotate(func, oload=False):
                     f"return value {ret!r} does not match annotation: {anno['return']} of function {get_name(func)}",
                 )
         return ret
+    wrapper.__pyod_annotate__ = func
     return wrapper
 
 
 __overloads__ = {}
 
 
-def overload(func, name=None):
+def overload(func:callable, name:str|None=None):
+    '''
+    returns a wrapper over the passed function
+    which typechecks arguments on each call
+    and finds the function instance with same name which does not raise
+    an `InternalAnnotationError` exception
+    :param func: the function to annotate
+    :param oload: internal
+
+    :return: the wrapper function
+    '''
     if isinstance(func, str):
         return partial(overload, name=func)
     if name is None or not isinstance(name, str):
@@ -241,7 +287,6 @@ def overload(func, name=None):
     if name not in __overloads__:
         __overloads__[name] = []
     __overloads__[name].append(annotate(func, True))
-    func.__overloads__ = __overloads__[name]
 
     @wraps(func)
     def wrapper(*args, **kw):
@@ -257,10 +302,19 @@ def overload(func, name=None):
                 f'No overload of function: {get_name(func)} matches types of arguments',
             )
         return val
+
+    wrapper.__pyo_overloads__ = __overloads__[name]
+    wrapper.__pyo_overloads_name__ = name
+
     return wrapper
 
 
 def annotateClass(cls):
+    '''
+    Annotates a class object, wrapping and replacing over it's __setattr__
+    and typechecking over each attribute assignment.
+    If no annotation for the passed object found it sets it to `type(val)`
+    '''
     if not hasattr(cls, '__annotations__'):
         cls.__annotations__ = {}
     if isinstance(cls, bool):
