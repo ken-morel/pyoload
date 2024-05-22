@@ -148,19 +148,21 @@ def typeMatch(val, spec):
         return isinstance(val, spec)
 
 
+
 def get_module(obj):
     return sys.modules[obj.__module__]
 
+
 def resolveAnnotations(obj):
-    if isclass(obj):
+    if isclass(obj) or hasattr(obj, '__class__'):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
                 try:
-                    obj.__annotations__[k] = eval(v, get_module(obj).__globals__, dict(vars(obj)))
+                    obj.__annotations__[k] = eval(v, dict(vars(get_module(obj))), dict(vars(obj)))
                 except Exception as e:
                     raise AnnotationResolutionError(
-                        f'Exception: {k!s} while resolving'
-                        f' annotation {v!r} of object {obj!r}',
+                        f'Exception: {e!s} while resolving'
+                        f' annotation {e}={v!r} of object {obj!r}',
                     ) from e
     elif callable(obj):
         for k, v in obj.__annotations__.items():

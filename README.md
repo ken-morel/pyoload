@@ -1,4 +1,4 @@
-# pip-package-template-docker
+# pyoload
 
 [![Release Status](https://github.com/ken-morel/pyoload/actions/workflows/python-publish.yml/badge.svg)](https://github.com/ken-morel/pyoload/releases)
 [![PyPI package](https://badge.fury.io/py/pyoload.svg)](https://pypi.org/project/pyoload)
@@ -8,8 +8,8 @@
 
 pyoload has two main functions
 
-annotate
-========
+# pyoload.annotate
+
 Is used as a decorator on the function.
 ```python
 
@@ -24,8 +24,8 @@ b = twice(4)
 The annotate creates a wrapper over the decorated function which checks in for argument types over each function call using `pyoload.matchType(val, spec)`.
 The original function is kept in the `.__pyod_annotate__` attribute.
 
-overload
-========
+# pyoload.overload
+
 Implements function overloading in python via a simple decorator
 
 ```python
@@ -51,8 +51,33 @@ and a new list of overloads is created and stored in `pyoload.__overloads__` dic
 
 When the function is called, the wrapper tries all the functions registerred to that name to catch a `pyoload.InternalAnnotationError`. If none ran succesfully, it raises an `pyoload.OverloadError`.
 
-Accepted annotations
-====================
+# Casting
+
+All `pyoload.annotate` and `pyoload.overload` both support Cast objects
+instances of `pyoloas.Cast`.
+It uses recursive casting with integrated support for dictionaries, e.g:
+```python
+dict[
+  int,
+  tuple[list[float] | float]
+]
+```
+for a dictionarry mapping of integers to list of floats or floats.
+
+> Note:
+  When a union, e.g `int | str` is passed to Cast, it tries to cast in each of
+  the specified types in the listed order, that is
+
+  ```python
+  cast = pyoload.Cast(int|str)
+  print(repr(cast(3.0)))
+  ```
+
+  Will print `'3.0'` as `3.0` can not be converted to a complex
+
+
+# Accepted annotations
+
 
 In addition to supporting normal plain types,
 pyoload includes support for generic aliasses of iterable types and some other classes:
