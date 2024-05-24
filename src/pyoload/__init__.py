@@ -1,4 +1,4 @@
-from typing import Any, GenericAlias, Union
+from typing import Any, GenericAlias
 from types import UnionType
 from functools import wraps, partial
 from inspect import isclass
@@ -49,26 +49,110 @@ def get_name(funcOrCls):
     return funcOrCls.__module__ + '.' + funcOrCls.__qualname__
 
 
-g_n = get_name
+class Check:
+    checks_list = {}
+
+    def __init_subclass__(cls, subclass):
+        cls.register(cls.name, cls.__call__)
+
+    @classmethod
+    def register(cls, name):
+        if name in cls.checks_list:
+            raise Check.CheckNameAlreadyExistsError(name)
+
+        def inner(func):
+            cls.checks_list[name] = func
+        return inner
+
+    @classmethod
+    def check(cls, name, params, val):
+        print(cls, name, params, val)
+        check = cls.checks_list.get(name)
+        if check is None:
+            raise Check.CheckDoesNotExistError(name)
+        check(val, params)
+
+    class CheckNameAlreadyExistsError(ValueError):
+        pass
+
+    class CheckDoesNotExistError(ValueError):
+        pass
+
+    class CheckError(Exception):
+        pass
 
 
-class Validator:
-    def __init__(self, func):
-        if not callable(func):
-            raise TypeError(self.__class__.__init__.__qualname__)
-        self.func = func
+@Check.register('len')
+def len_check(params, val):
+    print(params, val)
+    if isinstance(params, int):
+        if not len(val) == params:
+            raise Check.CheckError(f"length of {val!r} not eq {params!r}")
+    elif isinstance(params, tuple) and len(params) > 0:
+        mi = ma = None
+        mi, ma = params
+        if mi is not None:
+            if not len(val) > mi:
+                raise Check.CheckError(f"length of {val!r} not gt {mi!r}")
+        if ma is not None:
+            if not len(val) < ma:
+                raise Check.CheckError(f"length of {val!r} not lt {mi!r}")
+
+
+@Check.register('lt')
+def lt_check(param, val):
+    if not val < param:
+        raise Check.CheckError()
+
+
+@Check.register('le')
+def le_check(param, val):
+    if not val <= param:
+        raise Check.CheckError()
+
+
+@Check.register('ge')
+def ge_check(param, val):
+    if not val >= param:
+        raise Check.CheckError()
+
+
+@Check.register('gt')
+def gt_check(param, val):
+    if not val > param:
+        raise Check.CheckError()
+
+
+@Check.register('func')
+def func_check(param, val):
+    if not param(val):
+        raise Check.CheckError()
+
+
+@Check.register('match_')
+def matches_check(param, val):
+    if not typeMatch(val, param):
+        raise Check.CheckError()
+
+
+class Checks:
+    def __init__(self, **checks):
+        self.checks = checks
+        print(f'{checks=}')
 
     def __call__(self, val):
-        try:
-            return self.func()
-        except Exception as e:
-            raise AnnotationError(
-                f'{type(e)} while using validator method: {get_name(self.func)}' +
-                f'\n{e!s}',
-            ) from e
+        print(self.checks, val)
+        for name, params in self.checks.items():
+            Check.check(name, params, val)
 
+    def __str__(self):
+        ret = '<Checks('
+        for k, v in self.checks.items():
+            ret += f'{k}={v!r}, '
+        ret = ret[:-2] + ')>'
+        return ret
 
-Vf = Validator
+    __repr__ = __str__
 
 
 class Cast:
@@ -97,7 +181,7 @@ class Cast:
                 except Exception as e:
                     errors.append(e)
             else:
-                raise e
+                raise errors
         else:
             return totype(val) if not isinstance(val, totype) else val
 
@@ -107,7 +191,7 @@ class Cast:
         """
         self.type = type
 
-    def __call__(self:'Cast', val: Any):
+    def __call__(self: 'Cast', val: Any):
         '''
         Calls to the type specified in the object `.type` attribute
         :param self: The cast onject
@@ -123,7 +207,7 @@ class Cast:
             ) from e
 
 
-def typeMatch(val: Any, spec:type) -> bool:
+def typeMatch(val: Any, spec: type) -> bool:
     '''
     recursively checks if type matches
     :param val: The value to typecheck
@@ -135,8 +219,14 @@ def typeMatch(val: Any, spec:type) -> bool:
         return True
     if isinstance(spec, Values):
         return spec(val)
-    elif isinstance(spec, Validator):
-        return spec(val)
+    elif isinstance(spec, Checks):
+        print(val)
+        try:
+            spec(val)
+        except Check.CheckError:
+            return False
+        else:
+            return True
     elif isinstance(spec, GenericAlias):
         if not isinstance(val, spec.__origin__):
             return False
@@ -165,7 +255,6 @@ def typeMatch(val: Any, spec:type) -> bool:
         return isinstance(val, spec)
 
 
-
 def get_module(obj: Any):
     '''
     gets the module to which an object, function or class belongs
@@ -186,7 +275,10 @@ def resolveAnnotations(obj: Any) -> None:
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
                 try:
-                    obj.__annotations__[k] = eval(v, dict(vars(get_module(obj))), dict(vars(obj)))
+                    obj.__annotations__[k] = eval(
+                        v,
+                        dict(vars(get_module(obj))), dict(vars(obj)),
+                    )
                 except Exception as e:
                     raise AnnotationResolutionError(
                         f'Exception: {e!s} while resolving'
@@ -205,7 +297,7 @@ def resolveAnnotations(obj: Any) -> None:
                     ) from e
 
 
-def annotate(func:callable, oload:bool=False) -> callable:
+def annotate(func: callable, oload: bool = False) -> callable:
     '''
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -243,12 +335,13 @@ def annotate(func:callable, oload:bool=False) -> callable:
             if isinstance(anno[k], Cast):
                 vals[k] = anno[k](v)
                 continue
+            print(v)
             if not typeMatch(v, anno[k]):
                 if oload:
                     raise InternalAnnotationError()
                 errors.append(
                     AnnotationError(
-                        f'Value: {v!r} does not match annotation: {anno[k]!r}' +
+                        f'Value: {v!r} does not match annotation: {anno[k]!r}'
                         f' for argument {k!r} of function {get_name(func)}',
                     ),
                 )
@@ -259,7 +352,8 @@ def annotate(func:callable, oload:bool=False) -> callable:
         if 'return' in anno:
             if not typeMatch(ret, anno['return']):
                 raise AnnotationError(
-                    f"return value {ret!r} does not match annotation: {anno['return']} of function {get_name(func)}",
+                    f"return value {ret!r} does not match annotation: "
+                    f"{anno['return']} of function {get_name(func)}",
                 )
         return ret
     wrapper.__pyod_annotate__ = func
@@ -269,7 +363,7 @@ def annotate(func:callable, oload:bool=False) -> callable:
 __overloads__ = {}
 
 
-def overload(func:callable, name:str|None=None):
+def overload(func: callable, name: str | None = None):
     '''
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -299,7 +393,8 @@ def overload(func:callable, name:str|None=None):
                 break
         else:
             raise OverloadError(
-                f'No overload of function: {get_name(func)} matches types of arguments',
+                f'No overload of function: {get_name(func)}'
+                ' matches types of arguments',
             )
         return val
 
@@ -344,13 +439,13 @@ def annotateClass(cls):
                 self.__annotations__[name] = type(value)
         elif not typeMatch(value, self.__annotations__[name]):
             raise AnnotationError(
-                f'value {value!r} does not match annotation' +
-                f'of attribute: {name!r}:{self.__annotations__[name]!r} of object of class {get_name(cls)}',
+                f'value {value!r} does not match annotation'
+                f'of attribute: {name!r}:{self.__annotations__[name]!r}'
+                f' of object of class {get_name(cls)}',
             )
-        
         return setter(self, name, value)
     cls.__setattr__ = new_setter
     return cls
 
 
-__version__ = '1.0.2'
+__version__ = '1.1.0'
