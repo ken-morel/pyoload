@@ -1,4 +1,3 @@
-# pyoload
 .. image:: https://github.com/ken-morel/pyoload/actions/workflows/python-publish.yml/badge.svg
   :alt: Release status
   :target: https://github.com/ken-morel/pyoload/releases
@@ -16,22 +15,28 @@
   :target: https://coveralls.io/github/ken-morel/pyoload?branch=mai
 .. image:: https://img.shields.io/badge/stackoverflow-Ask%20questions-blue.svg
   :target: https://stackoverflow.com/questions/tagged/pyoload
+
+=======
+pyoload
+=======
 pyoload has two main functions
 
-# pyoload.annotate
+----------------
+pyoload.annotate
+----------------
 
 Is used as a decorator on the function.
-```python
+.. code-block:: python
 
-from pyoload import annotate
+  from pyoload import annotate
 
-@annotate
-def twice(a:int) -> int:
-    return a * 2
+  @annotate
+  def twice(a:int) -> int:
+      return a * 2
 
-b = twice(4)
-```
-The annotate creates a wrapper over the decorated function which checks in for argument types over each function call using `pyoload.matchType(val, spec)`.
+  b = twice(4)
+
+The annotate creates a wrapper over the decorated function which checks in for argument types over each function call using :python`pyoload.matchType(val, spec)`.
 The original function is kept in the `.__pyod_annotate__` attribute.
 
 # pyoload.overload
