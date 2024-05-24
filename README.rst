@@ -85,10 +85,10 @@ for a dictionarry mapping of integers to list of floats or floats.
 
   ```python
   cast = pyoload.Cast(int|str)
-  print(repr(cast(3.0)))
+  print(repr(cast(3i)))
   ```
 
-  Will print `'3.0'` as `3.0` can not be converted to a complex
+  Will print `'3i'` as `3i` can not be converted to a complex
 
 --------------------
 Accepted annotations
