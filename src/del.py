@@ -16,12 +16,16 @@ b = foo({'1': ['1.0', 3]})
 
 
 @annotate
-def ca(v=Checks(ge=3)) -> Checks(len=3):
+def cassy(v=Checks(ge=3), v1=Checks(gt=4)):
     print(dkdkdjd)
     return 1, 2, 3
 
 
-ca(5)
+print(cassy.__annotations__)
+print(cassy.__pyod_annotate__.__annotations__)
+
+
+cassy(7, 3)
 
 
 """

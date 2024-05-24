@@ -335,7 +335,6 @@ def annotate(func: callable, oload: bool = False) -> callable:
             if isinstance(anno[k], Cast):
                 vals[k] = anno[k](v)
                 continue
-            print(v)
             if not typeMatch(v, anno[k]):
                 if oload:
                     raise InternalAnnotationError()
