@@ -15,6 +15,9 @@
   :target: https://coveralls.io/github/ken-morel/pyoload?branch=mai
 .. image:: https://img.shields.io/badge/stackoverflow-Ask%20questions-blue.svg
   :target: https://stackoverflow.com/questions/tagged/pyoload
+.. image:: https://readthedocs.org/projects/pyoload/badge/?version=latest
+    :target: https://pyoload.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 =======
 pyoload
