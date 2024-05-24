@@ -7,7 +7,7 @@ services:
       dockerfile: dockerfiles/dev.dockerfile
     volumes:
       - ./src:/src
-      - ./README.md:/src/README.md
+      - ./README.rst:/src/README.rst
       - ./LICENSE:/src/LICENSE
 
 

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>pyoload &#8212; pyoload 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4848ba22" />
+    <link rel="stylesheet" type="text/css" href="_static/pyramid.css?v=6f14c262" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="API" href="api.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="api.html" title="API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyoload 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyoload</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="pyoload">
+<h1>pyoload<a class="headerlink" href="#pyoload" title="Permalink to this heading">¶</a></h1>
+<p>pyoload has two main functions</p>
+<section id="pyoload-annotate">
+<h2>pyoload.annotate<a class="headerlink" href="#pyoload-annotate" title="Permalink to this heading">¶</a></h2>
+<p>Is used as a decorator on the function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">annotate</span>
+<span class="nd">@annotate</span>
+<span class="k">def</span> <span class="nf">twice</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">twice</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The annotate creates a wrapper over the decorated function which checks in for argument types over each function call using <code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">matchType</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span></code>.
+The original function is kept in the <code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code> attribute.</p>
+</section>
+<section id="pyoload-overload">
+<h2>pyoload.overload<a class="headerlink" href="#pyoload-overload" title="Permalink to this heading">¶</a></h2>
+<p>Implements function overloading in python via a simple decorator</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">overload</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">tan_is_real</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="ow">not</span> <span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="mi">90</span><span class="p">)</span> <span class="o">%</span> <span class="mi">180</span> <span class="o">==</span> <span class="mi">0</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="n">num</span><span class="p">:</span><span class="n">Validator</span><span class="p">(</span><span class="n">tan_is_real</span><span class="p">,</span> <span class="n">opposite</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="n">num</span><span class="p">:</span><span class="nb">int</span><span class="o">|</span><span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">num</span><span class="p">(</span>
+
+<span class="n">tan</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When an overload is registerred, the function name in the form <code class="code highlight python docutils literal highlight-python"><span class="n">functionModuleName</span><span class="o">.</span><span class="n">functionQualName</span></code> is goten using <cite>pyoload.get_name(funcOrClass)</cite> an annotate is gotten using <cite>pyoload.annotate(func, True)</cite>
+and a new list of overloads is created and stored in <code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">__overloads__</span></code> dictionarry under it’s name. A reference to the list of annotated overloads is stored in the functions <cite>.__pyod_overloads__</cite>.</p>
+<p>When the function is called, the wrapper tries all the functions registerred to that name to catch a <cite>pyoload.InternalAnnotationError</cite>. If none ran succesfully, it raises an <cite>pyoload.OverloadError</cite>.</p>
+</section>
+<section id="casting">
+<h2>Casting<a class="headerlink" href="#casting" title="Permalink to this heading">¶</a></h2>
+<p>All <cite>pyoload.annotate</cite> and <cite>pyoload.overload</cite> both support Cast objects
+instances of <cite>pyoloas.Cast</cite>.
+It uses recursive casting with integrated support for dictionaries, e.g:
+<code class="code highlight python docutils literal highlight-python"><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span></code>
+for a dictionarry mapping of integers to list of floats or floats.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When a union, e.g <cite>int | str</cite> is passed to Cast, it tries to cast in each of
+the specified types in the listed order, that is</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cast</span> <span class="o">=</span> <span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="nb">int</span><span class="o">|</span><span class="nb">str</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="mi">3</span><span class="n">i</span><span class="p">)))</span>  <span class="c1"># Will print `&#39;3i&#39;` as `3i` can not be converted to a complex</span>
+</pre></div>
+</div>
+</section>
+<section id="accepted-annotations">
+<h2>Accepted annotations<a class="headerlink" href="#accepted-annotations" title="Permalink to this heading">¶</a></h2>
+<p>In addition to supporting normal plain types,
+pyoload includes support for generic aliasses of iterable types and some other classes:</p>
+<ul class="simple">
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Values</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span></code>
+e.g <cite>Values(“+-*/”)</cite> or <cite>Values(range(6))</cite></p></li>
+<li><p><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span></code>
+Instructs pyoload to cast to the specified type</p></li>
+<li><p>A string
+The string contents will be evaluated as soon as first function call.</p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">pyoload</a><ul>
+<li><a class="reference internal" href="#pyoload-annotate">pyoload.annotate</a></li>
+<li><a class="reference internal" href="#pyoload-overload">pyoload.overload</a></li>
+<li><a class="reference internal" href="#casting">Casting</a></li>
+<li><a class="reference internal" href="#accepted-annotations">Accepted annotations</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="api.html"
+                          title="previous chapter">API</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="api.html" title="API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyoload 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyoload</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, ken-morel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    </div>
+  </body>
+</html>
