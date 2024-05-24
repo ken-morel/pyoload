@@ -45,7 +45,7 @@ setup(
     author_email='engonken8@gmail.com',
     description='Python package for function argument overload, typechecking and casting',
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type='text/x-rst',
 
     install_requires=deps,
     extras_require={
