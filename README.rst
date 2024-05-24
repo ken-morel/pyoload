@@ -19,6 +19,7 @@
 =======
 pyoload
 =======
+
 pyoload has two main functions
 
 ----------------
@@ -89,9 +90,9 @@ for a dictionarry mapping of integers to list of floats or floats.
 
   Will print `'3.0'` as `3.0` can not be converted to a complex
 
----—--—-—-----------
-Accepted annotations
 --------------------
+Accepted annotations
+–-------------------
 
 In addition to supporting normal plain types,
 pyoload includes support for generic aliasses of iterable types and some other classes:
@@ -102,3 +103,7 @@ pyoload includes support for generic aliasses of iterable types and some other c
   Instructs pyoload to cast to the specified type
 - A string
   The string contents will be evaluated as soon as first function call.
+
+
+.. role:: python
+  :language: python
