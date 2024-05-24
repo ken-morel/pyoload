@@ -92,7 +92,7 @@ for a dictionarry mapping of integers to list of floats or floats.
 
 --------------------
 Accepted annotations
-–-------------------
+--------------------
 
 In addition to supporting normal plain types,
 pyoload includes support for generic aliasses of iterable types and some other classes:
@@ -107,3 +107,4 @@ pyoload includes support for generic aliasses of iterable types and some other c
 
 .. role:: python
   :language: python
+  :syntax: python
