@@ -70,7 +70,7 @@ class Check:
         check = cls.checks_list.get(name)
         if check is None:
             raise Check.CheckDoesNotExistError(name)
-        check(val, params)
+        check(params, val)
 
     class CheckNameAlreadyExistsError(ValueError):
         pass
@@ -87,7 +87,7 @@ def len_check(params, val):
     print(params, val)
     if isinstance(params, int):
         if not len(val) == params:
-            raise Check.CheckError(f"length of {val!r} not eq {params!r}")
+            raise Check.CheckError(f"length of {val!r} not eq {params!r}",)
     elif isinstance(params, tuple) and len(params) > 0:
         mi = ma = None
         mi, ma = params
@@ -304,19 +304,28 @@ def annotate(func: callable, oload: bool = False) -> callable:
     :param func: the function to annotate
     :param oload: internal
 
-    :return: the wrapper function
+    :returns: the wrapper function
     '''
     if isclass(func):
         return annotateClass(func)
     anno = func.__annotations__
     if len(anno) == 0:
+        raise Warning(f"function {get_name(func)} is not annotated")
         return func
 
     @wraps(func)
     def wrapper(*args, **kw):
-        names = tuple(anno.keys())
-        if any(isinstance(x, str) for x in anno.values()):
+        i = 0
+        while str in map(type, func.__annotations__.values()) and i < 10:
             resolveAnnotations(func)
+            i += 1
+        else:
+            if i == 10:
+                raise AnnotationResolutionError(func.__annotations__, anno)
+        anno = func.__annotations__.copy()
+        if 'return' in anno:
+            anno.pop('return')
+        names = list(anno.keys())
         vals = {}
         try:
             if func.__defaults__:
@@ -327,7 +336,8 @@ def annotate(func: callable, oload: bool = False) -> callable:
             vals.update(kw)
         except IndexError as e:
             raise AnnotationError(
-                f'Was function {get_name(func)} properly annotated?',
+                f'Was function {get_name(func)} properly annotated?, has'
+                f' {len(anno)} annotations but {len(args)} arguments passed',
             ) from e
 
         errors = []
@@ -348,11 +358,12 @@ def annotate(func: callable, oload: bool = False) -> callable:
             raise AnnotationErrors(errors)
 
         ret = func(**vals)
-        if 'return' in anno:
-            if not typeMatch(ret, anno['return']):
+        if 'return' in func.__annotations__:
+            ann = func.__annotations__['return']
+            if not typeMatch(ret, ann):
                 raise AnnotationError(
                     f"return value {ret!r} does not match annotation: "
-                    f"{anno['return']} of function {get_name(func)}",
+                    f"{ann} of function {get_name(func)}",
                 )
         return ret
     wrapper.__pyod_annotate__ = func
