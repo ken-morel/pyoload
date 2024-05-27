@@ -36,15 +36,12 @@ usage
 
 `pyoload.annotate` used as a decorator over a simple function
 it returns a wrapper function which on each call
+
 - get the function's annotations
-- resolve the annotations if stringified, on error raises
-  a `pyoload.AnnotationResolutionError`
-- check for matches between the passed arguments and annotations with
-  the recursive `pyoload.typeMatch` function
-- if all matches, then calls the function, else raises a
-  `pyoload.AnnotationError`
-- if the return annotation specified then returns it else raises
-  an annotation error.
+- resolve the annotations if stringified, on error raises a `pyoload.AnnotationResolutionError`
+- check for matches between the passed arguments and annotations with the recursive `pyoload.typeMatch` function
+- if all matches, then calls the function, else raises a `pyoload.AnnotationError`
+- if the return annotation specified then returns it else raises an annotation error.
 
 Example
 
@@ -76,10 +73,7 @@ Example
 When decorating a function it:
 
 - annotates the function with the special kwarg `is_overload=True`
-- gets the function's name using `pyoload.get_name` and if needed
-  creates a new register dictionarry value in
-  `pyoload.__overloads__[name]` and stores a copy in
-  the function's `.__pyod_overloads__`
+- gets the function's name using `pyoload.get_name` and if needed creates a new register dictionarry value in `pyoload.__overloads__[name]` and stores a copy in the function's `.__pyod_overloads__`
 
 And on each call it simply loops through each function entry, while
 it catches a `pyoload.InternalAnnotationError` which is raised when
