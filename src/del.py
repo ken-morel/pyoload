@@ -1,4 +1,4 @@
-from pyoload import *
+from pyoload import annotate, Cast, Checks, typeMatch
 import pyoload
 
 assert pyoload.__version__ == '1.1.0'
@@ -17,8 +17,9 @@ b = foo({'1': ['1.0', 3]})
 
 
 @annotate
-def cassy(v:Checks(ge=3), v1:Checks(gt=4)) -> Checks(len=3):
+def cassy(v: Checks(ge=3), v1: Checks(gt=4)) -> Checks(len=3):
     return 1, 2, 3
+
 
 cassy(7, 4.1)
 

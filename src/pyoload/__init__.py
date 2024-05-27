@@ -308,8 +308,7 @@ def annotate(func: callable, oload: bool = False) -> callable:
     '''
     if isclass(func):
         return annotateClass(func)
-    anno = func.__annotations__
-    if len(anno) == 0:
+    if len(func.__annotations__) == 0:
         raise Warning(f"function {get_name(func)} is not annotated")
         return func
 
@@ -321,7 +320,7 @@ def annotate(func: callable, oload: bool = False) -> callable:
             i += 1
         else:
             if i == 10:
-                raise AnnotationResolutionError(func.__annotations__, anno)
+                raise AnnotationResolutionError(func.__annotations__)
         anno = func.__annotations__.copy()
         if 'return' in anno:
             anno.pop('return')
