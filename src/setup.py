@@ -5,10 +5,8 @@ from setuptools import setup, find_packages
 from pyoload import __version__
 
 project_dir = Path(__file__).parent
-try:
-    long_description = (project_dir / 'README.md').read_text()
-except FileNotFoundError:
-    long_description = ''
+
+long_description = (project_dir.parent / 'README.rst').read_text()
 
 deps = ()
 
@@ -43,7 +41,12 @@ setup(
     license='MIT',
     author='ken-morel',
     author_email='engonken8@gmail.com',
-    description='Python package for function argument overload, typechecking and casting',
+    maintainer='ken-morel',
+    maintainer_email='engonken8@gmail.com',
+    description=(
+        'Python package for function argument overload,'
+        ' typechecking and casting'
+    ),
     long_description=long_description,
     long_description_content_type='text/x-rst',
 
