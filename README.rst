@@ -50,8 +50,6 @@ Example
 
 >>> from pyoload import *
 >>> from pathlib import Path
->>>
->>>
 >>> @annotate
 ... def add_eof(eof: str, file: Cast(Path)) -> int:
 ...     '''
@@ -62,7 +60,6 @@ Example
 ...     data = file.read_text()
 ...     return file.write_text(data + eof)
 ...
->>>
 >>> print(add_eof)
 <function add_eof at 0x017B2D48>
 >>> print(add_eof.__pyod_annotate__)
@@ -96,36 +93,29 @@ the special :python:`is_overload` is set to true
 
 >>> from pyoload import *
 >>> from pathlib import Path
->>>
->>>
 >>> @overload
 ... def div(a: float|int, b: Checks(eq=0)):
 ...     raise ZeroDivisionError()
 ...
 checks={'eq': 0}
->>>
 >>> @overload
 ... def div(a: int, b: int) -> int:
 ...     return a // b
 ...
->>>
 >>> @overload
 ... def div(a: float, b: float) -> float:
 ...     return a / b
 ...
->>>
 >>> @overload
 ... def div(a: Any, b: Any):
 ...     raise NotImplementedError()
 ...
->>>
 >>> print(div.__pyo_overloads__)
 [<function div at 0x019C2D48>, <function div at 0x01B5EE38>, <function div at 0x01B65E88>, <function div at 0x01B65F78>]
 >>> print(div.__pyod_overloads_name__)
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 AttributeError: 'function' object has no attribute '__pyod_overloads_name__'. Did you mean: '__pyo_overloads_name__'?
->>>
 >>> print(repr(div(1, 2)))
 2
 {'eq': 0} 2
@@ -205,10 +195,6 @@ Traceback (most recent call last):
           ^^^^^^^^^^^^
   File "<stdin>", line 3, in div
 NotImplementedError
-
-
-
-
 
 .. role:: python(code)
   :language: python
