@@ -1,6 +1,3 @@
-.. role:: python(code)
-  :language: python
-
 .. image:: https://github.com/ken-morel/pyoload/actions/workflows/python-publish.yml/badge.svg
   :alt: Release status
   :target: https://github.com/ken-morel/pyoload/releases
@@ -24,28 +21,28 @@
 pyoload
 ==================================================
 
-:python:`pyoload` provides an intuitive and easy way to add type and value checking
+`pyoload` provides an intuitive and easy way to add type and value checking
 to function arguments and class attributes.
 
 --------------------------------------------------
 usage
 --------------------------------------------------
 
-:python:`pyoload` base provides two simple use functions
+`pyoload` base provides two simple use functions
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-:python:`pyoload.annotate`
+`pyoload.annotate`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:python:`pyoload.annotate` used as a decorator over a simple function
+`pyoload.annotate` used as a decorator over a simple function
 it returns a wrapper function which on each call
 - get the function's annotations
 - resolve the annotations if stringified, on error raises
-  a :python:`pyoload.AnnotationResolutionError`
+  a `pyoload.AnnotationResolutionError`
 - check for matches between the passed arguments and annotations with
-  the recursive :python:`pyoload.typeMatch` function
+  the recursive `pyoload.typeMatch` function
 - if all matches, then calls the function, else raises a
-  :python:`pyoload.AnnotationError`
+  `pyoload.AnnotationError`
 - if the return annotation specified then returns it else raises
   an annotation error.
 
@@ -72,25 +69,25 @@ Example
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-:python:`pyoload.overload`
+`pyoload.overload`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:python:`pyoload.overload` used as a decorator over a simple function
+`pyoload.overload` used as a decorator over a simple function
 When decorating a function it:
 
-- annotates the function with the special kwarg :python:`is_overload=True`
-- gets the function's name using :python:`pyoload.get_name` and if needed
+- annotates the function with the special kwarg `is_overload=True`
+- gets the function's name using `pyoload.get_name` and if needed
   creates a new register dictionarry value in
-  :python:`pyoload.__overloads__[name]` and stores a copy in
-  the function's :python:`.__pyod_overloads__`
+  `pyoload.__overloads__[name]` and stores a copy in
+  the function's `.__pyod_overloads__`
 
 And on each call it simply loops through each function entry, while
-it catches a :python:`pyoload.InternalAnnotationError` which is raised when
-the special :python:`is_overload` is set to true
+it catches a `pyoload.InternalAnnotationError` which is raised when
+the special `is_overload` is set to true
 
 .. tip::
 
-  you may raise :python:`pyoload.InternalAnnotationError` inside an overloaded
+  you may raise `pyoload.InternalAnnotationError` inside an overloaded
   function after carrying out some other checks and pyoload will switch to the
   next oveload.
 
