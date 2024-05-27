@@ -8,10 +8,10 @@ project_dir = Path(__file__).parent
 
 try:
     long_description = (project_dir / 'README.rst').read_text()
-except:
+except FileNotFoundError:
     try:
         long_description = Path('README.rst').read_text()
-    except:
+    except FileNotFoundError:
         long_description = Path('/src/README.rst').read_text()
 
 deps = ()
