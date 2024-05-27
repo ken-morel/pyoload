@@ -9,9 +9,6 @@ services:
       - ./src:/src
       - ./README.rst:/src/README.rst
       - ./LICENSE:/src/LICENSE
-
-
-
   test311:
     build:
       context: .
