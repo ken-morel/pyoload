@@ -72,9 +72,6 @@ Example
 :python:`pyoload.overload`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
->>> print(add_eof('@EOF@', 'del.txt'))
-17
-
 :python:`pyoload.overload` used as a decorator over a simple function
 When decorating a function it:
 
