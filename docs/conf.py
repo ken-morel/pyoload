@@ -1,13 +1,14 @@
 # Configuration file for the Sphinx documentation builder.
 
 # -- Project information
-import sys; sys.setrecursionlimit(500)
+import sys
+sys.setrecursionlimit(500)
 project = 'pyoload'
 copyright = '2024, ken-morel'
 author = 'ken-morel'
 
-release = '0.1'
-version = '1.0.2'
+release = '1.1.0'
+version = '1.1.0'
 
 # -- General configuration
 
@@ -22,6 +23,7 @@ extensions = [
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
+    'github': ('https://github.com/', None),
 }
 intersphinx_disabled_domains = ['std']
 
@@ -33,8 +35,3 @@ html_theme = 'pyramid'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
-
-rst_prolog = '''\
-.. role:: python(code)
-  :language: python
-'''
