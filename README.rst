@@ -1,3 +1,6 @@
+.. role:: python(code)
+  :language: python
+
 .. image:: https://github.com/ken-morel/pyoload/actions/workflows/python-publish.yml/badge.svg
   :alt: Release status
   :target: https://github.com/ken-morel/pyoload/releases
@@ -196,6 +199,3 @@ Traceback (most recent call last):
   File "<stdin>", line 3, in div
 NotImplementedError
 
-.. role:: python(code)
-  :language: python
-  :syntax: python
