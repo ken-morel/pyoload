@@ -87,16 +87,16 @@ def len_check(params, val):
     print(params, val)
     if isinstance(params, int):
         if not len(val) == params:
-            raise Check.CheckError(f"length of {val!r} not eq {params!r}",)
+            raise Check.CheckError(f'length of {val!r} not eq {params!r}')
     elif isinstance(params, tuple) and len(params) > 0:
         mi = ma = None
         mi, ma = params
         if mi is not None:
             if not len(val) > mi:
-                raise Check.CheckError(f"length of {val!r} not gt {mi!r}")
+                raise Check.CheckError(f'length of {val!r} not gt {mi!r}')
         if ma is not None:
             if not len(val) < ma:
-                raise Check.CheckError(f"length of {val!r} not lt {mi!r}")
+                raise Check.CheckError(f'length of {val!r} not lt {mi!r}')
 
 
 @Check.register('lt')
@@ -164,7 +164,7 @@ class Cast:
                     kt, vt = totype.__args__
                 elif len(totype.__args__) == 1:
                     kt, vt = Any, totype.__args__[1]
-                print(f"{totype=} {kt=} {vt=}")
+                print(f'{totype=} {kt=} {vt=}')
                 return {
                     Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
                 }
@@ -192,13 +192,13 @@ class Cast:
         self.type = type
 
     def __call__(self: 'Cast', val: Any):
-        '''
+        """
         Calls to the type specified in the object `.type` attribute
         :param self: The cast onject
         :param val: the value to be casted
 
         :return: The casted value
-        '''
+        """
         try:
             return Cast.cast(val, self.type)
         except Exception as e:
@@ -208,13 +208,13 @@ class Cast:
 
 
 def typeMatch(val: Any, spec: type) -> bool:
-    '''
+    """
     recursively checks if type matches
     :param val: The value to typecheck
     :param spec: The type specifier
 
     :return: A boolean
-    '''
+    """
     if spec == Any or spec is None or val is None:
         return True
     if isinstance(spec, Values):
@@ -256,21 +256,21 @@ def typeMatch(val: Any, spec: type) -> bool:
 
 
 def get_module(obj: Any):
-    '''
+    """
     gets the module to which an object, function or class belongs
     :param obj: the object
     :returns: the module
-    '''
+    """
     return sys.modules[obj.__module__]
 
 
 def resolveAnnotations(obj: Any) -> None:
-    '''
+    """
     Evaluates all the stringized annotations of the argument
 
     :param obj: The object
     :returns: None
-    '''
+    """
     if isclass(obj) or hasattr(obj, '__class__'):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
@@ -281,8 +281,10 @@ def resolveAnnotations(obj: Any) -> None:
                     )
                 except Exception as e:
                     raise AnnotationResolutionError(
-                        f'Exception: {e!s} while resolving'
-                        f' annotation {e}={v!r} of object {obj!r}',
+                        (
+                            f'Exception: {e!s} while resolving'
+                            f' annotation {e}={v!r} of object {obj!r}'
+                        ),
                     ) from e
     elif callable(obj):
         for k, v in obj.__annotations__.items():
@@ -298,14 +300,14 @@ def resolveAnnotations(obj: Any) -> None:
 
 
 def annotate(func: callable, oload: bool = False) -> callable:
-    '''
+    """
     returns a wrapper over the passed function
     which typechecks arguments on each call
     :param func: the function to annotate
     :param oload: internal
 
     :returns: the wrapper function
-    '''
+    """
     if isclass(func):
         return annotateClass(func)
     if len(func.__annotations__) == 0:
@@ -373,7 +375,7 @@ __overloads__ = {}
 
 
 def overload(func: callable, name: str | None = None):
-    '''
+    """
     returns a wrapper over the passed function
     which typechecks arguments on each call
     and finds the function instance with same name which does not raise
@@ -382,7 +384,7 @@ def overload(func: callable, name: str | None = None):
     :param oload: internal
 
     :return: the wrapper function
-    '''
+    """
     if isinstance(func, str):
         return partial(overload, name=func)
     if name is None or not isinstance(name, str):
@@ -414,11 +416,11 @@ def overload(func: callable, name: str | None = None):
 
 
 def annotateClass(cls):
-    '''
+    """
     Annotates a class object, wrapping and replacing over it's __setattr__
     and typechecking over each attribute assignment.
     If no annotation for the passed object found it sets it to `type(val)`
-    '''
+    """
     if not hasattr(cls, '__annotations__'):
         cls.__annotations__ = {}
     if isinstance(cls, bool):
