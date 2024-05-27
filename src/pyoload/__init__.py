@@ -295,7 +295,7 @@ def resolveAnnotations(obj: Any) -> None:
                     raise AnnotationResolutionError(
                         f'Exception: {k!s} while resolving'
                         f' annotation {v!r} of function {obj!r}',
-                        f'globals: {obj.__globals__}'
+                        f'globals: {obj.__globals__}',
                     ) from e
 
 
@@ -311,7 +311,7 @@ def annotate(func: callable, oload: bool = False) -> callable:
     if isclass(func):
         return annotateClass(func)
     if len(func.__annotations__) == 0:
-        raise Warning(f"function {get_name(func)} is not annotated")
+        raise Warning(f'function {get_name(func)} is not annotated')
         return func
 
     @wraps(func)
@@ -363,8 +363,8 @@ def annotate(func: callable, oload: bool = False) -> callable:
             ann = func.__annotations__['return']
             if not typeMatch(ret, ann):
                 raise AnnotationError(
-                    f"return value {ret!r} does not match annotation: "
-                    f"{ann} of function {get_name(func)}",
+                    f'return value {ret!r} does not match annotation: '
+                    f'{ann} of function {get_name(func)}',
                 )
         return ret
     wrapper.__pyod_annotate__ = func
