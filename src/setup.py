@@ -6,7 +6,13 @@ from pyoload import __version__
 
 project_dir = Path(__file__).parent
 
-long_description = (project_dir / 'README.rst').read_text()
+try:
+    long_description = (project_dir / 'README.rst').read_text()
+except:
+    try:
+        long_description = Path('README.rst').read_text()
+    except:
+        long_description = Path('/src/README.rst').read_text()
 
 deps = ()
 
