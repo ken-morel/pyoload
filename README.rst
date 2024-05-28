@@ -189,4 +189,3 @@ Traceback (most recent call last):
           ^^^^^^^^^^^^
   File "<stdin>", line 3, in div
 NotImplementedError
-
