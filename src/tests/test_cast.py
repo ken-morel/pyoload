@@ -6,7 +6,7 @@ from pyoload import CastedAttr
 from pyoload import annotate
 from pyoload import typeMatch
 
-assert pyoload.__version__ == '1.1.2'
+assert pyoload.__version__ == '1.1.3'
 
 
 @annotate

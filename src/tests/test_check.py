@@ -4,9 +4,10 @@ from pyoload import AnnotationError
 from pyoload import Any
 from pyoload import CheckedAttr
 from pyoload import Checks
+from pyoload import Check
 from pyoload import annotate
 
-assert pyoload.__version__ == '1.1.2'
+assert pyoload.__version__ == '1.1.3'
 
 
 @annotate
@@ -34,6 +35,12 @@ def test_check():
         pass
     else:
         raise Exception()
+
+    @Check.register('test1 test2')
+    def test(param, val):
+        print(param, val)
+    Checks(test1=3)(3)
+    Checks(test2=4)(4)
 
 
 if __name__ == '__main__':
