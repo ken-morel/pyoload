@@ -18,12 +18,12 @@ class foo:
         self.bar = bar
 
 
-def CastTest():
-    q = foo()
+def test_cast():
+    q = foo([(1, "67")])
     q.foo = {1234: {'5', 16j}}
     assert typeMatch(q.foo, dict[str, tuple[int | str]])
     assert typeMatch(q.bar, list[tuple[float]])
 
 
 if __name__ == '__main__':
-    CastTest()
+    test_cast()

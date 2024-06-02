@@ -1,5 +1,6 @@
 import pyoload
 
+from pyoload import AnnotationError
 from pyoload import Any
 from pyoload import Check
 from pyoload import CheckedAttr
@@ -18,10 +19,10 @@ class foo:
         pass
 
 
-def CheckTest():
+def test_check():
     try:
         foo(0)
-    except Check.CheckError:
+    except AnnotationError:
         pass
     else:
         raise Exception()
@@ -30,11 +31,11 @@ def CheckTest():
     obj.bar = 3
     try:
         obj.bar = 2.9
-    except Check.CheckError:
+    except AnnotationError:
         pass
     else:
         raise Exception()
 
 
 if __name__ == '__main__':
-    CheckTest()
+    test_check()

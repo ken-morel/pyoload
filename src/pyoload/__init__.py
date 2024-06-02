@@ -187,6 +187,12 @@ def gt_check(param, val):
         raise Check.CheckError(f'{val!r} not gt {param!r}')
 
 
+@Check.register('eq')
+def eq_check(param, val):
+    if not val == param:
+        raise Check.CheckError(f'{val!r} not eq {param!r}')
+
+
 @Check.register('func')
 def func_check(param, val):
     if not param(val):
@@ -540,9 +546,8 @@ def overload(func: callable, name: str | None = None):
 
     :return: the wrapper function
     """
-    short = partial(overload, name=func)
     if isinstance(func, str):
-        return short
+        return partial(overload, name=func)
     if name is None or not isinstance(name, str):
         name = get_name(func)
     if name not in __overloads__:
@@ -561,13 +566,13 @@ def overload(func: callable, name: str | None = None):
         else:
             raise OverloadError(
                 f'No overload of function: {get_name(func)}'
-                ' matches types of arguments',
+                f' matches types of arguments: {args}, {kw}',
             )
         return val
 
-    wrapper.__pyo_overloads__ = __overloads__[name]
-    wrapper.__pyo_overloads_name__ = name
-    wrapper.overload = short
+    wrapper.__pyod_overloads__ = __overloads__[name]
+    wrapper.__pyod_overloads_name__ = name
+    wrapper.overload = partial(overload, name=name)
 
     return wrapper
 
@@ -608,6 +613,8 @@ def annotateClass(cls):
         if name not in self.__annotations__:
             if value is not None:
                 self.__annotations__[name] = type(value)
+        elif isinstance(self.__annotations__[name], Cast):
+            return setter(self, name, self.__annotations__[name](value))
         elif not typeMatch(value, self.__annotations__[name]):
             raise AnnotationError(
                 f'value {value!r} does not match annotation'
