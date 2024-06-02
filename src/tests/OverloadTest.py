@@ -37,7 +37,7 @@ def OverloadTest():
     assert div('4', '2') == '2.0'
     assert div('3', 0) == 'Infinity'
     assert div(None, 0) == NotImplemented
-    assert div("4", 2) == 2
+    assert div('4', 2) == 2
     assert div(3.0, 1.0) == 3.0
 
 
