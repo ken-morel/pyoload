@@ -41,3 +41,34 @@ class Person:
 djamago = Person(15, 'djamago')
 
 print(djamago.__annotations__)
+
+
+from pyoload import Cast
+
+caster = Cast(dict[str, list[tuple[float]]]) # a dictionary of names of
+                                             # places[str] to a list of their
+                                             # (x, y) coordinates
+                                             #             [list[tuple[float]]]
+
+raw = {
+    4: (
+        ['1.5', 10],
+        [10, '1.5'],
+    )
+}
+print(caster(raw))
+
+print("-"*20)
+from pyoload import *
+
+Check.register('is_equal')
+def isnonecheck(param, value):
+    print(f'{param=}, {value=}')
+    if param != value:
+        raise Check.CheckError(f'{param!r} not equal to {value!r}')
+
+def foos(bar: Checks(is_equ=3)):
+    raise 3
+
+foos(4)  # param=3 value=3
+foos('4')
