@@ -1,7 +1,7 @@
 from pyoload import *
 import pyoload
 
-assert pyoload.__version__ == '1.1.0'
+assert pyoload.__version__ == '1.1.1'
 
 
 @annotate
@@ -61,14 +61,32 @@ print(caster(raw))
 print("-"*20)
 from pyoload import *
 
-Check.register('is_equal')
+
+
+@Check.register('is_equal')
 def isnonecheck(param, value):
-    print(f'{param=}, {value=}')
     if param != value:
         raise Check.CheckError(f'{param!r} not equal to {value!r}')
 
-def foos(bar: Checks(is_equ=3)):
-    raise 3
+@annotate
+def foo(bar: Checks(is_equal=3)):
+    pass
 
-foos(4)  # param=3 value=3
-foos('4')
+foo(3)  # param=3 value=3
+
+print(Cast(tuple[int])("678936798"))
+
+class Person:
+    age = CheckedAttr(gt=0)
+    phone = CastedAttr(tuple[int])
+
+    def __init__(self, age, phone):
+        self.age = age
+        self.phone = phone
+
+temeze = Person(17, "678936798")
+
+print(temeze.age)  # 17
+print(temeze.phone)  # (6, 7, 8, 9, 3, 6, 7, 9, 8)
+
+mballa = Person(0, "123456")

@@ -168,6 +168,56 @@ def foo(bar: Checks(is_equal=3)):
 foo(3)  # param=3 value=3
 foo('4')
 
-
+Traceback (most recent call last):
+  File "C:\pyoload\src\del.py", line 77, in <module>
+    foo('4')
+  File "C:\pyoload\src\pyoload\__init__.py", line 514, in wrapper
+    raise AnnotationErrors(errors)
+pyoload.AnnotationErrors: [AnnotationError("Value: '4' does not match annotation: <Checks(is_equal=3)> for argument 'bar' of function __main__.foo")]
 ```
 
+It provides builtin checkes as: lt, gt, ge, le, eq, `func:Callable`,
+`type:Any|PyoloadAnnotation`
+
+## using `pyoload.CheckedAttr` and `pyoload.CastedAttr`
+
+Felling not your to use such annotate or check?, `pyoload` provide
+- `pyoload.CheckedAttr` A descriptor which does the type checking on
+  assignment, and
+- `pyoload.CastedAttr` Which stores a casted copy of the values it is assigned
+
+```python
+class Person:
+    age = CheckedAttr(gt=0)
+    phone = CastedAttr(tuple[int])
+
+    def __init__(self, age, phone):
+        self.age = age
+        self.phone = phone
+
+temeze = Person(17, "678936798")
+
+print(temeze.age)  # 17
+print(temeze.phone)  # (6, 7, 8, 9, 3, 6, 7, 9, 8)
+
+mballa = Person(0, "123456")
+Traceback (most recent call last):
+  File "C:\pyoload\src\del.py", line 92, in <module>
+    mballa = Person(0, "123456")
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\pyoload\src\del.py", line 84, in __init__
+    self.age = age
+    ^^^^^^^^
+  File "C:\pyoload\src\pyoload\__init__.py", line 264, in __set__
+    self(value)
+  File "C:\pyoload\src\pyoload\__init__.py", line 227, in __call__
+    Check.check(name, params, val)
+  File "C:\pyoload\src\pyoload\__init__.py", line 132, in check
+    check(params, val)
+  File "C:\pyoload\src\pyoload\__init__.py", line 187, in gt_check
+    raise Check.CheckError(f'{val!r} not gt {param!r}')
+pyoload.Check.CheckError: 0 not gt 0
+```
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G4XYJU6)
