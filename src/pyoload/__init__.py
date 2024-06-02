@@ -251,8 +251,8 @@ class CheckedAttr(Checks):
         self.name = name
         self.value = None
 
-    def __get__(self: Any):
-        """def __get__(self: Any)
+    def __get__(self: Any, obj: Any, type: Any):
+        """def __get__(self: Any, obj: Any, type: Any)
         returns the value in `self.value`
         """
         return self.value
@@ -270,7 +270,15 @@ class Cast(PyoloadAnnotation):
     Holds a cast object which describes the casts to be performed
     """
     @staticmethod
-    def cast(val, totype):
+    def cast(val: Any, totype: Any) -> Any:
+        """def cast(val: Any, totype: Any) -> Any
+        The gratest deal.
+        Recursively casts the given value to the specified structure or type
+        e.g
+        Cast.cast({ 1: 2}, dict[str, float])
+
+        returns: {'1': 2.0}
+        """
         if isinstance(totype, GenericAlias):
             if totype.__origin__ == dict:
                 if len(totype.__args__) == 2:
@@ -297,13 +305,13 @@ class Cast(PyoloadAnnotation):
         else:
             return totype(val) if not isinstance(val, totype) else val
 
-    def __init__(self, type):
+    def __init__(self: PyoloadAnnotation, type: Any):
         """
         creates a casting object for the specified type
         """
         self.type = type
 
-    def __call__(self: 'Cast', val: Any):
+    def __call__(self: PyoloadAnnotation, val: Any):
         """
         Calls to the type specified in the object `.type` attribute
         :param self: The cast onject
@@ -322,6 +330,34 @@ class Cast(PyoloadAnnotation):
         return f'pyoload.Cast({self.type!s})'
 
 
+class CastedAttr(Cast):
+    """class CastedAttr(Cast)
+    A descriptor class providing attributes which are checked on assignment
+    """
+
+    name: str
+    value: Any
+
+    def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
+        """def __set_name__(self: Any, obj: Any, name: str, typo: Any = None)
+        setd the name of the attribute
+        """
+        self.name = name
+        self.value = None
+
+    def __get__(self: Any, obj: Any, type: Any):
+        """def __get__(self: Any, obj: Any, type: Any)
+        returns the value in `self.value`
+        """
+        return self.value
+
+    def __set__(self: Any, obj: Any, value: Any):
+        """def __set__(self: Any, obj: Any, value: Any)
+        Performs checks then assigns the new value
+        """
+        self.value = self(value)
+
+
 def typeMatch(val: Any, spec: type) -> bool:
     """
     recursively checks if type matches
@@ -330,7 +366,6 @@ def typeMatch(val: Any, spec: type) -> bool:
 
     :return: A boolean
     """
-    print(val, spec)
     if spec == any:
         raise TypeError('May be have you confused `Any` and `any`')
 
@@ -419,7 +454,7 @@ def resolveAnnotations(obj: Any) -> None:
         raise AnnotationError(f'unknown resolution method for {obj}')
 
 
-def annotate(func: callable, oload: bool = False) -> callable:
+def annotate(func: Callable, oload: bool = False) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -491,7 +526,7 @@ def annotate(func: callable, oload: bool = False) -> callable:
     return wrapper
 
 
-__overloads__ = {}
+__overloads__: dict[str, list[Callable]] = {}
 
 
 def overload(func: callable, name: str | None = None):
@@ -505,8 +540,9 @@ def overload(func: callable, name: str | None = None):
 
     :return: the wrapper function
     """
+    short = partial(overload, name=func)
     if isinstance(func, str):
-        return partial(overload, name=func)
+        return short
     if name is None or not isinstance(name, str):
         name = get_name(func)
     if name not in __overloads__:
@@ -531,6 +567,7 @@ def overload(func: callable, name: str | None = None):
 
     wrapper.__pyo_overloads__ = __overloads__[name]
     wrapper.__pyo_overloads_name__ = name
+    wrapper.overload = short
 
     return wrapper
 
@@ -561,7 +598,10 @@ def annotateClass(cls):
                     ),
                 )
 
-    def new_setter(self, name, value):
+    @wraps(cls.__setattr__)
+    def new_setter(self: Any, name: str, value: Any) -> Any:
+        """def new_setter(self: Any, name: str, value: Any) -> Any
+        """
         if any(isinstance(x, str) for x in self.__annotations__.values()):
             resolveAnnotations(self)
 

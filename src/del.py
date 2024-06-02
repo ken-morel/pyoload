@@ -1,4 +1,4 @@
-from pyoload import annotate, Cast, Checks, typeMatch, resolveAnnotations, Any
+from pyoload import *
 import pyoload
 
 assert pyoload.__version__ == '1.1.1'
@@ -6,19 +6,11 @@ assert pyoload.__version__ == '1.1.1'
 
 @annotate
 class foo:
-    foo: dict[int, list[float]]
+    foo = CastedAttr(dict[str, tuple[int | str]])
 
-    def __init__(self: 'foo', bar: Cast(dict[int, list[float]])):
-        self.foo = bar
+    def __init__(self: Any) -> Any:
+        pass
 
-    def gama(self: Any, b: str):
-        return len(b)
 
-print(foo.gama.__annotations__)
-resolveAnnotations(foo.gama)
-print(foo.gama.__annotations__)
-b = foo({'1': ['1.0', 3]})
-print(foo.__init__.__annotations__)
-b.gama('ama')
-
-print(b.foo)
+q = foo()
+q.foo = {1234: {'5', 16j}}

@@ -7,12 +7,12 @@ from pyoload import __version__
 project_dir = Path(__file__).parent
 
 try:
-    long_description = (project_dir / 'README.rst').read_text()
+    long_description = (project_dir / 'README.md').read_text()
 except FileNotFoundError:
     try:
-        long_description = Path('README.rst').read_text()
+        long_description = Path('README.md').read_text()
     except FileNotFoundError:
-        long_description = Path('/src/README.rst').read_text()
+        long_description = Path('/src/README.md').read_text()
 
 deps = ()
 
@@ -60,7 +60,7 @@ setup(
         ' typechecking and casting'
     ),
     long_description=long_description,
-    long_description_content_type='text/x-rst',
+    long_description_content_type='text/markdown',
 
     install_requires=deps,
     extras_require={
