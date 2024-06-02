@@ -103,8 +103,10 @@ class Check:
         :param cls: the Check class
         :param name: the name to be registerred as
         """
-        if name in cls.checks_list:
-            raise Check.CheckNameAlreadyExistsError(name)
+        names = [x for x in name.split(' ') if x.strip() != '']
+        for name in names:
+            if name in cls.checks_list:
+                raise Check.CheckNameAlreadyExistsError(name)
 
         def inner(func: Callable) -> Callable:
             """def inner(func: Callable)
@@ -112,7 +114,8 @@ class Check:
 
             :returns: func
             """
-            cls.checks_list[name] = func
+            for name in names:
+                cls.checks_list[name] = func
             return func
         return inner
 
