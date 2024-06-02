@@ -15,7 +15,7 @@ casting in python functions and classes.
 
 ## `pyoload.annotate`
 
-Simple decorator over functions or classes
+Simple decorator over functions and classes
 
 ### functions
 
@@ -43,15 +43,15 @@ a typechecker function which typechecks the passed value on each assignment.
 It also calls annotate on each of it's methods, except the class has a
 `__annotate_norecur__` attribute.
 
-But if the attribute does not yes have annotations, it gets it using
-`type(val)` and adds it to the annotations.
+But if the assigned attribute does not yet have annotations, it gets them using
+`type(val)` and adds them to the annotations.
 
 ```python
 from pyoload import *
 
 @annotate
 class Person:
-    age: int
+    age: 'int'
 
     def __init__(self: Any, age: int, name: str):
         self.age = age
@@ -68,16 +68,16 @@ print(djamago.__annotations__)
 When decorating a function it:
 - annotates the function with the special kwarg `is_overload=True`
 - gets the function's name using `pyoload.get_name` and if needed
-  creates a new register dictionarry value in
-  `pyoload.__overloads__[name]` and stores a copy in
-  the function's `.__pyod_overloads__`
+  creates a new dictionarry value in
+  `pyoload.__overloads__[name]` where it stores all overloads and stores a copy in
+  the function's `.__pyod_overloads__` attribute.
 
 And on each call it simply loops through each function entry, while
 it catches a `pyoload.InternalAnnotationError` which is raised when
 the special `is_overload` is set to true
 
 > tip
-  you may raise :python:`pyoload.InternalAnnotationError` inside an overloaded
+  you may raise `pyoload.InternalAnnotationError` inside an overloaded
   function after carrying out some other checks and pyoload will switch to the
   next oveload.
 
@@ -90,12 +90,12 @@ def foo(a: int):
 def foo(b: str, c: float):
     ...
 
-foo.overload
+@foo.overload
 def foo_hello(d: dict[str, list[int]]):
     ...
 ```
 
-## tyme matches `pyoload.typeMatch(val, type)`
+## type checking with `pyoload.typeMatch(val, type)`
 
 this function simply finds type compatibility between the passes arguments
 
@@ -104,9 +104,10 @@ the type could be:
 - a Union e.g `int|str`
 - a generic alias e.g `dict[str, int]`
 - a subclass of `pyoload.PyoloadAnnotation` as:
-  - `pyoload.Cast`
   - `pyoload.Checks`
   - `pyoload.Values`
+
+
 
 ## Casting with `pyoload.Cast`
 
@@ -162,6 +163,7 @@ def isnonecheck(param, value):
     if param != value:
         raise Check.CheckError(f'{param!r} not equal to {value!r}')
 
+@annotate
 def foo(bar: Checks(is_equal=3)):
     pass
 
@@ -181,10 +183,10 @@ It provides builtin checkes as: lt, gt, ge, le, eq, `func:Callable`,
 
 ## using `pyoload.CheckedAttr` and `pyoload.CastedAttr`
 
-Felling not your to use such annotate or check?, `pyoload` provide
+`pyoload` provides:
 - `pyoload.CheckedAttr` A descriptor which does the type checking on
   assignment, and
-- `pyoload.CastedAttr` Which stores a casted copy of the values it is assigned
+- `pyoload.CastedAttr` Another descriptor Which stores a casted copy of the values it is assigned
 
 ```python
 class Person:
