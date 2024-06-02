@@ -187,6 +187,12 @@ def gt_check(param, val):
         raise Check.CheckError(f'{val!r} not gt {param!r}')
 
 
+@Check.register('eq')
+def gt_check(param, val):
+    if not val == param:
+        raise Check.CheckError(f'{val!r} eq {param!r}')
+
+
 @Check.register('func')
 def func_check(param, val):
     if not param(val):
