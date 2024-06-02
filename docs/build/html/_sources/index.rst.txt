@@ -28,12 +28,6 @@ Welcome to pyoload's documentation!
 welcome to pyoloads documentation, a python module for typechecking and
 casting of complex to simple datatypes.
 
-.. toctree::
-  :maxdepth: 2
-
-  api
-  examples
-  usage
 
 * :ref:`genindex`
 * :ref:`modindex`
