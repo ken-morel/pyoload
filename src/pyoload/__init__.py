@@ -4,7 +4,7 @@ pyoload is a little python script to incorporate some features of
 annotation and typechecking in python.
 
 """
-from typing import Any, GenericAlias, Callable
+from typing import Any, GenericAlias, Callable, Type
 from types import UnionType
 from functools import wraps, partial
 from inspect import isclass
@@ -13,26 +13,26 @@ import sys
 
 
 class AnnotationError(ValueError):
-    """class AnnotationError(ValueError)
+    """
     base exception for most pyoload errors
     """
 
 
 class AnnotationErrors(AnnotationError):
-    """class AnnotationErrors(AnnotationError)
+    """
     Hosts a list of AnnotationError
     """
 
 
 class InternalAnnotationError(Exception):
-    """class InternalAnnotationError(Exception)
-    **internam**
+    """
+    **internal**
     raised by overloads on type mismatch
     """
 
 
 class CastingError(TypeError):
-    """class CastingError(TypeError)
+    """
     Error during casting
     """
 
@@ -44,25 +44,25 @@ class OverloadError(TypeError):
 
 
 class AnnotationResolutionError(AnnotationError):
-    """class AnnotationResolutionError(AnnotationError)
+    """
     Annotations could not be resolved or evaluated.
     """
     _raise = False
 
 
 class PyoloadAnnotation:
-    """class PyoloadAnnotation
-    A parent class for pyoload extra annotations
+    """
+    A parent class for pyoload extra annotations as `Cast` and `Values`
     """
 
 
 class Values(PyoloadAnnotation, tuple):
-    """class Values(PyoloadAnnotation, tuple)
+    """
     A tuple subclass which holds several values as possible annotations
     """
 
     def __call__(self: 'Values', val: Any) -> bool:
-        """def __call__(self, val)
+        """
         :param self: the `Values` object
         :param val: the value to be checked
 
@@ -76,40 +76,45 @@ class Values(PyoloadAnnotation, tuple):
     __repr__ = __str__
 
 
-def get_name(funcOrCls: Any):
-    """def get_name(funcOrCls: Any)
+def get_name(funcOrCls: Any) -> str:
+    """
     Gives a class or function name, possibly unique gotten from
     it's module name and qualifier name
+    :param funcOrCls: The object who's name to return
+
+    :returns: modulename + qualname
     """
     return funcOrCls.__module__ + '.' + funcOrCls.__qualname__
 
 
 class Check:
-    """class Check
+    """
     A class basicly abstract which holds registerred checks in pyoload
     """
     checks_list = {}
 
     def __init_subclass__(cls: Any, subclass: Any):
-        """def __init_subclass__(cls, subclass)
+        """
         register's subclasses as chexks
         """
         cls.register(cls.name, cls.__call__)
 
     @classmethod
-    def register(cls: Any, name: str) -> Any:
-        """def register(cls, name)
-        returns a callable which registers a new checker mathod
+    def register(cls: Any, name: str) -> Callable[Callable[Any, Any]]:
+        """
+        returns a callable which registers a new checker method
         :param cls: the Check class
-        :param name: the name to be registerred as
+        :param name: the name to be registerred as.
+
+        :returns: a function which registers the check under the name
         """
         names = [x for x in name.split(' ') if x.strip() != '']
         for name in names:
             if name in cls.checks_list:
                 raise Check.CheckNameAlreadyExistsError(name)
 
-        def inner(func: Callable) -> Callable:
-            """def inner(func: Callable)
+        def inner(func: Callable[Any, Any]) -> Callable:
+            """
             :param func: The callable to register
 
             :returns: func
@@ -121,13 +126,15 @@ class Check:
 
     @classmethod
     def check(cls: Any, name: str, params: Any, val: Any) -> None:
-        """def check(cls: Any, name: str, params: Any, val: Any)
+        """
         Performs the specified check with the specified params on
         the specified value
         :param cls: pyoload.Check class
         :param name: The registerred name of the check
         :param params: The parameters to pass to the check
         :param val: The value to check
+
+        :returns: `None`
         """
         check = cls.checks_list.get(name)
         if check is None:
@@ -135,17 +142,17 @@ class Check:
         check(params, val)
 
     class CheckNameAlreadyExistsError(ValueError):
-        """class CheckNameAlreadyExistsError(ValueError)
+        """
         The check name to be registerred already exists
         """
 
     class CheckDoesNotExistError(ValueError):
-        """class CheckDoesNotExistError(ValueError)
+        """
         The specified check does not exist
         """
 
     class CheckError(Exception):
-        """class CheckError(Exception)
+        """
         Error occurring during check call.
         """
 
@@ -215,25 +222,32 @@ def instance_check(param, val):
 
 
 class Checks(PyoloadAnnotation):
-    """class Checks(Annotation)
-    Pyoload annotation holding several checks
+    """
+    Pyoload annotation holding several checks called on typechecking.
     """
 
     def __init__(
         self: PyoloadAnnotation,
         **checks: dict[str, Callable[Any, Any]],
-    ):
-        """def __init__(self: PyoloadAnnotation, **checks)
+    ) -> Any:
+        """
         crates the check object,e.g
 
         class foo:
             bar = pyoload.Checks(gt=4)
+
+        :param self: self
+        :param checks: the checks to be done.
+
+        :returns: self
         """
         self.checks = checks
 
     def __call__(self: PyoloadAnnotation, val: Any) -> None:
-        """def __call__(self: PyoloadAnnotation, val: Any) -> None
+        """
         Performs the several checks contained in `self.checks`
+        :param self: self
+        :param val: The value to check
         """
         for name, params in self.checks.items():
             Check.check(name, params, val)
@@ -249,7 +263,7 @@ class Checks(PyoloadAnnotation):
 
 
 class CheckedAttr(Checks):
-    """class CheckedAttr(Checks)
+    """
     A descriptor class providing attributes which are checked on assignment
     """
 
@@ -257,20 +271,20 @@ class CheckedAttr(Checks):
     value: Any
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
-        """def __set_name__(self: Any, obj: Any, name: str, typo: Any = None)
-        setd the name of the attribute
+        """
+        sets the name of the attribute
         """
         self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):
-        """def __get__(self: Any, obj: Any, type: Any)
+        """
         returns the value in `self.value`
         """
         return self.value
 
     def __set__(self: Any, obj: Any, value: Any):
-        """def __set__(self: Any, obj: Any, value: Any)
+        """
         Performs checks then assigns the new value
         """
         self(value)
@@ -278,18 +292,23 @@ class CheckedAttr(Checks):
 
 
 class Cast(PyoloadAnnotation):
-    """class Cast(PyoloadAnnotation)
+    """
     Holds a cast object which describes the casts to be performed
     """
     @staticmethod
     def cast(val: Any, totype: Any) -> Any:
-        """def cast(val: Any, totype: Any) -> Any
+        """
         The gratest deal.
         Recursively casts the given value to the specified structure or type
         e.g
-        Cast.cast({ 1: 2}, dict[str, float])
 
-        returns: {'1': 2.0}
+        >>> Cast.cast({ 1: 2}, dict[str, float])
+        {'1': 2.0}
+
+        :param val: the value to cast
+        :param totype: The type structure to be casted to.
+
+        :returns: An instance of the casting type
         """
         if isinstance(totype, GenericAlias):
             if totype.__origin__ == dict:
@@ -320,13 +339,29 @@ class Cast(PyoloadAnnotation):
     def __init__(self: PyoloadAnnotation, type: Any):
         """
         creates a casting object for the specified type
+        The object can then be used anywhere for casting, e.g
+
+        >>> caster = Cast(dict[str, list[tuple[float]]])
+        >>> raw = {
+        ...     4: (
+        ...         ['1.5', 10],
+        ...         [10, '1.5'],
+        ...     )
+        ... }
+        >>> caster(raw)
+        {'4': [(1.5, 10.0), (10.0, 1.5)]}
+
+        :param self: self
+        :param type: The type to which the object will cast
+
+        :returns: self
         """
         self.type = type
 
     def __call__(self: PyoloadAnnotation, val: Any):
         """
         Calls to the type specified in the object `.type` attribute
-        :param self: The cast onject
+        :param self: self
         :param val: the value to be casted
 
         :return: The casted value
@@ -343,8 +378,8 @@ class Cast(PyoloadAnnotation):
 
 
 class CastedAttr(Cast):
-    """class CastedAttr(Cast)
-    A descriptor class providing attributes which are checked on assignment
+    """
+    A descriptor class providing attributes which are casted on assignment
     """
 
     name: str
@@ -423,17 +458,31 @@ def typeMatch(val: Any, spec: Any) -> bool:
 def get_module(obj: Any):
     """
     gets the module to which an object, function or class belongs
+    e.g
+
+    >>> class foo:
+    ...     def bar(self):
+    ...         pass
+    ...
+    >>> get_name(foo)
+    '__main__.foo'
+    >>> get_name(foo.bar)
+    '__main__.foo.bar'
+
     :param obj: the object
+
     :returns: the module
     """
     return sys.modules[obj.__module__]
 
 
-def resolveAnnotations(obj: Any) -> None:
+def resolveAnnotations(obj: Type | Callable) -> None:
     """
     Evaluates all the stringized annotations of the argument
 
-    :param obj: The object
+
+    :param obj: The object of which to evaluate annotations
+
     :returns: None
     """
     if isclass(obj) or hasattr(obj, '__class__'):
@@ -471,7 +520,8 @@ def annotate(func: Callable, oload: bool = False) -> Callable:
     returns a wrapper over the passed function
     which typechecks arguments on each call
     :param func: the function to annotate
-    :param oload: internal
+    :param oload: internal, if set to True, will raise
+                  `InternalAnnotationError` on type mismatch
 
     :returns: the wrapper function
     """
@@ -541,14 +591,23 @@ def annotate(func: Callable, oload: bool = False) -> Callable:
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def overload(func: Callable, name: str | None = None):
+def overload(func: Callable, name: str | None = None) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
     and finds the function instance with same name which does not raise
-    an `InternalAnnotationError` exception
+    an `InternalAnnotationError` exception.
+    if `func` is a string, overload will return another registering function
+    which will register to the specified name.
+
+    The decorated function takes some new attributes:
+    - __pyod_annotate__: The raw function
+    - __pyod_overloads__: The list of the function overloads
+    - overload(func: Callable)
+      registers the passed function under the same name.
+
     :param func: the function to annotate
-    :param oload: internal
+    :param name: optional name under which to register.
 
     :return: the wrapper function
     """
@@ -587,13 +646,16 @@ def annotateClass(cls: Any):
     """
     Annotates a class object, wrapping and replacing over it's __setattr__
     and typechecking over each attribute assignment.
-    If no annotation for the passed object found it sets it to `type(val)`
+    If no annotation for the passed object found it ignores it till it is
+    found
+    it recursively annotates the classes methods except `__pyod_norecur__`
+    attribute is defines
     """
     if not hasattr(cls, '__annotations__'):
         cls.__annotations__ = {}
     if isinstance(cls, bool):
         return partial(annotate, recur=cls)
-    recur = not hasattr(cls, '__annotate_norecur__')
+    recur = not hasattr(cls, '__pyod_norecur__')
     setter = cls.__setattr__
     if recur:
         for x in dir(cls):
@@ -611,8 +673,6 @@ def annotateClass(cls: Any):
 
     @wraps(cls.__setattr__)
     def new_setter(self: Any, name: str, value: Any) -> Any:
-        """def new_setter(self: Any, name: str, value: Any) -> Any
-        """
         if any(isinstance(x, str) for x in self.__annotations__.values()):
             resolveAnnotations(self)
 
