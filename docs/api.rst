@@ -1,5 +1,5 @@
 ==================================================
-Usage
+API
 ==================================================
 
 --------------------------------------------------
@@ -55,5 +55,20 @@ The list of the annotated overloads of the function
 The dictionary key under which the overloads was registered.
 
 --------------------------------------------------
-:python:`.`
+:python:`pyoload.Cast(Type)`
 --------------------------------------------------
+
+It receives a type as argument, it is the type
+inwhich the object will cast.
+
+>>> from pyoload import Cast
+>>> caster = Cast(dict[str, list[tuple[float]])
+  File "<stdin>", line 1
+    caster = Cast(dict[str, list[tuple[float]])
+                                              ^
+SyntaxError: closing parenthesis ')' does not match opening parenthesis '['
+>>> from pyoload import Cast
+>>> caster = Cast(dict[str, list[tuple[float]]])
+>>> object = {237: (['1.0', 5], (5.0, 6.0))}
+>>> caster(object)
+{'237': [(1.0, 5.0), (5.0, 6.0)]}
