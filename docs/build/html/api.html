@@ -95,129 +95,203 @@
 <div id="content" role="main">
 <section id="module-pyoload">
 <span id="api"></span><h1>API<a class="headerlink" href="#module-pyoload" title="Link to this heading">¶</a></h1>
-<p>pyoload</p>
-<p>pyoload is a little python script to incorporate some features of
-annotation and typechecking in python.</p>
+<dl class="simple">
+<dt>pyoload is a little python script to incorporate some features of</dt><dd><p>typechecking and casting in python.</p>
+</dd>
+</dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.AnnotationError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">AnnotationError</span></span><a class="headerlink" href="#pyoload.AnnotationError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.AnnotationError'">¶</a></dt>
-<dd><p>class AnnotationError(ValueError)
-base exception for most pyoload errors</p>
+<dd><p>base exception for most pyoload errors</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.AnnotationErrors">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">AnnotationErrors</span></span><a class="headerlink" href="#pyoload.AnnotationErrors" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.AnnotationErrors'">¶</a></dt>
-<dd><p>class AnnotationErrors(AnnotationError)
-Hosts a list of AnnotationError</p>
+<dd><p>Hosts a list of AnnotationError</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.AnnotationResolutionError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">AnnotationResolutionError</span></span><a class="headerlink" href="#pyoload.AnnotationResolutionError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.AnnotationResolutionError'">¶</a></dt>
-<dd><p>class AnnotationResolutionError(AnnotationError)
-Annotations could not be resolved or evaluated.</p>
+<dd><p>Annotations could not be resolved or evaluated.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyoload.Cast">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.Cast" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Cast'">¶</a></dt>
-<dd><p>class Cast(PyoloadAnnotation)
-Holds a cast object which describes the casts to be performed</p>
-<p>creates a casting object for the specified type</p>
+<dd><p>Holds a cast object which describes the casts to be performed</p>
+<p>creates a casting object for the specified type
+The object can then be used anywhere for casting, e.g</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]]])</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">raw</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-3"><span class="gp">... </span>    <span class="mi">4</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="line-4"><span class="gp">... </span>        <span class="p">[</span><span class="s1">'1.5'</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+</span><span id="line-5"><span class="gp">... </span>        <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'1.5'</span><span class="p">],</span>
+</span><span id="line-6"><span class="gp">... </span>    <span class="p">)</span>
+</span><span id="line-7"><span class="gp">... </span><span class="p">}</span>
+</span><span id="line-8"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+</span><span id="line-9"><span class="go">{'4': [(1.5, 10.0), (10.0, 1.5)]}</span>
+</span></code></pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – self</p></li>
+<li><p><strong>type</strong> – The type to which the object will cast</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyoload.Cast.cast">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">totype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></span><a class="headerlink" href="#pyoload.Cast.cast" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Cast.cast'">¶</a></dt>
-<dd><p>def cast(val: Any, totype: Any) -&gt; Any
-The gratest deal.
+<dd><p>The gratest deal.
 Recursively casts the given value to the specified structure or type
-e.g
-Cast.cast({ 1: 2}, dict[str, float])</p>
-<p>returns: {‘1’: 2.0}</p>
+e.g</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">Cast</span><span class="o">.</span><span class="n">cast</span><span class="p">({</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span>
+</span><span id="line-2"><span class="go">{'1': 2.0}</span>
+</span></code></pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> – the value to cast</p></li>
+<li><p><strong>totype</strong> – The type structure to be casted to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the casting type</p>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyoload.CastedAttr">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">CastedAttr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.CastedAttr" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.CastedAttr'">¶</a></dt>
-<dd><p>class CastedAttr(Cast)
-A descriptor class providing attributes which are checked on assignment</p>
-<p>creates a casting object for the specified type</p>
+<dd><p>A descriptor class providing attributes which are casted on assignment</p>
+<p>creates a casting object for the specified type
+The object can then be used anywhere for casting, e.g</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]]])</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">raw</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-3"><span class="gp">... </span>    <span class="mi">4</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="line-4"><span class="gp">... </span>        <span class="p">[</span><span class="s1">'1.5'</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+</span><span id="line-5"><span class="gp">... </span>        <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'1.5'</span><span class="p">],</span>
+</span><span id="line-6"><span class="gp">... </span>    <span class="p">)</span>
+</span><span id="line-7"><span class="gp">... </span><span class="p">}</span>
+</span><span id="line-8"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+</span><span id="line-9"><span class="go">{'4': [(1.5, 10.0), (10.0, 1.5)]}</span>
+</span></code></pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – self</p></li>
+<li><p><strong>type</strong> – The type to which the object will cast</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.CastingError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">CastingError</span></span><a class="headerlink" href="#pyoload.CastingError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.CastingError'">¶</a></dt>
-<dd><p>class CastingError(TypeError)
-Error during casting</p>
+<dd><p>Error during casting</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyoload.Check">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Check</span></span><a class="headerlink" href="#pyoload.Check" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check'">¶</a></dt>
-<dd><p>class Check
-A class basicly abstract which holds registerred checks in pyoload</p>
+<dd><p>A class basicly abstract which holds registerred checks in pyoload</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.Check.CheckDoesNotExistError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CheckDoesNotExistError</span></span><a class="headerlink" href="#pyoload.Check.CheckDoesNotExistError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.CheckDoesNotExistError'">¶</a></dt>
-<dd><p>class CheckDoesNotExistError(ValueError)
-The specified check does not exist</p>
+<dd><p>The specified check does not exist</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.Check.CheckError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CheckError</span></span><a class="headerlink" href="#pyoload.Check.CheckError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.CheckError'">¶</a></dt>
-<dd><p>class CheckError(Exception)
-Error occurring during check call.</p>
+<dd><p>Error occurring during check call.</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.Check.CheckNameAlreadyExistsError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CheckNameAlreadyExistsError</span></span><a class="headerlink" href="#pyoload.Check.CheckNameAlreadyExistsError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.CheckNameAlreadyExistsError'">¶</a></dt>
-<dd><p>class CheckNameAlreadyExistsError(ValueError)
-The check name to be registerred already exists</p>
+<dd><p>The check name to be registerred already exists</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyoload.Check.check">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#pyoload.Check.check" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.check'">¶</a></dt>
-<dd><p>def check(cls: Any, name: str, params: Any, val: Any)
-Performs the specified check with the specified params on
+<dd><p>Performs the specified check with the specified params on
 the specified value
 :param cls: pyoload.Check class
 :param name: The registerred name of the check
 :param params: The parameters to pass to the check
 :param val: The value to check</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>None</cite></p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyoload.Check.register">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></span><a class="headerlink" href="#pyoload.Check.register" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.register'">¶</a></dt>
-<dd><p>def register(cls, name)
-returns a callable which registers a new checker mathod
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyoload.Check.register" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.register'">¶</a></dt>
+<dd><p>returns a callable which registers a new checker method
 :param cls: the Check class
-:param name: the name to be registerred as</p>
+:param name: the name to be registerred as.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a function which registers the check under the name</p>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyoload.CheckedAttr">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">CheckedAttr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">checks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.CheckedAttr" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.CheckedAttr'">¶</a></dt>
-<dd><p>class CheckedAttr(Checks)
-A descriptor class providing attributes which are checked on assignment</p>
-<p>def __init__(self: PyoloadAnnotation, <a href="#id1"><span class="problematic" id="id2">**</span></a>checks)
-crates the check object,e.g</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">CheckedAttr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">checks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.CheckedAttr" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.CheckedAttr'">¶</a></dt>
+<dd><p>A descriptor class providing attributes which are checked on assignment</p>
+<p>crates the check object,e.g</p>
 <dl class="simple">
 <dt>class foo:</dt><dd><p>bar = pyoload.Checks(gt=4)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – self</p></li>
+<li><p><strong>checks</strong> – the checks to be done.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyoload.Checks">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">checks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.Checks" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Checks'">¶</a></dt>
-<dd><p>class Checks(Annotation)
-Pyoload annotation holding several checks</p>
-<p>def __init__(self: PyoloadAnnotation, <a href="#id3"><span class="problematic" id="id4">**</span></a>checks)
-crates the check object,e.g</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">checks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.Checks" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Checks'">¶</a></dt>
+<dd><p>Pyoload annotation holding several checks called on typechecking.</p>
+<p>crates the check object,e.g</p>
 <dl class="simple">
 <dt>class foo:</dt><dd><p>bar = pyoload.Checks(gt=4)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – self</p></li>
+<li><p><strong>checks</strong> – the checks to be done.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.InternalAnnotationError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">InternalAnnotationError</span></span><a class="headerlink" href="#pyoload.InternalAnnotationError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.InternalAnnotationError'">¶</a></dt>
-<dd><p>class InternalAnnotationError(Exception)
-<strong>internam</strong>
+<dd><p><strong>internal</strong>
 raised by overloads on type mismatch</p>
 </dd></dl>
 <dl class="py exception">
@@ -229,14 +303,12 @@ Error in or during overload</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyoload.PyoloadAnnotation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">PyoloadAnnotation</span></span><a class="headerlink" href="#pyoload.PyoloadAnnotation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.PyoloadAnnotation'">¶</a></dt>
-<dd><p>class PyoloadAnnotation
-A parent class for pyoload extra annotations</p>
+<dd><p>A parent class for pyoload extra annotations as <cite>Cast</cite> and <cite>Values</cite></p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyoload.Values">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.Values" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Values'">¶</a></dt>
-<dd><p>class Values(PyoloadAnnotation, tuple)
-A tuple subclass which holds several values as possible annotations</p>
+<dd><p>A tuple subclass which holds several values as possible annotations</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.annotate">
@@ -244,7 +316,7 @@ A tuple subclass which holds several values as possible annotations</p>
 <dd><p>returns a wrapper over the passed function
 which typechecks arguments on each call
 :param func: the function to annotate
-:param oload: internal</p>
+:param oload: internal, if set to True, will raise     <cite>InternalAnnotationError</cite> on type mismatch</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>the wrapper function</p>
@@ -256,44 +328,79 @@ which typechecks arguments on each call
 <span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">annotateClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.annotateClass" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.annotateClass'">¶</a></dt>
 <dd><p>Annotates a class object, wrapping and replacing over it’s __setattr__
 and typechecking over each attribute assignment.
-If no annotation for the passed object found it sets it to <cite>type(val)</cite></p>
+If no annotation for the passed object found it ignores it till it is
+found
+it recursively annotates the classes methods except <cite>__pyod_norecur__</cite>
+attribute is defines</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.get_module">
 <span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">get_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.get_module" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.get_module'">¶</a></dt>
 <dd><p>gets the module to which an object, function or class belongs
-:param obj: the object
-:returns: the module</p>
+e.g</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">foo</span><span class="p">:</span>
+</span><span id="line-2"><span class="gp">... </span>    <span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-3"><span class="gp">... </span>        <span class="k">pass</span>
+</span><span id="line-4"><span class="gp">...</span>
+</span><span id="line-5"><span class="gp">&gt;&gt;&gt; </span><span class="n">get_name</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+</span><span id="line-6"><span class="go">'__main__.foo'</span>
+</span><span id="line-7"><span class="gp">&gt;&gt;&gt; </span><span class="n">get_name</span><span class="p">(</span><span class="n">foo</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
+</span><span id="line-8"><span class="go">'__main__.foo.bar'</span>
+</span></code></pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> – the object</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the module</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.get_name">
-<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcOrCls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.get_name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.get_name'">¶</a></dt>
-<dd><p>def get_name(funcOrCls: Any)
-Gives a class or function name, possibly unique gotten from
-it’s module name and qualifier name</p>
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcOrCls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#pyoload.get_name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.get_name'">¶</a></dt>
+<dd><p>Gives a class or function name, possibly unique gotten from
+it’s module name and qualifier name
+:param funcOrCls: The object who’s name to return</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>modulename + qualname</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.overload">
-<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">overload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.overload" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.overload'">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">overload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.overload" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.overload'">¶</a></dt>
 <dd><p>returns a wrapper over the passed function
 which typechecks arguments on each call
 and finds the function instance with same name which does not raise
-an <cite>InternalAnnotationError</cite> exception
-:param func: the function to annotate
-:param oload: internal</p>
+an <cite>InternalAnnotationError</cite> exception.
+if <cite>func</cite> is a string, overload will return another registering function
+which will register to the specified name.</p>
+<p>The decorated function takes some new attributes:
+- __pyod_annotate__: The raw function
+- __pyod_overloads__: The list of the function overloads
+- overload(func: Callable) registers the passed function under the same       name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>the wrapper function</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> – the function to annotate</p></li>
+<li><p><strong>name</strong> – optional name under which to register.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the wrapper function</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.resolveAnnotations">
-<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">resolveAnnotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#pyoload.resolveAnnotations" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.resolveAnnotations'">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">resolveAnnotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><span class="pre">Type</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#pyoload.resolveAnnotations" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.resolveAnnotations'">¶</a></dt>
 <dd><p>Evaluates all the stringized annotations of the argument</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The object</p>
+<dd class="field-odd"><p><strong>obj</strong> – The object of which to evaluate annotations</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>

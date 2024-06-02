@@ -1,13 +1,16 @@
-"""pyoload
-
-pyoload is a little python script to incorporate some features of
-annotation and typechecking in python.
-
 """
-from typing import Any, GenericAlias, Callable, Type
-from types import UnionType
-from functools import wraps, partial
+pyoload is a little python script to incorporate some features of
+ typechecking and casting in python.
+"""
+from functools import partial
+from functools import wraps
 from inspect import isclass
+from types import NoneType
+from types import UnionType
+from typing import Any
+from typing import Callable
+from typing import GenericAlias
+from typing import Type
 
 import sys
 
@@ -100,7 +103,10 @@ class Check:
         cls.register(cls.name, cls.__call__)
 
     @classmethod
-    def register(cls: Any, name: str) -> Callable[Callable[Any, Any]]:
+    def register(
+        cls: Any,
+        name: str,
+    ) -> Callable[[Callable[[Any, Any], NoneType]], Callable]:
         """
         returns a callable which registers a new checker method
         :param cls: the Check class
@@ -228,7 +234,7 @@ class Checks(PyoloadAnnotation):
 
     def __init__(
         self: PyoloadAnnotation,
-        **checks: dict[str, Callable[Any, Any]],
+        **checks: dict[str, Callable[[Any, Any], NoneType]],
     ) -> Any:
         """
         crates the check object,e.g
@@ -520,8 +526,8 @@ def annotate(func: Callable, oload: bool = False) -> Callable:
     returns a wrapper over the passed function
     which typechecks arguments on each call
     :param func: the function to annotate
-    :param oload: internal, if set to True, will raise
-                  `InternalAnnotationError` on type mismatch
+    :param oload: internal, if set to True, will raise \
+    `InternalAnnotationError` on type mismatch
 
     :returns: the wrapper function
     """
@@ -603,8 +609,8 @@ def overload(func: Callable, name: str | None = None) -> Callable:
     The decorated function takes some new attributes:
     - __pyod_annotate__: The raw function
     - __pyod_overloads__: The list of the function overloads
-    - overload(func: Callable)
-      registers the passed function under the same name.
+    - overload(func: Callable) registers the passed function under the same \
+      name.
 
     :param func: the function to annotate
     :param name: optional name under which to register.

@@ -59,7 +59,7 @@ The dictionary key under which the overloads was registered.
 --------------------------------------------------
 
 It receives a type as argument, it is the type
-inwhich the object will cast.
+in which the object will cast.
 
 >>> from pyoload import Cast
 >>> caster = Cast(dict[str, list[tuple[float]])

@@ -14,6 +14,7 @@
 <link href="_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
+<link href="api.html" rel="next" title="API"/>
 <link href="examples.html" rel="prev" title="examples"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
@@ -68,28 +69,9 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="api.html"><code class="docutils literal notranslate"><span class="pre">AnnotationError</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.AnnotationErrors"><code class="docutils literal notranslate"><span class="pre">AnnotationErrors</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.AnnotationResolutionError"><code class="docutils literal notranslate"><span class="pre">AnnotationResolutionError</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.Cast"><code class="docutils literal notranslate"><span class="pre">Cast</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.CastedAttr"><code class="docutils literal notranslate"><span class="pre">CastedAttr</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.CastingError"><code class="docutils literal notranslate"><span class="pre">CastingError</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.Check"><code class="docutils literal notranslate"><span class="pre">Check</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.CheckedAttr"><code class="docutils literal notranslate"><span class="pre">CheckedAttr</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.Checks"><code class="docutils literal notranslate"><span class="pre">Checks</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.InternalAnnotationError"><code class="docutils literal notranslate"><span class="pre">InternalAnnotationError</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.OverloadError"><code class="docutils literal notranslate"><span class="pre">OverloadError</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.PyoloadAnnotation"><code class="docutils literal notranslate"><span class="pre">PyoloadAnnotation</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.Values"><code class="docutils literal notranslate"><span class="pre">Values</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.annotate"><code class="docutils literal notranslate"><span class="pre">annotate()</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.annotateClass"><code class="docutils literal notranslate"><span class="pre">annotateClass()</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.get_name"><code class="docutils literal notranslate"><span class="pre">get_name()</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.overload"><code class="docutils literal notranslate"><span class="pre">overload()</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.resolveAnnotations"><code class="docutils literal notranslate"><span class="pre">resolveAnnotations()</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pyoload.typeMatch"><code class="docutils literal notranslate"><span class="pre">typeMatch()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 </nav>
 </div>
@@ -155,7 +137,7 @@
 <section id="pyoload-cast-type">
 <h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></code><a class="headerlink" href="#pyoload-cast-type" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-cast-type'">¶</a></h2>
 <p>It receives a type as argument, it is the type
-inwhich the object will cast.</p>
+in which the object will cast.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">Cast</span>
 </span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span>
 </span><span id="line-3">  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>
