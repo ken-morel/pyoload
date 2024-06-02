@@ -18,9 +18,9 @@ sys.path.insert(0, mydir)
 
 # -- Project information -----------------------------------------------------
 
-project = "dashing"
-copyright = "2020, Federico Ceratto"
-author = "Federico Ceratto"
+project = "pyoload"
+copyright = "2024, ken-morel"
+author = "ken-morel"
 
 master_doc = "index"
 
