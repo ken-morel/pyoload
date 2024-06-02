@@ -1,6 +1,10 @@
 import pyoload
 
-from pyoload import *
+from pyoload import Any
+from pyoload import Check
+from pyoload import CheckedAttr
+from pyoload import Checks
+from pyoload import annotate
 
 assert pyoload.__version__ == '1.1.1'
 

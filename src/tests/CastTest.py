@@ -1,6 +1,10 @@
 import pyoload
 
-from pyoload import *
+from pyoload import Any
+from pyoload import Cast
+from pyoload import CastedAttr
+from pyoload import annotate
+from pyoload import typeMatch
 
 assert pyoload.__version__ == '1.1.1'
 
