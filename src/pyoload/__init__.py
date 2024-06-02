@@ -216,7 +216,10 @@ class Checks(PyoloadAnnotation):
     Pyoload annotation holding several checks
     """
 
-    def __init__(self: PyoloadAnnotation, **checks):
+    def __init__(
+        self: PyoloadAnnotation,
+        **checks: dict[str, Callable[Any, Any]]
+    ):
         """def __init__(self: PyoloadAnnotation, **checks)
         crates the check object,e.g
 
@@ -364,7 +367,7 @@ class CastedAttr(Cast):
         self.value = self(value)
 
 
-def typeMatch(val: Any, spec: type) -> bool:
+def typeMatch(val: Any, spec: Any) -> bool:
     """
     recursively checks if type matches
     :param val: The value to typecheck
@@ -535,7 +538,7 @@ def annotate(func: Callable, oload: bool = False) -> Callable:
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def overload(func: callable, name: str | None = None):
+def overload(func: Callable, name: str | None = None):
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -554,7 +557,7 @@ def overload(func: callable, name: str | None = None):
         __overloads__[name] = []
     __overloads__[name].append(annotate(func, True))
 
-    @wraps(func)
+    @wraps(func: Callable)
     def wrapper(*args, **kw):
         for f in __overloads__[name]:
             try:
@@ -577,7 +580,7 @@ def overload(func: callable, name: str | None = None):
     return wrapper
 
 
-def annotateClass(cls):
+def annotateClass(cls: Any):
     """
     Annotates a class object, wrapping and replacing over it's __setattr__
     and typechecking over each attribute assignment.
@@ -611,8 +614,7 @@ def annotateClass(cls):
             resolveAnnotations(self)
 
         if name not in self.__annotations__:
-            if value is not None:
-                self.__annotations__[name] = type(value)
+            return setter(self, name, value)  # do not check if no annotations
         elif isinstance(self.__annotations__[name], Cast):
             return setter(self, name, self.__annotations__[name](value))
         elif not typeMatch(value, self.__annotations__[name]):
@@ -626,5 +628,5 @@ def annotateClass(cls):
     return cls
 
 
-__version__ = '1.1.2'
+__version__ = '1.1.3'
 __author__ = 'ken-morel'

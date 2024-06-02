@@ -43,8 +43,8 @@ a typechecker function which typechecks the passed value on each assignment.
 It also calls annotate on each of it's methods, except the class has a
 `__annotate_norecur__` attribute.
 
-But if the assigned attribute does not yet have annotations, it gets them using
-`type(val)` and adds them to the annotations.
+Newer from version 1.1.3, pyoload ignores attributes with no annotations and does not check
+them.
 
 ```python
 from pyoload import *
@@ -76,8 +76,8 @@ And on each call it simply loops through each function entry, while
 it catches a `pyoload.InternalAnnotationError` which is raised when
 the special `is_overload` is set to true
 
-> tip
-  you may raise `pyoload.InternalAnnotationError` inside an overloaded
+> [!TIP]
+> you may raise `pyoload.InternalAnnotationError` inside an overloaded
   function after carrying out some other checks and pyoload will switch to the
   next oveload.
 
@@ -94,6 +94,11 @@ def foo(b: str, c: float):
 def foo_hello(d: dict[str, list[int]]):
     ...
 ```
+
+> [!TIP]
+> you may raise `pyoload.InternalAnnotationError` inside an overloaded
+  function after carrying out some other checks and pyoload will switch to the
+  next oveload.
 
 ## type checking with `pyoload.typeMatch(val, type)`
 
@@ -121,7 +126,7 @@ def foo(a: str):
 foo(3.5)  # '3.5'
 ```
 
-### casting recursiion
+### casting recursion
 
 Using recursion it supports Generic Aliases of `dict` and builtin iterable
 types as `list` and `tuple`.
