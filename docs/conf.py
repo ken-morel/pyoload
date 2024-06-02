@@ -35,3 +35,9 @@ html_theme = "sphinxawesome_theme"
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
+rst_prolog = """\
+.. role:: python(code)
+  :language: python
+
+"""

@@ -37,14 +37,10 @@ usage
 `pyoload.annotate` used as a decorator over a simple function
 it returns a wrapper function which on each call
 - get the function's annotations
-- resolve the annotations if stringified, on error raises
-  a `pyoload.AnnotationResolutionError`
-- check for matches between the passed arguments and annotations with
-  the recursive `pyoload.typeMatch` function
-- if all matches, then calls the function, else raises a
-  `pyoload.AnnotationError`
-- if the return annotation specified then returns it else raises
-  an annotation error.
+- resolve the annotations if stringified, on error raises a `pyoload.AnnotationResolutionError`
+- check for matches between the passed arguments and annotations with the recursive `pyoload.typeMatch` function
+- if all matches, then calls the function, else raises a `pyoload.AnnotationError`
+- if the return annotation specified then returns it else raises an annotation error.
 
 Example
 

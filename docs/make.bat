@@ -4,13 +4,13 @@ pushd %~dp0
 
 REM Command file for Sphinx documentation
 
-if "%SPHINXBUILD%" == "" (
-	set SPHINXBUILD=sphinx-build
+if %SPHINXBUILD% == "" (
+	set "SPHINXBUILD=sphinx-build"
 )
 
 if "%1" == "" goto help
 
-"%SPHINXBUILD%" >NUL 2>NUL
+%SPHINXBUILD% >NUL 2>NUL
 if errorlevel 9009 (
 	echo.
 	echo.The 'sphinx-build' command was not found. Make sure you have Sphinx
@@ -23,11 +23,11 @@ if errorlevel 9009 (
 	exit /b 1
 )
 
-"%SPHINXBUILD%" -M "%1" "." "build" "%SPHINXOPTS%" "%O%"
+%SPHINXBUILD% -M "%1" "." "build" %SPHINXOPTS% %O%
 goto end
 
 :help
-"%SPHINXBUILD%" -M help . build %SPHINXOPTS% %O%
+%SPHINXBUILD% -M help . build %SPHINXOPTS% %O%
 
 :end
 popd
