@@ -79,7 +79,6 @@ print(Cast(tuple[int])("678936798"))
 class Person:
     age = CheckedAttr(gt=0)
     phone = CastedAttr(tuple[int])
-
     def __init__(self, age, phone):
         self.age = age
         self.phone = phone

@@ -68,7 +68,6 @@ class Values(PyoloadAnnotation, tuple):
         """
         Checks if the tuple containes the specified value.
 
-        :param self: the `Values` object
         :param val: the value to be checked
 
         :returns: if the value `val` is contained in `self`
@@ -239,10 +238,9 @@ class Checks(PyoloadAnnotation):
         """
         crates the check object,e.g
 
-        class foo:
-            bar = pyoload.Checks(gt=4)
+        >>> class foo:
+        ...    bar: pyoload.Checks(gt=4)
 
-        :param self: self
         :param checks: the checks to be done.
 
         :returns: self
@@ -253,7 +251,6 @@ class Checks(PyoloadAnnotation):
         """
         Performs the several checks contained in `self.checks`
 
-        :param self: self
         :param val: The value to check
         """
         for name, params in self.checks.items():
@@ -276,6 +273,21 @@ class CheckedAttr(Checks):
 
     name: str
     value: Any
+
+    def __init__(
+        self: Any,
+        **checks: dict[str, Callable[[Any, Any], NoneType]]
+    ) -> Any:
+        """
+        Creates a Checked Attribute descriptor whick does checking on each
+        assignment, E.G
+
+        >>> class foo:
+        ...     bar = CheckedAttr(gt=4)
+
+        :param checks: The checks to perform
+        """
+        super().__init__(**checks)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
         """
@@ -358,7 +370,6 @@ class Cast(PyoloadAnnotation):
         >>> caster(raw)
         {'4': [(1.5, 10.0), (10.0, 1.5)]}
 
-        :param self: self
         :param type: The type to which the object will cast
 
         :returns: self
@@ -368,7 +379,7 @@ class Cast(PyoloadAnnotation):
     def __call__(self: PyoloadAnnotation, val: Any):
         """
         Calls to the type specified in the object `.type` attribute
-        :param self: self
+
         :param val: the value to be casted
 
         :return: The casted value
@@ -391,6 +402,29 @@ class CastedAttr(Cast):
 
     name: str
     value: Any
+
+    def __init__(self: Cast, type: Any) -> Cast:
+        """
+        >>> class Person:
+        ...     age = CheckedAttr(gt=0)
+        ...     phone = CastedAttr(tuple[int])
+        ...     def __init__(self, age, phone):
+        ...         self.age = age
+        ...         self.phone = phone
+        ...
+        >>> temeze = Person(17, "678936798")
+        >>>
+        >>> print(temeze.age)
+        17
+        >>> print(temeze.phone)
+        (6, 7, 8, 9, 3, 6, 7, 9, 8)
+        >>>
+        >>> mballa = Person(0, "123456")
+        Traceback (most recent call last):
+          ...
+        pyoload.Check.CheckError: 0 not gt 0
+        """
+        super().__init__(type)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
         """def __set_name__(self: Any, obj: Any, name: str, typo: Any = None)
