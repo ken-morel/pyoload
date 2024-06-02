@@ -26,3 +26,18 @@ cassy(7, 4.1)
 """
 mentor-no = 694190032
 """
+
+from pyoload import *
+
+@annotate
+class Person:
+    age: int
+
+    def __init__(self: Any, age: int, name: str):
+        self.age = age
+        self.name = name
+
+
+djamago = Person(15, 'djamago')
+
+print(djamago.__annotations__)

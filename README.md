@@ -33,6 +33,52 @@ def bar(foo: str):
     ...
 ```
 
-raises `pyoload.AnnotationError` when
+raises `pyoload.AnnotationError` when type mismatch
+
+### classes
+
+When annotating a class, pyoload wraps the classes `__setattr__` with
+a typechecker function which typechecks the passed value on each assignment.
+
+It also calls annotate on each of it's methods, except the class has a
+`__annotate_norecur__` attribute.
+
+But if the attribute does not yes have annotations, it gets it using
+`type(val)` and adds it to the annotations.
+
+```python
+from pyoload import *
+
+@annotate
+class Person:
+    age: int
+
+    def __init__(self: Any, age: int, name: str):
+        self.age = age
+        self.name = name
+
+
+djamago = Person(15, 'djamago')  # {'age': <class 'int'>, 'name': <class 'str'>}
+
+print(djamago.__annotations__)
+```
+
+## `pyoload.overload`
+
+```python
+@overload
+def foo(a: int):
+    ...
+
+@overload
+def foo(b: str, c: float):
+    ...
+
+foo.overload
+def foo_hello(d: dict[str, list[int]]):
+    ...
+```
+
+## `pyoload.ov`
 
 
