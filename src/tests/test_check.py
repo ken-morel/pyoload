@@ -6,7 +6,7 @@ from pyoload import CheckedAttr
 from pyoload import Checks
 from pyoload import annotate
 
-assert pyoload.__version__ == '1.1.1'
+assert pyoload.__version__ == '1.1.2'
 
 
 @annotate

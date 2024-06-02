@@ -75,8 +75,8 @@ setup(
 
         # 'Development Status :: 1 - Planning',
         # 'Development Status :: 2 - Pre-Alpha',
-        # 'Development Status :: 3 - Alpha',
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
+        # 'Development Status :: 4 - Beta',
         # 'Development Status :: 5 - Production/Stable',
         # 'Development Status :: 6 - Mature',
         # 'Development Status :: 7 - Inactive',
@@ -90,6 +90,8 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+
+        'Natural Language :: English',
 
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
