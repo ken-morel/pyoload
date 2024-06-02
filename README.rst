@@ -25,7 +25,7 @@ pyoload
 `pyoload` provides an intuitive and easy way to add type and value checking
 to function arguments and class attributes.
 
-view [readthedocs](https://pyoload.readthedocs.io) for an extended documentation
+view `readthedocs <https://pyoload.readthedocs.io>`_ for an extended documentation
 
 --------------------------------------------------
 usage
