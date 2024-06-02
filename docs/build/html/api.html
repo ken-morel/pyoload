@@ -7,9 +7,9 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
-<title>API | pyoload 1.1.3 documentation</title>
-<meta content="API | pyoload 1.1.3 documentation" property="og:title"/>
-<meta content="API | pyoload 1.1.3 documentation" name="twitter:title"/>
+<title>&lt;no title&gt; | pyoload 1.1.3 documentation</title>
+<meta content="&lt;no title&gt; | pyoload 1.1.3 documentation" property="og:title"/>
+<meta content="&lt;no title&gt; | pyoload 1.1.3 documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=8d216cef" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="search.html" rel="search" title="Search"/>
@@ -69,8 +69,28 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">AnnotationError</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.AnnotationErrors"><code class="docutils literal notranslate"><span class="pre">AnnotationErrors</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.AnnotationResolutionError"><code class="docutils literal notranslate"><span class="pre">AnnotationResolutionError</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.Cast"><code class="docutils literal notranslate"><span class="pre">Cast</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.CastedAttr"><code class="docutils literal notranslate"><span class="pre">CastedAttr</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.CastingError"><code class="docutils literal notranslate"><span class="pre">CastingError</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.Check"><code class="docutils literal notranslate"><span class="pre">Check</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.CheckedAttr"><code class="docutils literal notranslate"><span class="pre">CheckedAttr</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.Checks"><code class="docutils literal notranslate"><span class="pre">Checks</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.InternalAnnotationError"><code class="docutils literal notranslate"><span class="pre">InternalAnnotationError</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.OverloadError"><code class="docutils literal notranslate"><span class="pre">OverloadError</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.PyoloadAnnotation"><code class="docutils literal notranslate"><span class="pre">PyoloadAnnotation</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.Values"><code class="docutils literal notranslate"><span class="pre">Values</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.annotate"><code class="docutils literal notranslate"><span class="pre">annotate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.annotateClass"><code class="docutils literal notranslate"><span class="pre">annotateClass()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.get_name"><code class="docutils literal notranslate"><span class="pre">get_name()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.overload"><code class="docutils literal notranslate"><span class="pre">overload()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.resolveAnnotations"><code class="docutils literal notranslate"><span class="pre">resolveAnnotations()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pyoload.typeMatch"><code class="docutils literal notranslate"><span class="pre">typeMatch()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">usage</a></li>
 </ul>
 </nav>
 </div>
@@ -90,82 +110,259 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">API</span>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">&lt;no title&gt;</span>
 </nav>
 <div id="content" role="main">
-<section id="api">
-<h1>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h1>
-<section id="pyoload-annotate">
-<h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">annotate</span><span class="p">()</span></code><a class="headerlink" href="#pyoload-annotate" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-annotate'">¶</a></h2>
-<p>It is a simple decorator.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span id="line-2">
-</span><span id="line-3"><span class="nd">@annotate</span>
-</span><span id="line-4"><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">arg1</span><span class="p">:</span> <span class="n">typ1</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetType</span><span class="p">:</span>
-</span><span id="line-5">    <span class="o">...</span>
-</span></code></pre></div>
-</div>
-<ul class="simple">
-<li><p>The return type is optional.</p></li>
-<li><p>The parameter annotations must be specified.</p></li>
-<li><p>It raises a <code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">AnnotationError</span></code> when type mismatch</p></li>
-</ul>
-<section id="pyod-annotate">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code><a class="headerlink" href="#pyod-annotate" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyod-annotate'">¶</a></h3>
-<p>The raw function which was annotated.</p>
-</section>
-</section>
-<section id="pyoload-overload">
-<h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">overload</span></code><a class="headerlink" href="#pyoload-overload" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-overload'">¶</a></h2>
-<p>It is another decorator</p>
-<p>It accepts all the arguments of annotate.</p>
-<p>The return function support these arguments:</p>
-<section id="id1">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code><a class="headerlink" href="#id1" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#id1'">¶</a></h3>
-<p>The raw function which was annotated.</p>
-</section>
-<section id="pyod-overloads">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads__</span></code><a class="headerlink" href="#pyod-overloads" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyod-overloads'">¶</a></h3>
-<p>The list of the annotated overloads of the function</p>
-</section>
-<section id="pyod-overloads-name">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads_name__</span></code><a class="headerlink" href="#pyod-overloads-name" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyod-overloads-name'">¶</a></h3>
-<p>The dictionary key under which the overloads was registered.</p>
-</section>
-</section>
-<section id="pyoload-cast-type">
-<h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></code><a class="headerlink" href="#pyoload-cast-type" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-cast-type'">¶</a></h2>
-<p>It receives a type as argument, it is the type
-inwhich the object will cast.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">Cast</span>
-</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span>
-</span><span id="line-3">  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>
-</span><span id="line-4"><span class="w">    </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span>
-</span><span id="line-5"><span class="w">                                              </span><span class="pm">^</span>
-</span><span id="line-6"><span class="gr">SyntaxError</span>: <span class="n">closing parenthesis ')' does not match opening parenthesis '['</span>
-</span><span id="line-7"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">Cast</span>
-</span><span id="line-8"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]]])</span>
-</span><span id="line-9"><span class="gp">&gt;&gt;&gt; </span><span class="nb">object</span> <span class="o">=</span> <span class="p">{</span><span class="mi">237</span><span class="p">:</span> <span class="p">([</span><span class="s1">'1.0'</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">))}</span>
-</span><span id="line-10"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
-</span><span id="line-11"><span class="go">{'237': [(1.0, 5.0), (5.0, 6.0)]}</span>
-</span></code></pre></div>
-</div>
-</section>
-</section>
+<p id="module-pyoload">pyoload</p>
+<p>pyoload is a little python script to incorporate some features of
+annotation and typechecking in python.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.AnnotationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">AnnotationError</span></span><a class="headerlink" href="#pyoload.AnnotationError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.AnnotationError'">¶</a></dt>
+<dd><p>class AnnotationError(ValueError)
+base exception for most pyoload errors</p>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.AnnotationErrors">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">AnnotationErrors</span></span><a class="headerlink" href="#pyoload.AnnotationErrors" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.AnnotationErrors'">¶</a></dt>
+<dd><p>class AnnotationErrors(AnnotationError)
+Hosts a list of AnnotationError</p>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.AnnotationResolutionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">AnnotationResolutionError</span></span><a class="headerlink" href="#pyoload.AnnotationResolutionError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.AnnotationResolutionError'">¶</a></dt>
+<dd><p>class AnnotationResolutionError(AnnotationError)
+Annotations could not be resolved or evaluated.</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyoload.Cast">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.Cast" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Cast'">¶</a></dt>
+<dd><p>class Cast(PyoloadAnnotation)
+Holds a cast object which describes the casts to be performed</p>
+<p>creates a casting object for the specified type</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyoload.Cast.cast">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">totype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></span><a class="headerlink" href="#pyoload.Cast.cast" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Cast.cast'">¶</a></dt>
+<dd><p>def cast(val: Any, totype: Any) -&gt; Any
+The gratest deal.
+Recursively casts the given value to the specified structure or type
+e.g
+Cast.cast({ 1: 2}, dict[str, float])</p>
+<p>returns: {‘1’: 2.0}</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyoload.CastedAttr">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">CastedAttr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.CastedAttr" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.CastedAttr'">¶</a></dt>
+<dd><p>class CastedAttr(Cast)
+A descriptor class providing attributes which are checked on assignment</p>
+<p>creates a casting object for the specified type</p>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.CastingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">CastingError</span></span><a class="headerlink" href="#pyoload.CastingError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.CastingError'">¶</a></dt>
+<dd><p>class CastingError(TypeError)
+Error during casting</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyoload.Check">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Check</span></span><a class="headerlink" href="#pyoload.Check" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check'">¶</a></dt>
+<dd><p>class Check
+A class basicly abstract which holds registerred checks in pyoload</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.Check.CheckDoesNotExistError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CheckDoesNotExistError</span></span><a class="headerlink" href="#pyoload.Check.CheckDoesNotExistError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.CheckDoesNotExistError'">¶</a></dt>
+<dd><p>class CheckDoesNotExistError(ValueError)
+The specified check does not exist</p>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.Check.CheckError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CheckError</span></span><a class="headerlink" href="#pyoload.Check.CheckError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.CheckError'">¶</a></dt>
+<dd><p>class CheckError(Exception)
+Error occurring during check call.</p>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.Check.CheckNameAlreadyExistsError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CheckNameAlreadyExistsError</span></span><a class="headerlink" href="#pyoload.Check.CheckNameAlreadyExistsError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.CheckNameAlreadyExistsError'">¶</a></dt>
+<dd><p>class CheckNameAlreadyExistsError(ValueError)
+The check name to be registerred already exists</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyoload.Check.check">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#pyoload.Check.check" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.check'">¶</a></dt>
+<dd><p>def check(cls: Any, name: str, params: Any, val: Any)
+Performs the specified check with the specified params on
+the specified value
+:param cls: pyoload.Check class
+:param name: The registerred name of the check
+:param params: The parameters to pass to the check
+:param val: The value to check</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyoload.Check.register">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></span><a class="headerlink" href="#pyoload.Check.register" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check.register'">¶</a></dt>
+<dd><p>def register(cls, name)
+returns a callable which registers a new checker mathod
+:param cls: the Check class
+:param name: the name to be registerred as</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyoload.CheckedAttr">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">CheckedAttr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">checks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.CheckedAttr" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.CheckedAttr'">¶</a></dt>
+<dd><p>class CheckedAttr(Checks)
+A descriptor class providing attributes which are checked on assignment</p>
+<p>def __init__(self: PyoloadAnnotation, <a href="#id1"><span class="problematic" id="id2">**</span></a>checks)
+crates the check object,e.g</p>
+<dl class="simple">
+<dt>class foo:</dt><dd><p>bar = pyoload.Checks(gt=4)</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyoload.Checks">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">checks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.Checks" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Checks'">¶</a></dt>
+<dd><p>class Checks(Annotation)
+Pyoload annotation holding several checks</p>
+<p>def __init__(self: PyoloadAnnotation, <a href="#id3"><span class="problematic" id="id4">**</span></a>checks)
+crates the check object,e.g</p>
+<dl class="simple">
+<dt>class foo:</dt><dd><p>bar = pyoload.Checks(gt=4)</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.InternalAnnotationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">InternalAnnotationError</span></span><a class="headerlink" href="#pyoload.InternalAnnotationError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.InternalAnnotationError'">¶</a></dt>
+<dd><p>class InternalAnnotationError(Exception)
+<strong>internam</strong>
+raised by overloads on type mismatch</p>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pyoload.OverloadError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">OverloadError</span></span><a class="headerlink" href="#pyoload.OverloadError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.OverloadError'">¶</a></dt>
+<dd><p>class OverloadError(TypeError)
+Error in or during overload</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyoload.PyoloadAnnotation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">PyoloadAnnotation</span></span><a class="headerlink" href="#pyoload.PyoloadAnnotation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.PyoloadAnnotation'">¶</a></dt>
+<dd><p>class PyoloadAnnotation
+A parent class for pyoload extra annotations</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyoload.Values">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.Values" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Values'">¶</a></dt>
+<dd><p>class Values(PyoloadAnnotation, tuple)
+A tuple subclass which holds several values as possible annotations</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.annotate">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">annotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">oload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.annotate" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.annotate'">¶</a></dt>
+<dd><p>returns a wrapper over the passed function
+which typechecks arguments on each call
+:param func: the function to annotate
+:param oload: internal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the wrapper function</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.annotateClass">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">annotateClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.annotateClass" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.annotateClass'">¶</a></dt>
+<dd><p>Annotates a class object, wrapping and replacing over it’s __setattr__
+and typechecking over each attribute assignment.
+If no annotation for the passed object found it sets it to <cite>type(val)</cite></p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.get_module">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">get_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.get_module" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.get_module'">¶</a></dt>
+<dd><p>gets the module to which an object, function or class belongs
+:param obj: the object
+:returns: the module</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.get_name">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcOrCls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.get_name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.get_name'">¶</a></dt>
+<dd><p>def get_name(funcOrCls: Any)
+Gives a class or function name, possibly unique gotten from
+it’s module name and qualifier name</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.overload">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">overload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.overload" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.overload'">¶</a></dt>
+<dd><p>returns a wrapper over the passed function
+which typechecks arguments on each call
+and finds the function instance with same name which does not raise
+an <cite>InternalAnnotationError</cite> exception
+:param func: the function to annotate
+:param oload: internal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the wrapper function</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.resolveAnnotations">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">resolveAnnotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#pyoload.resolveAnnotations" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.resolveAnnotations'">¶</a></dt>
+<dd><p>Evaluates all the stringized annotations of the argument</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> – The object</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.typeMatch">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">typeMatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#pyoload.typeMatch" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.typeMatch'">¶</a></dt>
+<dd><p>recursively checks if type matches
+:param val: The value to typecheck
+:param spec: The type specifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean</p>
+</dd>
+</dl>
+</dd></dl>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#pyoload-annotate'" class="reference internal" href="#pyoload-annotate"><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">annotate</span><span class="p">()</span></code></a><ul>
-<li><a :data-current="activeSection === '#pyod-annotate'" class="reference internal" href="#pyod-annotate"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code></a></li>
+<li></li>
+<li><a :data-current="activeSection === '#pyoload.AnnotationErrors'" class="reference internal" href="#pyoload.AnnotationErrors"><code class="docutils literal notranslate"><span class="pre">AnnotationErrors</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.AnnotationResolutionError'" class="reference internal" href="#pyoload.AnnotationResolutionError"><code class="docutils literal notranslate"><span class="pre">AnnotationResolutionError</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Cast'" class="reference internal" href="#pyoload.Cast"><code class="docutils literal notranslate"><span class="pre">Cast</span></code></a><ul>
+<li><a :data-current="activeSection === '#pyoload.Cast.cast'" class="reference internal" href="#pyoload.Cast.cast"><code class="docutils literal notranslate"><span class="pre">Cast.cast()</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#pyoload-overload'" class="reference internal" href="#pyoload-overload"><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">overload</span></code></a><ul>
-<li><a :data-current="activeSection === '#id1'" class="reference internal" href="#id1"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code></a></li>
-<li><a :data-current="activeSection === '#pyod-overloads'" class="reference internal" href="#pyod-overloads"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads__</span></code></a></li>
-<li><a :data-current="activeSection === '#pyod-overloads-name'" class="reference internal" href="#pyod-overloads-name"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads_name__</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.CastedAttr'" class="reference internal" href="#pyoload.CastedAttr"><code class="docutils literal notranslate"><span class="pre">CastedAttr</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.CastingError'" class="reference internal" href="#pyoload.CastingError"><code class="docutils literal notranslate"><span class="pre">CastingError</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Check'" class="reference internal" href="#pyoload.Check"><code class="docutils literal notranslate"><span class="pre">Check</span></code></a><ul>
+<li><a :data-current="activeSection === '#pyoload.Check.CheckDoesNotExistError'" class="reference internal" href="#pyoload.Check.CheckDoesNotExistError"><code class="docutils literal notranslate"><span class="pre">Check.CheckDoesNotExistError</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Check.CheckError'" class="reference internal" href="#pyoload.Check.CheckError"><code class="docutils literal notranslate"><span class="pre">Check.CheckError</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Check.CheckNameAlreadyExistsError'" class="reference internal" href="#pyoload.Check.CheckNameAlreadyExistsError"><code class="docutils literal notranslate"><span class="pre">Check.CheckNameAlreadyExistsError</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Check.check'" class="reference internal" href="#pyoload.Check.check"><code class="docutils literal notranslate"><span class="pre">Check.check()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Check.register'" class="reference internal" href="#pyoload.Check.register"><code class="docutils literal notranslate"><span class="pre">Check.register()</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#pyoload-cast-type'" class="reference internal" href="#pyoload-cast-type"><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.CheckedAttr'" class="reference internal" href="#pyoload.CheckedAttr"><code class="docutils literal notranslate"><span class="pre">CheckedAttr</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Checks'" class="reference internal" href="#pyoload.Checks"><code class="docutils literal notranslate"><span class="pre">Checks</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.InternalAnnotationError'" class="reference internal" href="#pyoload.InternalAnnotationError"><code class="docutils literal notranslate"><span class="pre">InternalAnnotationError</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.OverloadError'" class="reference internal" href="#pyoload.OverloadError"><code class="docutils literal notranslate"><span class="pre">OverloadError</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.PyoloadAnnotation'" class="reference internal" href="#pyoload.PyoloadAnnotation"><code class="docutils literal notranslate"><span class="pre">PyoloadAnnotation</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.Values'" class="reference internal" href="#pyoload.Values"><code class="docutils literal notranslate"><span class="pre">Values</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.annotate'" class="reference internal" href="#pyoload.annotate"><code class="docutils literal notranslate"><span class="pre">annotate()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.annotateClass'" class="reference internal" href="#pyoload.annotateClass"><code class="docutils literal notranslate"><span class="pre">annotateClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.get_module'" class="reference internal" href="#pyoload.get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.get_name'" class="reference internal" href="#pyoload.get_name"><code class="docutils literal notranslate"><span class="pre">get_name()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.overload'" class="reference internal" href="#pyoload.overload"><code class="docutils literal notranslate"><span class="pre">overload()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.resolveAnnotations'" class="reference internal" href="#pyoload.resolveAnnotations"><code class="docutils literal notranslate"><span class="pre">resolveAnnotations()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.typeMatch'" class="reference internal" href="#pyoload.typeMatch"><code class="docutils literal notranslate"><span class="pre">typeMatch()</span></code></a></li>
 </ul>
 </div>
 </aside>

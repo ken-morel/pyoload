@@ -1,3 +1,4 @@
+
 Welcome to pyoload's documentation!
 ===================================
 
@@ -31,3 +32,7 @@ casting of complex to simple datatypes.
 
    api
    examples
+   usage
+
+* :ref:`genindex`
+* :ref:`modindex`
