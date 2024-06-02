@@ -18,6 +18,10 @@ version = '1.1.3'
 
 # -- General configuration
 
+master_doc = 'index'
+autosummary_generate = True
+autoclass_content = "both"
+
 extensions = [
     'sphinx.ext.duration',
     'sphinx.ext.doctest',
