@@ -2,6 +2,12 @@
 
 # -- Project information
 import sys
+import os
+
+
+mydir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+sys.path.insert(0, mydir)
+
 sys.setrecursionlimit(500)
 project = 'pyoload'
 copyright = '2024, ken-morel'
