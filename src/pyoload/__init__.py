@@ -221,7 +221,7 @@ class Checks(PyoloadAnnotation):
 
     def __init__(
         self: PyoloadAnnotation,
-        **checks: dict[str, Callable[Any, Any]]
+        **checks: dict[str, Callable[Any, Any]],
     ):
         """def __init__(self: PyoloadAnnotation, **checks)
         crates the check object,e.g
