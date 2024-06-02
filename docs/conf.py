@@ -13,7 +13,7 @@
 import os
 import sys
 
-mydir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+mydir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"))
 sys.path.insert(0, mydir)
 
 # -- Project information -----------------------------------------------------
