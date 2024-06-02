@@ -48,24 +48,25 @@ it returns a wrapper function which on each call
 
 Example
 
->>> from pyoload import *
->>> from pathlib import Path
->>> @annotate
-... def add_eof(eof: str, file: Cast(Path)) -> int:
-...     '''
-...     :param eof: the string to append
-...     :param file: the file to add content to
-...     :returns: the new file size
-...     '''
-...     data = file.read_text()
-...     return file.write_text(data + eof)
-...
->>> print(add_eof)
-<function add_eof at 0x017B2D48>
->>> print(add_eof.__pyod_annotate__)
-<function add_eof at 0x0109D7F8>
->>> print(add_eof('@EOF@', 'del.txt'))
-17
+```python
+from pyoload import *
+from pathlib import Path
+@annotate
+def add_eof(eof: str, file: Cast(Path)) -> int:
+    '''
+    :param eof: the string to append
+    :param file: the file to add content to
+    :returns: the new file size
+    '''
+    data = file.read_text()
+    return file.write_text(data + eof)
+
+print(add_eof)
+# <function add_eof at 0x017B2D48>
+print(add_eof.__pyod_annotate__)
+# <function add_eof at 0x0109D7F8>
+print(add_eof('@EOF@', 'del.txt'))
+# 17
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
