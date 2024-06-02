@@ -7,13 +7,14 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
-<title>Usage | pyoload 1.1.3 documentation</title>
-<meta content="Usage | pyoload 1.1.3 documentation" property="og:title"/>
-<meta content="Usage | pyoload 1.1.3 documentation" name="twitter:title"/>
+<title>API | pyoload 1.1.3 documentation</title>
+<meta content="API | pyoload 1.1.3 documentation" property="og:title"/>
+<meta content="API | pyoload 1.1.3 documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=8d216cef" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
+<link href="examples.html" rel="next" title="examples"/>
 <link href="index.html" rel="prev" title="Welcome to pyoload’s documentation!"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
@@ -68,7 +69,8 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
 </ul>
 </nav>
 </div>
@@ -88,11 +90,11 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Usage</span>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">API</span>
 </nav>
 <div id="content" role="main">
-<section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h1>
+<section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h1>
 <section id="pyoload-annotate">
 <h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">annotate</span><span class="p">()</span></code><a class="headerlink" href="#pyoload-annotate" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-annotate'">¶</a></h2>
 <p>It is a simple decorator.</p>
@@ -131,8 +133,23 @@
 <p>The dictionary key under which the overloads was registered.</p>
 </section>
 </section>
-<section id="id2">
-<h2><code class="code highlight python docutils literal highlight-python"><span class="o">.</span></code><a class="headerlink" href="#id2" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#id2'">¶</a></h2>
+<section id="pyoload-cast-type">
+<h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></code><a class="headerlink" href="#pyoload-cast-type" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-cast-type'">¶</a></h2>
+<p>It receives a type as argument, it is the type
+inwhich the object will cast.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">Cast</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span>
+</span><span id="line-3">  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>
+</span><span id="line-4"><span class="w">    </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span>
+</span><span id="line-5"><span class="w">                                              </span><span class="pm">^</span>
+</span><span id="line-6"><span class="gr">SyntaxError</span>: <span class="n">closing parenthesis ')' does not match opening parenthesis '['</span>
+</span><span id="line-7"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">Cast</span>
+</span><span id="line-8"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span> <span class="o">=</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">]]])</span>
+</span><span id="line-9"><span class="gp">&gt;&gt;&gt; </span><span class="nb">object</span> <span class="o">=</span> <span class="p">{</span><span class="mi">237</span><span class="p">:</span> <span class="p">([</span><span class="s1">'1.0'</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">))}</span>
+</span><span id="line-10"><span class="gp">&gt;&gt;&gt; </span><span class="n">caster</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</span><span id="line-11"><span class="go">{'237': [(1.0, 5.0), (5.0, 6.0)]}</span>
+</span></code></pre></div>
+</div>
 </section>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
@@ -148,7 +165,7 @@
 <li><a :data-current="activeSection === '#pyod-overloads-name'" class="reference internal" href="#pyod-overloads-name"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads_name__</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#id2'" class="reference internal" href="#id2"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload-cast-type'" class="reference internal" href="#pyoload-cast-type"><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></code></a></li>
 </ul>
 </div>
 </aside>
