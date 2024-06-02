@@ -7,8 +7,8 @@ project = 'pyoload'
 copyright = '2024, ken-morel'
 author = 'ken-morel'
 
-release = '1.1.0'
-version = '1.1.0'
+release = '1.1.3'
+version = '1.1.3'
 
 # -- General configuration
 
