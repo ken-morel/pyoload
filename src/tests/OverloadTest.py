@@ -1,6 +1,9 @@
 import pyoload
 
-from pyoload import *
+from pyoload import Any
+from pyoload import Checks
+from pyoload import get_name
+from pyoload import overload
 
 assert pyoload.__version__ == '1.1.1'
 
