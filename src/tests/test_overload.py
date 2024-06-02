@@ -5,7 +5,7 @@ from pyoload import Checks
 from pyoload import get_name
 from pyoload import overload
 
-assert pyoload.__version__ == '1.1.2'
+assert pyoload.__version__ == '1.1.3'
 
 
 @overload

@@ -557,7 +557,7 @@ def overload(func: Callable, name: str | None = None):
         __overloads__[name] = []
     __overloads__[name].append(annotate(func, True))
 
-    @wraps(func: Callable)
+    @wraps(func)
     def wrapper(*args, **kw):
         for f in __overloads__[name]:
             try:
