@@ -43,6 +43,12 @@ setup(
     name='pyoload',
     version=__version__,
     packages=find_packages(exclude=['tests', 'tests.*']),
+    project_urls={
+        'Documentation': 'https://pyoload.readthedocs.io/',
+        'Funding': 'https://ko-fi.com/kenmorel',
+        'Source': 'https://github.com/ken-morel/pyoload/',
+        'Tracker': 'https://github.com/ken-morel/pyoload/issues',
+    },
     url='https://github.com/ken-morel/pyoload',
     license='MIT',
     author='ken-morel',
