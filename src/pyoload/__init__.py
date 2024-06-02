@@ -41,7 +41,7 @@ class CastingError(TypeError):
 
 
 class OverloadError(TypeError):
-    """class OverloadError(TypeError)
+    """
     Error in or during overload
     """
 
@@ -66,6 +66,8 @@ class Values(PyoloadAnnotation, tuple):
 
     def __call__(self: 'Values', val: Any) -> bool:
         """
+        Checks if the tuple containes the specified value.
+
         :param self: the `Values` object
         :param val: the value to be checked
 
@@ -83,6 +85,7 @@ def get_name(funcOrCls: Any) -> str:
     """
     Gives a class or function name, possibly unique gotten from
     it's module name and qualifier name
+
     :param funcOrCls: The object who's name to return
 
     :returns: modulename + qualname
@@ -109,6 +112,7 @@ class Check:
     ) -> Callable[[Callable[[Any, Any], NoneType]], Callable]:
         """
         returns a callable which registers a new checker method
+
         :param cls: the Check class
         :param name: the name to be registerred as.
 
@@ -120,11 +124,6 @@ class Check:
                 raise Check.CheckNameAlreadyExistsError(name)
 
         def inner(func: Callable[Any, Any]) -> Callable:
-            """
-            :param func: The callable to register
-
-            :returns: func
-            """
             for name in names:
                 cls.checks_list[name] = func
             return func
@@ -135,6 +134,7 @@ class Check:
         """
         Performs the specified check with the specified params on
         the specified value
+
         :param cls: pyoload.Check class
         :param name: The registerred name of the check
         :param params: The parameters to pass to the check
@@ -252,6 +252,7 @@ class Checks(PyoloadAnnotation):
     def __call__(self: PyoloadAnnotation, val: Any) -> None:
         """
         Performs the several checks contained in `self.checks`
+
         :param self: self
         :param val: The value to check
         """
@@ -414,6 +415,7 @@ class CastedAttr(Cast):
 def typeMatch(val: Any, spec: Any) -> bool:
     """
     recursively checks if type matches
+
     :param val: The value to typecheck
     :param spec: The type specifier
 
@@ -486,7 +488,6 @@ def resolveAnnotations(obj: Type | Callable) -> None:
     """
     Evaluates all the stringized annotations of the argument
 
-
     :param obj: The object of which to evaluate annotations
 
     :returns: None
@@ -524,7 +525,8 @@ def resolveAnnotations(obj: Type | Callable) -> None:
 def annotate(func: Callable, oload: bool = False) -> Callable:
     """
     returns a wrapper over the passed function
-    which typechecks arguments on each call
+    which typechecks arguments on each call.
+
     :param func: the function to annotate
     :param oload: internal, if set to True, will raise \
     `InternalAnnotationError` on type mismatch
