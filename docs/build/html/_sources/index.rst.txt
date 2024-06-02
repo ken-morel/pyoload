@@ -31,3 +31,11 @@ casting of complex to simple datatypes.
 
 * :ref:`genindex`
 * :ref:`modindex`
+
+
+.. toctree::
+  :maxdepth: 1
+
+  examples
+  usage
+  api
