@@ -16,7 +16,8 @@
 .. image:: https://readthedocs.org/projects/pyoload/badge/?version=latest
   :target: https://pyoload.readthedocs.io/en/latest/?badge=latest
   :alt: Documentation Status
-
+.. image:: https://img.shields.io/pypi/dm/pyoload
+  :alt: downloads
 ==================================================
 pyoload
 ==================================================
