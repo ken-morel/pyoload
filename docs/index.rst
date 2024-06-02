@@ -15,9 +15,13 @@ Welcome to pyoload's documentation!
   :target: https://github.com/ken-morel/pyoload/tree/mai
 .. image:: https://coveralls.io/repos/github/ken-morel/pyoload/badge.svg?branch=main
   :alt: Coverage Status
-  :target: https://coveralls.io/github/ken-morel/pyoload?branch=mai
-.. image:: https://img.shields.io/badge/stackoverflow-Ask%20questions-blue.svg
-  :target: https://stackoverflow.com/questions/tagged/pyoload
+  :target: https://coveralls.io/github/ken-morel/pyoload?branch=main
+.. image:: https://readthedocs.org/projects/pyoload/badge/?version=latest
+  :target: https://pyoload.readthedocs.io
+  :alt: Documentation Status
+.. image::https://img.shields.io/pypi/dd/pyoload
+  :target: https://pypi.org/project/pyoload
+  :alt: Pypi downloads
 
 
 welcome to pyoloads documentation, a python module to help typechecking
@@ -26,4 +30,3 @@ and annotaions checking in functions
 .. toctree::
 
    api
-   usage
