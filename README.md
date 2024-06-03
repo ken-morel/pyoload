@@ -58,9 +58,9 @@ class Person:
         self.name = name
 
 
-djamago = Person(15, 'djamago')  # {'age': <class 'int'>, 'name': <class 'str'>}
+djamago = Person(15, 'djamago')
 
-print(djamago.__annotations__)
+print(djamago.__annotations__)  # {'age': <class 'int'>}
 ```
 
 ## `pyoload.overload`
