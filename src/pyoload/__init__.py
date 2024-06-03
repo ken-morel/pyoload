@@ -276,7 +276,7 @@ class CheckedAttr(Checks):
 
     def __init__(
         self: Any,
-        **checks: dict[str, Callable[[Any, Any], NoneType]]
+        **checks: dict[str, Callable[[Any, Any], NoneType]],
     ) -> Any:
         """
         Creates a Checked Attribute descriptor whick does checking on each
