@@ -95,10 +95,6 @@ def foo_hello(d: dict[str, list[int]]):
     ...
 ```
 
-> [!TIP]
-> you may raise `pyoload.InternalAnnotationError` inside an overloaded
-  function after carrying out some other checks and pyoload will switch to the
-  next oveload.
 
 ## type checking with `pyoload.typeMatch(val, type)`
 
