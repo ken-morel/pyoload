@@ -69,7 +69,7 @@ When decorating a function it:
 - annotates the function with the special kwarg `is_overload=True`
 - gets the function's name using `pyoload.get_name` and if needed
   creates a new dictionarry value in
-  `pyoload.__overloads__[name]` where it stores all overloads and stores a copy in
+  `pyoload.__overloads__[name]` where it stores all ~~overloads~~dispatches and stores a copy in
   the function's `.__pyod_overloads__` attribute.
 
 And on each call it simply loops through each function entry, while
@@ -77,8 +77,8 @@ it catches a `pyoload.InternalAnnotationError` which is raised when
 the special `is_overload` is set to true
 
 > [!TIP]
-> you may raise `pyoload.InternalAnnotationError` inside an overloaded
-  function after carrying out some other checks and pyoload will switch to the
+> you may raise `pyoload.InternalAnnotationError` inside ~~an overloaded
+  function~~a multimethod after carrying out some other checks and pyoload will switch to the
   next oveload.
 
 ```python
