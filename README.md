@@ -64,7 +64,7 @@ djamago = Person(15, 'djamago')
 print(djamago.__annotations__)  # {'age': <class 'int'>}
 ```
 
-## `pyoload.overload`
+## `pyoload.multimethod`
 
 When decorating a function it:
 - annotates the function with the special kwarg `is_overload=True`
