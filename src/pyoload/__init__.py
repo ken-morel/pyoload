@@ -14,6 +14,10 @@ from typing import Any
 from typing import Callable
 from typing import GenericAlias
 from typing import Type
+try:
+   from typing import NoneType
+except ImportError:
+    NoneType = None
 
 
 class AnnotationError(ValueError):
