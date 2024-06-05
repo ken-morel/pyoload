@@ -2,9 +2,12 @@
 pyoload is a little python script to incorporate some features of
  typechecking and casting in python.
 """
+
 from functools import partial
 from functools import wraps
+from inspect import _empty
 from inspect import isclass
+from inspect import signature
 from types import NoneType
 from types import UnionType
 from typing import Any
@@ -50,6 +53,7 @@ class AnnotationResolutionError(AnnotationError):
     """
     Annotations could not be resolved or evaluated.
     """
+
     _raise = False
 
 
@@ -64,7 +68,7 @@ class Values(PyoloadAnnotation, tuple):
     A tuple subclass which holds several values as possible annotations
     """
 
-    def __call__(self: 'Values', val: Any) -> bool:
+    def __call__(self: "Values", val: Any) -> bool:
         """
         Checks if the tuple containes the specified value.
 
@@ -75,7 +79,7 @@ class Values(PyoloadAnnotation, tuple):
         return val in self
 
     def __str__(self):
-        return 'Values(' + ', '.join(map(repr, self)) + ')'
+        return "Values(" + ", ".join(map(repr, self)) + ")"
 
     __repr__ = __str__
 
@@ -89,20 +93,21 @@ def get_name(funcOrCls: Any) -> str:
 
     :returns: modulename + qualname
     """
-    return funcOrCls.__module__ + '.' + funcOrCls.__qualname__
+    return funcOrCls.__module__ + "." + funcOrCls.__qualname__
 
 
 class Check:
     """
     A class basicly abstract which holds registerred checks in pyoload
     """
+
     checks_list = {}
 
     def __init_subclass__(cls: Any):
         """
         register's subclasses as chexks
         """
-        if hasattr(cls, 'name'):
+        if hasattr(cls, "name"):
             name = cls.name
         else:
             name = cls.__name__
@@ -121,7 +126,7 @@ class Check:
 
         :returns: a function which registers the check under the name
         """
-        names = [x for x in name.split(' ') if x.strip() != '']
+        names = [x for x in name.split(" ") if x.strip() != ""]
         for name in names:
             if name in cls.checks_list:
                 raise Check.CheckNameAlreadyExistsError(name)
@@ -130,6 +135,7 @@ class Check:
             for name in names:
                 cls.checks_list[name] = func
             return func
+
         return inner
 
     @classmethod
@@ -166,68 +172,68 @@ class Check:
         """
 
 
-@Check.register('len')
+@Check.register("len")
 def len_check(params, val):
     if isinstance(params, int):
         if not len(val) == params:
-            raise Check.CheckError(f'length of {val!r} not eq {params!r}')
+            raise Check.CheckError(f"length of {val!r} not eq {params!r}")
     elif isinstance(params, tuple) and len(params) > 0:
         mi = ma = None
         mi, ma = params
         if mi is not None:
             if not len(val) > mi:
-                raise Check.CheckError(f'length of {val!r} not gt {mi!r}')
+                raise Check.CheckError(f"length of {val!r} not gt {mi!r}")
         if ma is not None:
             if not len(val) < ma:
-                raise Check.CheckError(f'length of {val!r} not lt {mi!r}')
+                raise Check.CheckError(f"length of {val!r} not lt {mi!r}")
 
 
-@Check.register('lt')
+@Check.register("lt")
 def lt_check(param, val):
     if not val < param:
-        raise Check.CheckError(f'{val!r} not lt {param!r}')
+        raise Check.CheckError(f"{val!r} not lt {param!r}")
 
 
-@Check.register('le')
+@Check.register("le")
 def le_check(param, val):
     if not val <= param:
-        raise Check.CheckError(f'{val!r} not gt {param!r}')
+        raise Check.CheckError(f"{val!r} not gt {param!r}")
 
 
-@Check.register('ge')
+@Check.register("ge")
 def ge_check(param, val):
     if not val >= param:
-        raise Check.CheckError(f'{val!r} not ge {param!r}')
+        raise Check.CheckError(f"{val!r} not ge {param!r}")
 
 
-@Check.register('gt')
+@Check.register("gt")
 def gt_check(param, val):
     if not val > param:
-        raise Check.CheckError(f'{val!r} not gt {param!r}')
+        raise Check.CheckError(f"{val!r} not gt {param!r}")
 
 
-@Check.register('eq')
+@Check.register("eq")
 def eq_check(param, val):
     if not val == param:
-        raise Check.CheckError(f'{val!r} not eq {param!r}')
+        raise Check.CheckError(f"{val!r} not eq {param!r}")
 
 
-@Check.register('func')
+@Check.register("func")
 def func_check(param, val):
     if not param(val):
-        raise Check.CheckError(f'{param!r} call returned false on {val!r}')
+        raise Check.CheckError(f"{param!r} call returned false on {val!r}")
 
 
-@Check.register('type')
+@Check.register("type")
 def matches_check(param, val):
     if not typeMatch(val, param):
-        raise Check.CheckError(f'{val!r} foes not match type {param!r}')
+        raise Check.CheckError(f"{val!r} foes not match type {param!r}")
 
 
-@Check.register('isinstance')
+@Check.register("isinstance")
 def instance_check(param, val):
     if not isinstance(val, param):
-        raise Check.CheckError(f'{val!r} not instance of {param!r}')
+        raise Check.CheckError(f"{val!r} not instance of {param!r}")
 
 
 class Checks(PyoloadAnnotation):
@@ -261,10 +267,10 @@ class Checks(PyoloadAnnotation):
             Check.check(name, params, val)
 
     def __str__(self: Any) -> str:
-        ret = '<Checks('
+        ret = "<Checks("
         for k, v in self.checks.items():
-            ret += f'{k}={v!r}, '
-        ret = ret[:-2] + ')>'
+            ret += f"{k}={v!r}, "
+        ret = ret[:-2] + ")>"
         return ret
 
     __repr__ = __str__
@@ -318,6 +324,7 @@ class Cast(PyoloadAnnotation):
     """
     Holds a cast object which describes the casts to be performed
     """
+
     @staticmethod
     def cast(val: Any, totype: Any) -> Any:
         """
@@ -339,14 +346,10 @@ class Cast(PyoloadAnnotation):
                     kt, vt = totype.__args__
                 elif len(totype.__args__) == 1:
                     kt, vt = Any, totype.__args__[1]
-                return {
-                    Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
-                }
+                return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
             else:
                 sub = totype.__args__[0]
-                return totype.__origin__([
-                    Cast.cast(v, sub) for v in val
-                ])
+                return totype.__origin__([Cast.cast(v, sub) for v in val])
         if isinstance(totype, UnionType):
             errors = []
             for subtype in totype.__args__:
@@ -392,11 +395,11 @@ class Cast(PyoloadAnnotation):
             return Cast.cast(val, self.type)
         except Exception as e:
             raise CastingError(
-                f'Exception({e}) while casting: {val!r} to {self.type}',
+                f"Exception({e}) while casting: {val!r} to {self.type}",
             ) from e
 
     def __str__(self):
-        return f'pyoload.Cast({self.type!s})'
+        return f"pyoload.Cast({self.type!s})"
 
 
 class CastedAttr(Cast):
@@ -460,7 +463,7 @@ def typeMatch(val: Any, spec: Any) -> bool:
     :return: A boolean
     """
     if spec == any:
-        raise TypeError('May be have you confused `Any` and `any`')
+        raise TypeError("May be have you confused `Any` and `any`")
 
     if spec == Any or spec is None or val is None:
         return True
@@ -530,19 +533,20 @@ def resolveAnnotations(obj: Type | Callable) -> None:
 
     :returns: None
     """
-    if isclass(obj) or hasattr(obj, '__class__'):
+    if isclass(obj) or hasattr(obj, "__class__"):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
                 try:
                     obj.__annotations__[k] = eval(
                         v,
-                        dict(vars(get_module(obj))), dict(vars(obj)),
+                        dict(vars(get_module(obj))),
+                        dict(vars(obj)),
                     )
                 except Exception as e:
                     raise AnnotationResolutionError(
                         (
-                            f'Exception: {e!s} while resolving'
-                            f' annotation {e}={v!r} of object {obj!r}'
+                            f"Exception: {e!s} while resolving"
+                            f" annotation {e}={v!r} of object {obj!r}"
                         ),
                     ) from e
     elif callable(obj):
@@ -552,20 +556,26 @@ def resolveAnnotations(obj: Type | Callable) -> None:
                     obj.__annotations__[k] = eval(v, obj.__globals__)
                 except Exception as e:
                     raise AnnotationResolutionError(
-                        f'Exception: {k!s} while resolving'
-                        f' annotation {v!r} of function {obj!r}',
-                        f'globals: {obj.__globals__}',
+                        f"Exception: {k!s} while resolving"
+                        f" annotation {v!r} of function {obj!r}",
+                        f"globals: {obj.__globals__}",
                     ) from e
     else:
-        raise AnnotationError(f'unknown resolution method for {obj}')
+        raise AnnotationError(f"unknown resolution method for {obj}")
 
 
-def annotate(func: Callable, oload: bool = False) -> Callable:
+def annotate(
+    func: Callable,
+    *,
+    force: bool = False,
+    oload: bool = False,
+) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call.
 
     :param func: the function to annotate
+    :param force: annotate force even on unannotatables
     :param oload: internal, if set to True, will raise \
     `InternalAnnotationError` on type mismatch
 
@@ -574,62 +584,66 @@ def annotate(func: Callable, oload: bool = False) -> Callable:
     if isclass(func):
         return annotateClass(func)
     if len(func.__annotations__) == 0:
-        raise Warning(f'function {get_name(func)} is not annotated')
         return func
 
     @wraps(func)
-    def wrapper(*args, **kw):
-        i = 0
-        while str in map(type, func.__annotations__.values()) and i < 10:
+    def wrapper(*pargs, **kw):
+        if str in map(type, func.__annotations__.values()):
             resolveAnnotations(func)
-            i += 1
-        else:
-            if i == 10:
-                raise AnnotationResolutionError(func.__annotations__)
-        anno = func.__annotations__.copy()
-        if 'return' in anno:
-            anno.pop('return')
-        names = list(anno.keys())
-        vals = {}
         try:
-            if func.__defaults__:
-                for i, v in enumerate(reversed(func.__defaults__)):
-                    vals[names[-1 - i]] = v
-            for i, v in enumerate(args):
-                vals[names[i]] = v
-            vals.update(kw)
-        except IndexError as e:
-            raise AnnotationError(
-                f'Was function {get_name(func)} properly annotated?, has'
-                f' {len(anno)} annotations but {len(args)} arguments passed',
-            ) from e
-
+            sign = signature(func)
+        except Exception:
+            if oload:
+                raise InternalAnnotationError()
+            else:
+                raise
+        args = sign.bind(*pargs, **kw)
         errors = []
-        for k, v in vals.items():
-            if isinstance(anno[k], Cast):
-                vals[k] = anno[k](v)
+        for k, v in args.arguments.items():
+            param = sign.parameters.get(k)
+            if param.annotation is None:
                 continue
-            if not typeMatch(v, anno[k]):
-                if oload:
-                    raise InternalAnnotationError()
-                errors.append(
-                    AnnotationError(
-                        f'Value: {v!r} does not match annotation: {anno[k]!r}'
-                        f' for argument {k!r} of function {get_name(func)}',
-                    ),
-                )
+            if isinstance(param.annotation, Cast):
+                args.arguments["k"] = param.annotation(v)
+                continue
+            try:
+                isinstance(v, param.annotation)
+            except TypeError:
+                if not typeMatch(v, param.annotation):
+                    if oload:
+                        raise InternalAnnotationError()
+                    errors.append(
+                        AnnotationError(
+                            f"Value: {v!r} does not match annotation:"
+                            f" {param.annotation!r} for "
+                            f"argument {k!r} of function {get_name(func)}",
+                        ),
+                    )
+            else:
+                continue
         if len(errors) > 0:
             raise AnnotationErrors(errors)
 
-        ret = func(**vals)
-        if 'return' in func.__annotations__:
-            ann = func.__annotations__['return']
-            if not typeMatch(ret, ann):
-                raise AnnotationError(
-                    f'return value {ret!r} does not match annotation: '
-                    f'{ann} of function {get_name(func)}',
-                )
+        ret = func(*pargs, **kw)
+        if "return" in func.__annotations__:
+            ann = sign.return_annotation
+            if ann is _empty:
+                return ret
+            if isinstance(ann, Cast):
+                return ann(ret)
+            try:
+                isinstance(ret, ann)
+            except TypeError:
+                if not typeMatch(ret, ann):
+                    errors.append(
+                        AnnotationError(
+                            f"return value: {ret!r} does not match annotation:"
+                            f" {ann!r} for "
+                            f"of function {get_name(func)}",
+                        ),
+                    )
         return ret
+
     wrapper.__pyod_annotate__ = func
     return wrapper
 
@@ -676,8 +690,8 @@ def overload(func: Callable, name: str | None = None) -> Callable:
                 break
         else:
             raise OverloadError(
-                f'No overload of function: {get_name(func)}'
-                f' matches types of arguments: {args}, {kw}',
+                f"No overload of function: {get_name(func)}"
+                f" matches types of arguments: {args}, {kw}",
             )
         return val
 
@@ -697,15 +711,15 @@ def annotateClass(cls: Any):
     it recursively annotates the classes methods except `__pyod_norecur__`
     attribute is defines
     """
-    if not hasattr(cls, '__annotations__'):
+    if not hasattr(cls, "__annotations__"):
         cls.__annotations__ = {}
     if isinstance(cls, bool):
         return partial(annotate, recur=cls)
-    recur = not hasattr(cls, '__pyod_norecur__')
+    recur = not hasattr(cls, "__pyod_norecur__")
     setter = cls.__setattr__
     if recur:
         for x in dir(cls):
-            if hasattr(getattr(cls, x), '__annotations__'):
+            if hasattr(getattr(cls, x), "__annotations__"):
                 setattr(
                     cls,
                     x,
@@ -728,11 +742,12 @@ def annotateClass(cls: Any):
             return setter(self, name, self.__annotations__[name](value))
         elif not typeMatch(value, self.__annotations__[name]):
             raise AnnotationError(
-                f'value {value!r} does not match annotation'
-                f'of attribute: {name!r}:{self.__annotations__[name]!r}'
-                f' of object of class {get_name(cls)}',
+                f"value {value!r} does not match annotation"
+                f"of attribute: {name!r}:{self.__annotations__[name]!r}"
+                f" of object of class {get_name(cls)}",
             )
         return setter(self, name, value)
+
     cls.__setattr__ = new_setter
     return cls
 
