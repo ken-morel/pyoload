@@ -1,5 +1,5 @@
 
-Welcome to pyoload's documentation!
+Welcome to pyoload v|version| documentation!
 ===================================
 
 .. image:: https://github.com/ken-morel/pyoload/actions/workflows/python-publish.yml/badge.svg
