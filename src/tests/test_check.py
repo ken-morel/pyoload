@@ -43,7 +43,7 @@ def test_check():
     Checks(test2=4)(4)
     Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
     Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5)
-    Checks(len=(2, 5))("abcd")
+    Checks(len=(2, 5))('abcd')
 
 
 if __name__ == '__main__':
