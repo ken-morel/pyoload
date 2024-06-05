@@ -658,7 +658,7 @@ def is_annoted(func):
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def overload(func: Callable, name: str | None = None) -> Callable:
+def overload(func: Callable, name: str = None) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
