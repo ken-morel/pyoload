@@ -1,0 +1,7 @@
+typeMatch vs isinstance on int:True  0.10954592ms
+typeMatch vs isinstance on int:False  0.14949867ms
+typeMatch on dict[str, int]*50:True  26.902279449999998ms
+typeMatch on dict[str, int]*50:False  2.8174787300000004ms
+Cast str->int: 1.4734708ms
+Cast complex->int | str: 0.0892422ms
+Cast dict[int, list[str]*10]*10->dict[str, tuple[float]]: 1.583452671ms

@@ -463,6 +463,10 @@ def typeMatch(val: Any, spec: Any) -> bool:
 
     :return: A boolean
     """
+    try:
+        return isinstance(val, spec)
+    except TypeError:
+        pass
     if spec == any:
         raise TypeError("May be have you confused `Any` and `any`")
 
@@ -501,8 +505,6 @@ def typeMatch(val: Any, spec: Any) -> bool:
                     return False
             else:
                 return True
-    else:
-        return isinstance(val, spec)
 
 
 def resolveAnnotations(obj: Type | Callable) -> None:
@@ -583,47 +585,38 @@ def annotate(
         errors = []
         for k, v in args.arguments.items():
             param = sign.parameters.get(k)
+
             if param.annotation is None:
                 continue
             if isinstance(param.annotation, Cast):
-                args.arguments["k"] = param.annotation(v)
+                args.arguments[k] = param.annotation(v)
                 continue
-            try:
-                isinstance(v, param.annotation)
-            except TypeError:
-                if not typeMatch(v, param.annotation):
-                    if oload:
-                        raise InternalAnnotationError()
-                    errors.append(
-                        AnnotationError(
-                            f"Value: {v!r} does not match annotation:"
-                            f" {param.annotation!r} for "
-                            f"argument {k!r} of function {get_name(func)}",
-                        ),
-                    )
-            else:
-                continue
+            if not typeMatch(v, param.annotation):
+                if oload:
+                    raise InternalAnnotationError()
+                errors.append(
+                    AnnotationError(
+                        f"Value: {v!r} does not match annotation:"
+                        f" {param.annotation!r} for "
+                        f"argument {k!r} of function {get_name(func)}",
+                    ),
+                )
         if len(errors) > 0:
             raise AnnotationErrors(errors)
 
         ret = func(*pargs, **kw)
-        if "return" in func.__annotations__:
+
+        if sign.return_annotation is not _empty:
             ann = sign.return_annotation
-            if ann is _empty:
-                return ret
+
             if isinstance(ann, Cast):
                 return ann(ret)
-            try:
-                isinstance(ret, ann)
-            except TypeError:
-                if not typeMatch(ret, ann):
-                    errors.append(
-                        AnnotationError(
-                            f"return value: {ret!r} does not match annotation:"
-                            f" {ann!r} for "
-                            f"of function {get_name(func)}",
-                        ),
-                    )
+            if not typeMatch(ret, ann):
+                raise AnnotationError(
+                    f"return value: {ret!r} does not match annotation:"
+                    f" {ann!r} for "
+                    f"of function {get_name(func)}",
+                )
         return ret
 
     wrapper.__pyod_annotate__ = func
@@ -648,6 +641,10 @@ def annotable(func: Callable) -> Callable:
 
 def is_annotable(func):
     return not hasattr(func, '__pyod_annotable__') or func.__pyod_annotable__
+
+
+def is_annoted(func):
+    return hasattr(func, '__pyod_annotate__')
 
 
 __overloads__: dict[str, list[Callable]] = {}

@@ -31,10 +31,10 @@ def div____(a: float, b: float):
 
 
 def test_overload():
-    #assert div("4", "2") == "2.0"
-    #assert div(..., 0) == "Infinity"
+    assert div("4", "2") == "2.0"
+    assert div(..., 0) == "Infinity"
     assert div("4", 2) == 2
-    #assert div(3.0, 1.0) == 3.0
+    assert div(3.0, 1.0) == 3.0
 
 
 if __name__ == "__main__":
