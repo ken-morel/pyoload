@@ -7,7 +7,7 @@ from pyoload import Checks
 from pyoload import Check
 from pyoload import annotate
 
-assert pyoload.__version__ == '1.1.3'
+assert pyoload.__version__ == '2.0.0'
 
 
 @annotate
@@ -41,6 +41,9 @@ def test_check():
         print(param, val)
     Checks(test1=3)(3)
     Checks(test2=4)(4)
+    Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
+    Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5)
+    Checks(len=(2, 5))("abcd")
 
 
 if __name__ == '__main__':
