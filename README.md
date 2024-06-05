@@ -2,9 +2,10 @@
 [![PyPI package](https://badge.fury.io/py/pyoload.svg)](https://pypi.org/project/pyoload)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/pyoload)](https://pypi.org/project/pyoload)
 [![Build Status](https://github.com/ken-morel/pyoload/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/ken-morel/pyoload/tree/mai)
-[![Coverage Status](https://coveralls.io/repos/github/ken-morel/pyoload/badge.svg?branch=main)](https://coveralls.io/github/ken-morel/pyoload?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/ken-morel/pyoload/badge.svg?branch=main&cache=3000)](https://coveralls.io/github/ken-morel/pyoload?branch=main)
 [![Documentation Status](https://readthedocs.org/projects/pyoload/badge/?version=latest)](https://pyoload.readthedocs.io)
 [![Pypi downloads](https://img.shields.io/pypi/dd/pyoload)](https://pypi.org/project/pyoload)
+[![Pypi downloads](https://img.shields.io/pypi/dw/pyoload)](https://pypi.org/project/pyoload)
 
 # pyoload
 
@@ -58,9 +59,9 @@ class Person:
         self.name = name
 
 
-djamago = Person(15, 'djamago')  # {'age': <class 'int'>, 'name': <class 'str'>}
+djamago = Person(15, 'djamago')
 
-print(djamago.__annotations__)
+print(djamago.__annotations__)  # {'age': <class 'int'>}
 ```
 
 ## `pyoload.overload`
@@ -69,7 +70,7 @@ When decorating a function it:
 - annotates the function with the special kwarg `is_overload=True`
 - gets the function's name using `pyoload.get_name` and if needed
   creates a new dictionarry value in
-  `pyoload.__overloads__[name]` where it stores all overloads and stores a copy in
+  `pyoload.__overloads__[name]` where it stores all ~~overloads~~dispatches and stores a copy in
   the function's `.__pyod_overloads__` attribute.
 
 And on each call it simply loops through each function entry, while
@@ -77,8 +78,8 @@ it catches a `pyoload.InternalAnnotationError` which is raised when
 the special `is_overload` is set to true
 
 > [!TIP]
-> you may raise `pyoload.InternalAnnotationError` inside an overloaded
-  function after carrying out some other checks and pyoload will switch to the
+> you may raise `pyoload.InternalAnnotationError` inside ~~an overloaded
+  function~~a multimethod after carrying out some other checks and pyoload will switch to the
   next oveload.
 
 ```python
@@ -95,10 +96,6 @@ def foo_hello(d: dict[str, list[int]]):
     ...
 ```
 
-> [!TIP]
-> you may raise `pyoload.InternalAnnotationError` inside an overloaded
-  function after carrying out some other checks and pyoload will switch to the
-  next oveload.
 
 ## type checking with `pyoload.typeMatch(val, type)`
 
