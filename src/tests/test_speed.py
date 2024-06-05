@@ -71,7 +71,7 @@ def speedCast(f):
     dt = (end - begin) / N / 1000
     print(f'Cast str->int: {dt}ms', file=f)
 
-    ct = Cast(int | str)
+    ct = Cast(Union[int, str])
     begin = nanos()
     for x in range(N // NS):
         ct(3j)
