@@ -34,38 +34,38 @@ html_static_path = ["_static"]
 autoclass_content = "both"
 
 sys.setrecursionlimit(500)
-project = 'pyoload'
-copyright = '2024, ken-morel'
-author = 'ken-morel'
+project = "pyoload"
+copyright = "2024, ken-morel"
+author = "ken-morel"
 
-release = '2.0.0'
-version = '2.0.0'
+release = "2.0.0"
+version = "2.0.0"
 
 # -- General configuration
 
 extensions = [
-    'sphinx.ext.duration',
-    'sphinx.ext.doctest',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx',
+    "sphinx.ext.duration",
+    "sphinx.ext.doctest",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
 ]
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None),
-    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
-    'github': ('https://github.com/', None),
+    "python": ("https://docs.python.org/3/", None),
+    "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
+    "github": ("https://github.com/", None),
 }
-intersphinx_disabled_domains = ['std']
+intersphinx_disabled_domains = ["std"]
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # -- Options for HTML output
 
 html_theme = "sphinxawesome_theme"
 
 # -- Options for EPUB output
-epub_show_urls = 'footnote'
+epub_show_urls = "footnote"
 
 rst_prolog = """\
 .. role:: python(code)

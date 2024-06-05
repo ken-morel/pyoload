@@ -61,5 +61,6 @@ def test_overload():
     assert foo(1, 2) == 2
     assert foo(1, 2, 3) == 3
 
+
 if __name__ == "__main__":
     test_overload()

@@ -16,8 +16,9 @@ from typing import Callable
 from typing import GenericAlias
 from typing import Type
 from typing import Union
+
 try:
-   from types import NoneType
+    from types import NoneType
 except ImportError:
     NoneType = type(None)
 
@@ -351,9 +352,7 @@ class Cast(PyoloadAnnotation):
                     kt, vt = args
                 elif len(args) == 1:
                     kt, vt = args[0], Any
-                return {
-                    Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
-                }
+                return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
             else:
                 sub = args[0]
                 return get_origin(totype)([Cast.cast(v, sub) for v in val])
@@ -633,7 +632,7 @@ def annotate(
 
 
 def unannotate(func: Callable) -> Callable:
-    if hasattr(func, '__pyod_annotate__'):
+    if hasattr(func, "__pyod_annotate__"):
         return func.__pyod_annotate__
     else:
         return func
@@ -649,11 +648,11 @@ def annotable(func: Callable) -> Callable:
 
 
 def is_annotable(func):
-    return not hasattr(func, '__pyod_annotable__') or func.__pyod_annotable__
+    return not hasattr(func, "__pyod_annotable__") or func.__pyod_annotable__
 
 
 def is_annoted(func):
-    return hasattr(func, '__pyod_annotate__')
+    return hasattr(func, "__pyod_annotate__")
 
 
 __overloads__: dict[str, list[Callable]] = {}
