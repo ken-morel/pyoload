@@ -5,6 +5,7 @@ from pyoload import Cast
 from pyoload import CastedAttr
 from pyoload import annotate
 from pyoload import typeMatch
+from pyoload import AnnotationError
 
 assert pyoload.__version__ == '2.0.0'
 
@@ -13,9 +14,17 @@ assert pyoload.__version__ == '2.0.0'
 class foo:
     foo = CastedAttr(dict[str, tuple[int | str]])
     bar: Cast(list[tuple[float]])
+    a: 'str'
 
-    def __init__(self: Any, bar: list) -> Any:
+    def __init__(self: 'Any', bar: 'list') -> Any:
         self.bar = bar
+        self.a = "ama"
+        try:
+            self.a = 3
+        except AnnotationError:
+            pass
+        else:
+            pass
 
 
 def test_cast():
