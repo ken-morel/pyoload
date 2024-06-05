@@ -9,7 +9,6 @@ from inspect import _empty
 from inspect import getmodule
 from inspect import isclass
 from inspect import signature
-from types import NoneType
 from types import UnionType
 from typing import Any
 from typing import Callable
