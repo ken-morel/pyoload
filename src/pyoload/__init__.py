@@ -98,11 +98,15 @@ class Check:
     """
     checks_list = {}
 
-    def __init_subclass__(cls: Any, subclass: Any):
+    def __init_subclass__(subclass: Any):
         """
         register's subclasses as chexks
         """
-        cls.register(cls.name, cls.__call__)
+        if hasattr(cls, 'name'):
+            name = cls.name
+        else:
+            name = cls.__name__
+        cls.register(name, cls())
 
     @classmethod
     def register(
