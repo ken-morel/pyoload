@@ -4,7 +4,7 @@ from pyoload import AnnotationError
 import pyoload
 
 
-assert pyoload.__version__ == '2.0.0'
+assert pyoload.__version__ == "2.0.0"
 
 
 @annotate
@@ -13,12 +13,12 @@ def odd(a: Values(range(10))) -> bool:
 
 
 def test_values():
-    assert odd(3), '3 reported not odd'
-    assert not odd(2), '2 reported odd'
+    assert odd(3), "3 reported not odd"
+    assert not odd(2), "2 reported odd"
 
     try:
         odd(10)
     except AnnotationError:
         pass
     else:
-        raise AssertionError('Values did not crash')
+        raise AssertionError("Values did not crash")

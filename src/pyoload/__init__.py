@@ -6,6 +6,7 @@ pyoload is a little python script to incorporate some features of
 from functools import partial
 from functools import wraps
 from inspect import _empty
+from inspect import getmodule
 from inspect import isclass
 from inspect import signature
 from types import NoneType
@@ -14,8 +15,6 @@ from typing import Any
 from typing import Callable
 from typing import GenericAlias
 from typing import Type
-
-import sys
 
 
 class AnnotationError(ValueError):
@@ -346,7 +345,9 @@ class Cast(PyoloadAnnotation):
                     kt, vt = totype.__args__
                 elif len(totype.__args__) == 1:
                     kt, vt = Any, totype.__args__[1]
-                return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
+                return {
+                    Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
+                }
             else:
                 sub = totype.__args__[0]
                 return totype.__origin__([Cast.cast(v, sub) for v in val])
@@ -504,27 +505,6 @@ def typeMatch(val: Any, spec: Any) -> bool:
         return isinstance(val, spec)
 
 
-def get_module(obj: Any):
-    """
-    gets the module to which an object, function or class belongs
-    e.g
-
-    >>> class foo:
-    ...     def bar(self):
-    ...         pass
-    ...
-    >>> get_name(foo)
-    '__main__.foo'
-    >>> get_name(foo.bar)
-    '__main__.foo.bar'
-
-    :param obj: the object
-
-    :returns: the module
-    """
-    return sys.modules[obj.__module__]
-
-
 def resolveAnnotations(obj: Type | Callable) -> None:
     """
     Evaluates all the stringized annotations of the argument
@@ -539,7 +519,7 @@ def resolveAnnotations(obj: Type | Callable) -> None:
                 try:
                     obj.__annotations__[k] = eval(
                         v,
-                        dict(vars(get_module(obj))),
+                        dict(vars(getmodule(obj))),
                         dict(vars(obj)),
                     )
                 except Exception as e:
@@ -584,6 +564,8 @@ def annotate(
     if isclass(func):
         return annotateClass(func)
     if len(func.__annotations__) == 0:
+        return func
+    if not is_annotable(func) and not force:
         return func
 
     @wraps(func)
@@ -648,6 +630,26 @@ def annotate(
     return wrapper
 
 
+def unannotate(func: Callable) -> Callable:
+    if hasattr(func, '__pyod_annotate__'):
+        return func.__pyod_annotate__
+    else:
+        return func
+
+
+def unannotable(func: Callable) -> Callable:
+    func = unannotate(func)
+    func.__pyod_annotable__ = False
+
+
+def annotable(func: Callable) -> Callable:
+    func.__pyod_annotable__ = True
+
+
+def is_annotable(func):
+    return not hasattr(func, '__pyod_annotable__') or func.__pyod_annotable__
+
+
 __overloads__: dict[str, list[Callable]] = {}
 
 
@@ -677,7 +679,7 @@ def overload(func: Callable, name: str | None = None) -> Callable:
         name = get_name(func)
     if name not in __overloads__:
         __overloads__[name] = []
-    __overloads__[name].append(annotate(func, True))
+    __overloads__[name].append(annotate(func, oload=True))
 
     @wraps(func)
     def wrapper(*args, **kw):
@@ -752,5 +754,5 @@ def annotateClass(cls: Any):
     return cls
 
 
-__version__ = '2.0.0'
-__author__ = 'ken-morel'
+__version__ = "2.0.0"
+__author__ = "ken-morel"

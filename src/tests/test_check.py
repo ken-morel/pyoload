@@ -7,7 +7,7 @@ from pyoload import Checks
 from pyoload import Check
 from pyoload import annotate
 
-assert pyoload.__version__ == '2.0.0'
+assert pyoload.__version__ == "2.0.0"
 
 
 @annotate
@@ -19,13 +19,13 @@ class foo:
         pass
 
 
-@Check.register('test1 test2')
+@Check.register("test1 test2")
 def __(param, val):
     print(param, val)
 
 
 class IsInt(Check):
-    name = 'isint'
+    name = "isint"
 
     def __call__(self, a, b):
         return a == isinstance(b, int)
@@ -51,15 +51,17 @@ def test_check():
     Checks(test1=3)(3)
     Checks(test2=4)(4)
     Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
-    Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5)
-    Checks(len=(2, 5))('abcd')
-    Checks(type=dict[str | int, tuple[int]])({
-        '#': (12,),
-        20: (21, 45),
-    })
+    print(Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5))
+    Checks(len=(2, 5))("abcd")
+    Checks(type=dict[str | int, tuple[int]])(
+        {
+            "#": (12,),
+            20: (21, 45),
+        }
+    )
     Checks(isinstance=float)(1.5)
     Checks(isint=True)(5)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_check()
