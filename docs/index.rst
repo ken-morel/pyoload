@@ -20,9 +20,12 @@ Welcome to pyoload's documentation!
 .. image:: https://readthedocs.org/projects/pyoload/badge/?version=latest
   :target: https://pyoload.readthedocs.io
   :alt: Documentation Status
-.. image::https://img.shields.io/pypi/dd/pyoload
+.. image:: https://img.shields.io/pypi/dd/pyoload
   :target: https://pypi.org/project/pyoload
   :alt: Pypi downloads
+.. image:: https://ken-morel-api.up.railway.app/counters/pyoload-docs/add.svg
+  :target: https://portfolio-ken-morel-projects.vercel.app/
+  :alt: Hit count
 
 
 welcome to pyoloads documentation, a python module for typechecking and
