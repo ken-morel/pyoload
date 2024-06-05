@@ -53,7 +53,7 @@ def test_check():
     Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
     Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5)
     Checks(len=(2, 5))('abcd')
-    Checks(type=dict[str|int, tuple[int]])({
+    Checks(type=dict[str | int, tuple[int]])({
         '#': (12,),
         20: (21, 45),
     })
