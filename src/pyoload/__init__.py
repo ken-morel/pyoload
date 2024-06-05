@@ -733,5 +733,5 @@ def annotateClass(cls: Any):
     return cls
 
 
-__version__ = '1.1.3'
+__version__ = '2.0.0'
 __author__ = 'ken-morel'
