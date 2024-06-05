@@ -345,8 +345,8 @@ class Cast(PyoloadAnnotation):
         :returns: An instance of the casting type
         """
         if isinstance(totype, GenericAlias):
+            args = get_args(totype)
             if get_origin(totype) == dict:
-                args = get_args(totype)
                 if len(args) == 2:
                     kt, vt = args
                 elif len(args) == 1:
