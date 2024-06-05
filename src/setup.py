@@ -12,7 +12,10 @@ except FileNotFoundError:
     try:
         long_description = Path('README.md').read_text()
     except FileNotFoundError:
-        long_description = Path('/src/README.md').read_text()
+        try:
+            long_description = Path('/src/README.md').read_text()
+        except FileNotFoundError:
+            long_description = (project_dir.parent / 'README.md').read_text()
 
 deps = ()
 

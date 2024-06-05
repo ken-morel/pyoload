@@ -1,6 +1,7 @@
 import pyoload
 
 from pyoload import Checks
+from pyoload import OverloadError
 from pyoload import get_name
 from pyoload import overload
 
@@ -30,12 +31,35 @@ def div____(a: float, b: float):
     return float(float(a) / b)
 
 
+@overload
+def foo(a) -> int:
+    return 1
+
+
+@overload
+def foo(a, b) -> int:
+    return 2
+
+
+@overload
+def foo(a, b, c) -> int:
+    return 3
+
+
 def test_overload():
     assert div("4", "2") == "2.0"
-    assert div(..., 0) == "Infinity"
+    try:
+        assert div(..., 0) == "Infinity"
+    except OverloadError:
+        pass
+    else:
+        raise Exception()
     assert div("4", 2) == 2
     assert div(3.0, 1.0) == 3.0
 
+    assert foo(1) == 1
+    assert foo(1, 2) == 2
+    assert foo(1, 2, 3) == 3
 
 if __name__ == "__main__":
     test_overload()
