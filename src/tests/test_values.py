@@ -1,4 +1,6 @@
-from pyoload import *
+from pyoload import annotate
+from pyoload import Values
+from pyoload import AnnotationError
 import pyoload
 
 
