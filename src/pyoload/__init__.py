@@ -98,11 +98,15 @@ class Check:
     """
     checks_list = {}
 
-    def __init_subclass__(cls: Any, subclass: Any):
+    def __init_subclass__(cls: Any):
         """
         register's subclasses as chexks
         """
-        cls.register(cls.name, cls.__call__)
+        if hasattr(cls, 'name'):
+            name = cls.name
+        else:
+            name = cls.__name__
+        Check.register(name)(cls())
 
     @classmethod
     def register(
@@ -733,5 +737,5 @@ def annotateClass(cls: Any):
     return cls
 
 
-__version__ = '1.1.3'
+__version__ = '2.0.0'
 __author__ = 'ken-morel'
