@@ -15,6 +15,7 @@ from typing import Any
 from typing import Callable
 from typing import GenericAlias
 from typing import Type
+from typing import Union
 try:
    from types import NoneType
 except ImportError:
