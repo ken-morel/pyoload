@@ -98,7 +98,7 @@ class Check:
     """
     checks_list = {}
 
-    def __init_subclass__(subclass: Any):
+    def __init_subclass__(cls: Any):
         """
         register's subclasses as chexks
         """
@@ -106,7 +106,7 @@ class Check:
             name = cls.name
         else:
             name = cls.__name__
-        cls.register(name, cls())
+        Check.register(cls(), name)
 
     @classmethod
     def register(
