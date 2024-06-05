@@ -32,12 +32,12 @@ extra_test = (
 )
 
 extra_dev = (
-    *extra_flake8,
+    # *extra_flake8,
     *extra_test,
 )
 
 extra_ci = (
-    *extra_flake8,
+    # *extra_flake8,
     *extra_test,
     'coveralls',
 )
@@ -88,7 +88,6 @@ setup(
 
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
