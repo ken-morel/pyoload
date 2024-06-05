@@ -106,7 +106,7 @@ class Check:
             name = cls.name
         else:
             name = cls.__name__
-        Check.register(cls(), name)
+        Check.register(name)(cls())
 
     @classmethod
     def register(
