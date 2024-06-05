@@ -20,7 +20,7 @@ class foo:
 
 
 @Check.register('test1 test2')
-def test_print(param, val):
+def __(param, val):
     print(param, val)
 
 
