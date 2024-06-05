@@ -9,15 +9,16 @@ from inspect import _empty
 from inspect import getmodule
 from inspect import isclass
 from inspect import signature
-from types import UnionType
+from typing import get_origin
+from typing import get_args
 from typing import Any
 from typing import Callable
 from typing import GenericAlias
 from typing import Type
 try:
-   from typing import NoneType
+   from types import NoneType
 except ImportError:
-    NoneType = None
+    NoneType = type(None)
 
 
 class AnnotationError(ValueError):
@@ -354,7 +355,7 @@ class Cast(PyoloadAnnotation):
             else:
                 sub = totype.__args__[0]
                 return totype.__origin__([Cast.cast(v, sub) for v in val])
-        if isinstance(totype, UnionType):
+        if get_origin(totype) is Union:
             errors = []
             for subtype in totype.__args__:
                 try:
@@ -485,14 +486,16 @@ def typeMatch(val: Any, spec: Any) -> bool:
         else:
             return True
     elif isinstance(spec, GenericAlias):
-        if not isinstance(val, spec.__origin__):
+        orig = get_origin(spec)
+        if not isinstance(val, orig):
             return False
 
-        if spec.__origin__ == dict:
-            if len(spec.__args__) == 2:
-                kt, vt = spec.__args__
-            elif len(spec.__args__) == 1:
-                kt, vt = Any, spec.__args__[1]
+        if orig == dict:
+            args = get_args(spec)
+            if len(args) == 2:
+                kt, vt = args
+            elif len(args) == 1:
+                kt, vt = Any, args[1]
             else:
                 return True
 
@@ -502,7 +505,7 @@ def typeMatch(val: Any, spec: Any) -> bool:
             else:
                 return True
         else:
-            sub = spec.__args__[0]
+            sub = get_args(spec)[0]
             for val in val:
                 if not typeMatch(val, sub):
                     return False
