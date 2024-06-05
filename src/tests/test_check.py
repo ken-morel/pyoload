@@ -19,6 +19,18 @@ class foo:
         pass
 
 
+@Check.register('test1 test2')
+def test(param, val):
+    print(param, val)
+
+
+class IsInt(Check):
+    name = 'isint'
+
+    def __call__(self, a, b):
+        return a == isinstance(b, int)
+
+
 def test_check():
     try:
         foo(0)
@@ -36,14 +48,17 @@ def test_check():
     else:
         raise Exception()
 
-    @Check.register('test1 test2')
-    def test(param, val):
-        print(param, val)
     Checks(test1=3)(3)
     Checks(test2=4)(4)
     Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
     Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5)
     Checks(len=(2, 5))('abcd')
+    Checks(type=dict[str|int, tuple[int]])({
+        '#': (12,),
+        20: (21, 45),
+    })
+    Checks(isinstance=float)(1.5)
+    Checks(isint=True)(5)
 
 
 if __name__ == '__main__':
