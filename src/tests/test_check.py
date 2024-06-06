@@ -52,7 +52,7 @@ def test_check():
     Checks(test2=4)(4)
     Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
     print(Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5))
-    Checks(len=(2, 5))("abcd")
+    Checks(len=slice(2, 5))("abcd")
     Checks(type=dict[str | int, tuple[int]])(
         {
             "#": (12,),
@@ -61,6 +61,20 @@ def test_check():
     )
     Checks(isinstance=float)(1.5)
     Checks(isint=True)(5)
+
+    for name, check in pyoload.Check.checks_list.items():
+        try:
+            if pyoload.get_name(check).split('.')[0] == 'tests':
+                continue
+            pyoload.Checks(**{name: NotImplemented})(24)
+        except pyoload.Check.CheckError:
+            pass
+        else:
+            raise Exception(name, check)
+    pyoload.Checks(len=3)((1, 2, 3))
+    pyoload.Checks(len=2)((1, 2))
+    pyoload.Checks(len=slice(3, None))((1, 2, 3))
+    pyoload.Checks(len=slice(3))((1, 2))
 
 
 if __name__ == "__main__":

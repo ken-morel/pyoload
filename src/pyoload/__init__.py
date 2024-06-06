@@ -94,8 +94,9 @@ def get_name(funcOrCls: Any) -> str:
 
     :returns: modulename + qualname
     """
-    while not isinstance(funcOrCls, type) and type(funcOrCls)
-    return funcOrCls.__module__ + "." + funcOrCls.__qualname__
+    mod = funcOrCls.__module__
+    name = funcOrCls.__qualname__
+    return mod + "." + name
 
 
 class Check:
@@ -113,7 +114,9 @@ class Check:
             name = cls.name
         else:
             name = cls.__name__
-        Check.register(name)(cls())
+        obj = cls()
+        obj.__qualname__ = cls.__qualname__
+        Check.register(name)(obj)
 
     @classmethod
     def register(
@@ -159,7 +162,7 @@ class Check:
         try:
             check(params, val)
         except (AssertionError, TypeError) as e:
-            raise Check.CheckError from e
+            raise Check.CheckError(e) from e
 
     class CheckNameAlreadyExistsError(ValueError):
         """
@@ -182,15 +185,19 @@ def len_check(params, val):
     if isinstance(params, int):
         if not len(val) == params:
             raise Check.CheckError(f"length of {val!r} not eq {params!r}")
-    elif isinstance(params, tuple) and len(params) > 0:
-        mi = ma = None
-        mi, ma = params
-        if mi is not None:
-            if not len(val) > mi:
-                raise Check.CheckError(f"length of {val!r} not gt {mi!r}")
-        if ma is not None:
-            if not len(val) < ma:
-                raise Check.CheckError(f"length of {val!r} not lt {mi!r}")
+    elif isinstance(params, slice):
+        if params.start is not None:
+            if not len(val) >= params.start:
+                raise Check.CheckError(
+                    f"length of {val!r} not gt {params.start!r} not in:"
+                    f" {params!r}"
+                )
+        if params.stop is not None:
+            if not len(val) < params.stop:
+                raise Check.CheckError(
+                    f"length of {val!r} not lt {params.stop!r} not in:"
+                    f" {params!r}",
+                )
     else:
         raise Check.CheckError(f'wrong {params=!r} for len')
 

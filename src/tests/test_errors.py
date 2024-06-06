@@ -77,13 +77,3 @@ def test_errors():
         bar(NotImplemented)
     except pyoload.Check.CheckDoesNotExistError:
         pass
-
-    for name, check in pyoload.Check.checks_list.items():
-        try:
-            if pyoload.get_name(check).split('.')[0] == 'tests':
-                continue
-            pyoload.Checks(**{name: NotImplemented})(24)
-        except pyoload.Check.CheckError:
-            pass
-        else:
-            raise Exception(name, check)
