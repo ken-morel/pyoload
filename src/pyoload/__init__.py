@@ -14,13 +14,9 @@ from typing import get_args
 from typing import Any
 from typing import Callable
 from typing import GenericAlias
-from typing import Type
 from typing import Union
 
-try:
-    from types import NoneType
-except ImportError:
-    NoneType = type(None)
+NoneType = type(None)
 
 
 class AnnotationError(ValueError):
@@ -98,6 +94,7 @@ def get_name(funcOrCls: Any) -> str:
 
     :returns: modulename + qualname
     """
+    while not isinstance(funcOrCls, type) and type(funcOrCls)
     return funcOrCls.__module__ + "." + funcOrCls.__qualname__
 
 
@@ -159,7 +156,10 @@ class Check:
         check = cls.checks_list.get(name)
         if check is None:
             raise Check.CheckDoesNotExistError(name)
-        check(params, val)
+        try:
+            check(params, val)
+        except (AssertionError, TypeError) as e:
+            raise Check.CheckError from e
 
     class CheckNameAlreadyExistsError(ValueError):
         """
@@ -191,6 +191,8 @@ def len_check(params, val):
         if ma is not None:
             if not len(val) < ma:
                 raise Check.CheckError(f"length of {val!r} not lt {mi!r}")
+    else:
+        raise Check.CheckError(f'wrong {params=!r} for len')
 
 
 @Check.register("lt")
@@ -352,7 +354,9 @@ class Cast(PyoloadAnnotation):
                     kt, vt = args
                 elif len(args) == 1:
                     kt, vt = args[0], Any
-                return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
+                return {
+                    Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
+                }
             else:
                 sub = args[0]
                 return get_origin(totype)([Cast.cast(v, sub) for v in val])

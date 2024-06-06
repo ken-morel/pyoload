@@ -5,7 +5,7 @@ from pyoload import typeMatch
 from time import perf_counter_ns as nanos
 
 
-N = 100000
+N = 10000
 NS = 10
 src = Path(__file__).resolve().parent
 
