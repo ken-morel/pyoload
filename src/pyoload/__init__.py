@@ -1,6 +1,14 @@
 """
-pyoload is a little python script to incorporate some features of
- typechecking and casting in python.
+`pyoload` is a python module which will help you type check your function
+arguments and object attribute types on function call and attribute assignment.
+
+It supports the various builtin data types supported by :py:`isinstance` and
+adds support for:
+- :py:`typing.GenericAlias`
+- :py:`pyoload.PyoloadAnnoation` subclasses as:
+  - :py:`pyoload.Cast`
+  - :py:`pyoload.Values`
+  - :py:`pyoload.Checks`
 """
 
 from functools import partial
@@ -21,32 +29,30 @@ NoneType = type(None)
 
 class AnnotationError(ValueError):
     """
-    base exception for most pyoload errors
+    base exception for most pyoload errors is raised when a non-subclassable
+    error occurs.
     """
 
 
 class AnnotationErrors(AnnotationError):
     """
-    Hosts a list of AnnotationError
+    Hosts a list of `AnnotationError` instances.
     """
 
 
 class InternalAnnotationError(Exception):
-    """
-    **internal**
-    raised by overloads on type mismatch
-    """
+    pass
 
 
 class CastingError(TypeError):
     """
-    Error during casting
+    Error during casting, holds the actual error
     """
 
 
 class OverloadError(TypeError):
     """
-    Error in or during overload
+    Error in or during overload calling.
     """
 
 
@@ -73,6 +79,16 @@ class Values(PyoloadAnnotation, tuple):
         """
         Checks if the tuple containes the specified value.
 
+        >>> isPrimaryColor = Values(('red', 'green', 'blue'))
+        >>> isPrimaryColor
+        Values('red', 'green', 'blue')
+        >>> isPrimaryColor('red')
+        True
+        >>> isPrimaryColor('orange')
+        False
+        >>> isPrimaryColor(4)
+        False
+
         :param val: the value to be checked
 
         :returns: if the value `val` is contained in `self`
@@ -90,6 +106,16 @@ def get_name(funcOrCls: Any) -> str:
     Gives a class or function name, possibly unique gotten from
     it's module name and qualifier name
 
+    >>> def foo():
+    ...     pass
+    ...
+    >>> get_name(foo)
+    '__main__.foo'
+    >>> get_name(get_name)
+    'pyoload.get_name'
+    >>> get_name(print)
+    'builtins.print'
+
     :param funcOrCls: The object who's name to return
 
     :returns: modulename + qualname
@@ -102,13 +128,19 @@ def get_name(funcOrCls: Any) -> str:
 class Check:
     """
     A class basicly abstract which holds registerred checks in pyoload
+    A new check can be registerred by subclassing whith a non-initializing
+    callable class, the name will be gotten from the classes :py:`.name`
+    attribute or the basename of the class if not present.
+
+    A :py:`Check.CheckNameAlreadyExistsError` is raised if the check is already
+    registerred.
     """
 
     checks_list = {}
 
     def __init_subclass__(cls: Any):
         """
-        register's subclasses as chexks
+        register's subclasses as checks
         """
         if hasattr(cls, "name"):
             name = cls.name
@@ -126,12 +158,104 @@ class Check:
         """
         returns a callable which registers a new checker method
 
+        used as:
+
+        >>> @Check.register('integer_not_equal neq')  # can register on multiple names seperated by spaces
+        ... def _(param, val):
+        ...     """
+        ...     :param param: The parameter passed as kwarg
+        ...     :param val: The value passed as argument
+        ...     """
+        ...     assert param != val  # using assertions
+        ...     if not isinstance(param, int) or isinstance(val, int):
+        ...         raise TypeError()  # using typeError, handles even unwanted errors in case wrong value passed
+        ...     if param == val:
+        ...         raise Check.CheckError(f"values {param=!r} and {val=!r} not equal")
+        ...
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "C:\pyoload\src\pyoload\__init__.py", line 146, in register
+            name = cls.name
+                ^^^^^^^^^^^^
+        pyoload.Check.CheckNameAlreadyExistsError: integer_not_equal
+        >>> Checks(neq=3)(1)
+        Traceback (most recent call last):
+          File "C:\pyoload\src\pyoload\__init__.py", line 172, in check
+
+          File "<stdin>", line 10, in _
+        TypeError
+
+        The above exception was the direct cause of the following exception:
+
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "C:\pyoload\src\pyoload\__init__.py", line 291, in __call__
+            """
+
+          File "C:\pyoload\src\pyoload\__init__.py", line 174, in check
+            for name in names:
+            ^^^^^^^^^^^^^^^^^^^
+        pyoload.Check.CheckError
+        >>> Checks(neq=3)(1)
+        Traceback (most recent call last):
+          File "C:\pyoload\src\pyoload\__init__.py", line 172, in check
+
+          File "<stdin>", line 10, in _
+        TypeError
+
+        The above exception was the direct cause of the following exception:
+
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "C:\pyoload\src\pyoload\__init__.py", line 291, in __call__
+            """
+
+          File "C:\pyoload\src\pyoload\__init__.py", line 174, in check
+            for name in names:
+            ^^^^^^^^^^^^^^^^^^^
+        pyoload.Check.CheckError
+        >>> Check.check_list['neq']
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+        AttributeError: type object 'Check' has no attribute 'check_list'. Did you mean: 'checks_list'?
+        >>> Check.checks_list['neq']
+        <function _ at 0x01ACABB8>
+        >>> Check.checks_list['neq'](1)
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+        TypeError: _() missing 1 required positional argument: 'val'
+        >>> Check.checks_list['neq'](3, 1)
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "<stdin>", line 10, in _
+        TypeError
+        >>> Checks(neq=3)
+        <Checks(neq=3)>
+        >>> Checks(neq=3)(3)
+        Traceback (most recent call last):
+          File "C:\pyoload\src\pyoload\__init__.py", line 172, in check
+
+          File "<stdin>", line 8, in _
+        AssertionError
+
+        The above exception was the direct cause of the following exception:
+
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "C:\pyoload\src\pyoload\__init__.py", line 291, in __call__
+            """
+
+          File "C:\pyoload\src\pyoload\__init__.py", line 174, in check
+            for name in names:
+            ^^^^^^^^^^^^^^^^^^^
+        pyoload.Check.CheckError
+
         :param cls: the Check class
         :param name: the name to be registerred as.
 
         :returns: a function which registers the check under the name
         """
-        names = [x for x in name.split(" ") if x.strip() != ""]
+        names = [x.strip() for x in name.split(" ") if x.strip() != ""]
         for name in names:
             if name in cls.checks_list:
                 raise Check.CheckNameAlreadyExistsError(name)
@@ -240,14 +364,15 @@ def func_check(param, val):
 
 @Check.register("type")
 def matches_check(param, val):
-    if not typeMatch(val, param):
-        raise Check.CheckError(f"{val!r} foes not match type {param!r}")
+    m, e = typeMatch(val, param)
+    if m:
+        raise Check.CheckError(f"{val!r} foes not match type {param!r}", e)
 
 
 @Check.register("isinstance")
 def instance_check(param, val):
     if not isinstance(val, param):
-        raise Check.CheckError(f"{val!r} not instance of {param!r}")
+        raise Check.CheckError(f"{val!r} foes no instance of {param!r}")
 
 
 class Checks(PyoloadAnnotation):
@@ -470,37 +595,37 @@ class CastedAttr(Cast):
         self.value = self(value)
 
 
-def typeMatch(val: Any, spec: Any) -> bool:
+def typeMatch(val: Any, spec: Any) -> tuple:
     """
     recursively checks if type matches
 
     :param val: The value to typecheck
     :param spec: The type specifier
 
-    :return: A boolean
+    :returns: A tuple of the match status and the optional errors
     """
     try:
-        return isinstance(val, spec)
+        return (isinstance(val, spec), None)
     except TypeError:
         pass
     if spec is any:
         raise TypeError("May be have you confused `Any` and `any`")
 
     if spec is Any or spec is _empty or spec is None or val is None:
-        return True
+        return (True, None)
     if isinstance(spec, Values):
-        return spec(val)
+        return (spec(val), None)
     elif isinstance(spec, Checks):
         try:
             spec(val)
-        except Check.CheckError:
-            return False
+        except Check.CheckError as e:
+            return (False, e)
         else:
-            return True
+            return (True, None)
     elif isinstance(spec, GenericAlias):
         orig = get_origin(spec)
         if not isinstance(val, orig):
-            return False
+            return (False, None)
 
         if orig == dict:
             args = get_args(spec)
@@ -509,20 +634,25 @@ def typeMatch(val: Any, spec: Any) -> bool:
             elif len(args) == 1:
                 kt, vt = Any, args[1]
             else:
-                return True
+                return (True, None)
 
             for k, v in val.items():
-                if not typeMatch(k, kt) or not typeMatch(v, vt):
-                    return False
+                k, e = typeMatch(k, kt)
+                if not k:
+                    return (k, e)
+                v, e = typeMatch(v, vt)
+                if not v:
+                    return (False, e)
             else:
-                return True
+                return (True, None)
         else:
             sub = get_args(spec)[0]
             for val in val:
-                if not typeMatch(val, sub):
-                    return False
+                m, e = typeMatch(val, sub)
+                if not m:
+                    return (False, e)
             else:
-                return True
+                return (True, None)
 
 
 def resolveAnnotations(obj: Callable) -> None:
@@ -610,7 +740,7 @@ def annotate(
             if isinstance(param.annotation, Cast):
                 args.arguments[k] = param.annotation(v)
                 continue
-            if not typeMatch(v, param.annotation):
+            if not typeMatch(v, param.annotation)[0]:
                 if oload:
                     raise InternalAnnotationError()
                 errors.append(
@@ -630,11 +760,13 @@ def annotate(
 
             if isinstance(ann, Cast):
                 return ann(ret)
-            if not typeMatch(ret, ann):
+            m, e = typeMatch(ret, ann)
+            if not m:
                 raise AnnotationError(
                     f"return value: {ret!r} does not match annotation:"
                     f" {ann!r} for "
                     f"of function {get_name(func)}",
+                    e
                 )
         return ret
 
@@ -687,7 +819,7 @@ def overload(func: Callable, name: str = None) -> Callable:
     :param func: the function to annotate
     :param name: optional name under which to register.
 
-    :return: the wrapper function
+    :returns: the wrapper function
     """
     if isinstance(func, str):
         return partial(overload, name=func)
@@ -759,12 +891,16 @@ def annotateClass(cls: Any, recur: bool = True):
             return setter(self, name, value)  # do not check if no annotations
         elif isinstance(self.__annotations__[name], Cast):
             return setter(self, name, self.__annotations__[name](value))
-        elif not typeMatch(value, self.__annotations__[name]):
-            raise AnnotationError(
-                f"value {value!r} does not match annotation"
-                f"of attribute: {name!r}:{self.__annotations__[name]!r}"
-                f" of object of class {get_name(cls)}",
-            )
+
+        else:
+            m, e = typeMatch(value, self.__annotations__[name])
+            if not m:
+                raise AnnotationError(
+                    f"value {value!r} does not match annotation"
+                    f"of attribute: {name!r}:{self.__annotations__[name]!r}"
+                    f" of object of class {get_name(cls)}",
+                    e,
+                )
         return setter(self, name, value)
 
     cls.__setattr__ = new_setter
