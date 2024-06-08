@@ -36,28 +36,30 @@ Hy pythonista, here is `pyoload`, what is?
 It uses the beauty and ease of use of decorators and python scopes to provide
 an easy to use tool. here some quick examples.
 
+.. code-block:: python
 
-```python
-from pyoload import *
+    source
 
-@annotate
-def greater_than(a: int | float, b: int | float) -> bool:
-    return a > b
+    python
+    from pyoload import *
 
-@multimethod
-def foo(a, b=3, c: int = 5):
-    ...
+    @annotate
+    def greater_than(a: int | float, b: int | float) -> bool:
+        return a > b
 
-@multimethod
-def foo(a: int, b: Cast(str)):
-    ...
+    @multimethod
+    def foo(a, b=3, c: int = 5):
+        ...
 
-@multimethod
-def foo(a) -> Cast(str):
-    return repr(a)
+    @multimethod
+    def foo(a: int, b: Cast(str)):
+        ...
 
-foo(4)
-```
+    @multimethod
+    def foo(a) -> Cast(str):
+        return repr(a)
+
+  foo(4)
 
 
 * :ref:`genindex`
