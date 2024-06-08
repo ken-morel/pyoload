@@ -23,6 +23,7 @@ from typing import Any
 from typing import Callable
 from typing import GenericAlias
 from typing import Union
+from typing import Type
 
 NoneType = type(None)
 
@@ -342,6 +343,8 @@ class BuiltinChecks:
     @staticmethod
     @Check.register("type")
     def matches_check(param, val):
+        """Uses `type_match(val, param)` to check the value
+        """
         m, e = type_match(val, param)
         if m:
             raise Check.CheckError(f"{val!r} foes not match type {param!r}", e)
@@ -349,6 +352,8 @@ class BuiltinChecks:
     @staticmethod
     @Check.register("isinstance")
     def instance_check(param, val):
+        """uses :py:`isinstance(val, param)` to check the value
+        """
         if not isinstance(val, param):
             raise Check.CheckError(f"{val!r} foes no instance of {param!r}")
 
@@ -417,22 +422,13 @@ class CheckedAttr(Checks):
         super().__init__(**checks)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
-        """
-        sets the name of the attribute
-        """
         self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):
-        """
-        returns the value in `self.value`
-        """
         return self.value
 
     def __set__(self: Any, obj: Any, value: Any):
-        """
-        Performs checks then assigns the new value
-        """
         self(value)
         self.value = value
 
@@ -445,7 +441,7 @@ class Cast(PyoloadAnnotation):
     @staticmethod
     def cast(val: Any, totype: Any) -> Any:
         """
-        The gratest deal.
+        **The gratest deal.**
         Recursively casts the given value to the specified structure or type
         e.g
 
@@ -545,7 +541,6 @@ class CastedAttr(Cast):
         17
         >>> print(temeze.phone)
         (6, 7, 8, 9, 3, 6, 7, 9, 8)
-        >>>
         >>> mballa = Person(0, "123456")
         Traceback (most recent call last):
           ...
@@ -554,26 +549,17 @@ class CastedAttr(Cast):
         super().__init__(type)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
-        """def __set_name__(self: Any, obj: Any, name: str, typo: Any = None)
-        setd the name of the attribute
-        """
         self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):
-        """def __get__(self: Any, obj: Any, type: Any)
-        returns the value in `self.value`
-        """
         return self.value
 
     def __set__(self: Any, obj: Any, value: Any):
-        """def __set__(self: Any, obj: Any, value: Any)
-        Performs checks then assigns the new value
-        """
         self.value = self(value)
 
 
-def type_match(val: Any, spec: Any) -> tuple:
+def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
     """
     recursively checks if type matches
 
@@ -779,7 +765,7 @@ def is_annoted(func):
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def overload(func: Callable, name: str = None) -> Callable:
+def multimethod(func: Callable, name: str = None, force=False) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -790,8 +776,8 @@ def overload(func: Callable, name: str = None) -> Callable:
 
     The decorated function takes some new attributes:
     - __pyod_annotate__: The raw function
-    - __pyod_overloads__: The list of the function overloads
-    - overload(func: Callable) registers the passed function under the same \
+    - __pyod_dispatches__: The list of the function overloads
+    - multimethod(func: Callable) registers the passed function under the same\
       name.
 
     :param func: the function to annotate
@@ -800,12 +786,12 @@ def overload(func: Callable, name: str = None) -> Callable:
     :returns: the wrapper function
     """
     if isinstance(func, str):
-        return partial(overload, name=func)
+        return partial(multimethod, name=func)
     if name is None or not isinstance(name, str):
         name = get_name(func)
     if name not in __overloads__:
         __overloads__[name] = []
-    __overloads__[name].append(annotate(func, oload=True))
+    __overloads__[name].append(annotate(func, oload=True, force=force))
 
     @wraps(func)
     def wrapper(*args, **kw):
@@ -823,11 +809,14 @@ def overload(func: Callable, name: str = None) -> Callable:
             )
         return val
 
-    wrapper.__pyod_overloads__ = __overloads__[name]
+    wrapper.__pyod_dispatches__ = __overloads__[name]
     wrapper.__pyod_overloads_name__ = name
-    wrapper.overload = partial(overload, name=name)
+    wrapper.overload = wrapper.add = partial(overload, name=name)
 
     return wrapper
+
+
+overload = multimethod
 
 
 def annotateClass(cls: Any, recur: bool = True):
@@ -886,8 +875,10 @@ def annotateClass(cls: Any, recur: bool = True):
 
 
 __all__ = [
-    'annotate', 'overload', 'Checks', 'Check', 'annotable', 'unannotable',
-    'unannotate', 'is_annotable', 'is_annoted', 'resove_annotations'
+    'annotate', 'overload', 'multimethod', 'Checks', 'Check', 'annotable',
+    'unannotable', 'unannotate', 'is_annotable', 'is_annoted',
+    'resove_annotations', 'Cast', 'CastedAttr', 'CheckedAttr', 'Values',
+    'AnnotationResolutionError', 'AnnotationError',
 ]
 
 __version__ = "2.0.0"
