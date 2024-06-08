@@ -741,6 +741,14 @@ def annotate(
 
 
 def unannotate(func: Callable) -> Callable:
+    """
+    Returns the underlying function returned by :py:`annotate`,
+    if not annotated it returns the passed function.
+
+    :param func: the function to unwrap
+
+    :returns: The unwrapped function
+    """
     if hasattr(func, "__pyod_annotate__"):
         return func.__pyod_annotate__
     else:
@@ -748,28 +756,46 @@ def unannotate(func: Callable) -> Callable:
 
 
 def unannotable(func: Callable) -> Callable:
+    """
+    Marks a function to be not annotable, the function will then not be wrapped
+    by :py:`annotate` or :py:`multimethod`, except :py:`force=True` argument
+    specified.
+    """
     func = unannotate(func)
     func.__pyod_annotable__ = False
     return func
 
 
 def annotable(func: Callable) -> Callable:
+    """
+    Marks a function to be annotatble by :py:`annotate` and :py:`overload`
+    """
     func.__pyod_annotable__ = True
     return func
 
 
 def is_annotable(func):
+    """
+    Returns if the function posses the unannotable mark.
+    """
     return not hasattr(func, "__pyod_annotable__") or func.__pyod_annotable__
 
 
 def is_annoted(func):
+    """
+    Determines if a function has been annotated.
+    """
     return hasattr(func, "__pyod_annotate__")
 
 
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def multimethod(func: Callable, name: str = None, force=False) -> Callable:
+def multimethod(
+    func: Callable,
+    name: str = None,
+    force: bool = False
+) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -786,6 +812,7 @@ def multimethod(func: Callable, name: str = None, force=False) -> Callable:
 
     :param func: the function to annotate
     :param name: optional name under which to register.
+    :param force: overloads even unnanotable functions
 
     :returns: the wrapper function
     """
