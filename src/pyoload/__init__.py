@@ -346,7 +346,7 @@ class BuiltinChecks:
         """Uses `type_match(val, param)` to check the value
         """
         m, e = type_match(val, param)
-        if m:
+        if not m:
             raise Check.CheckError(f"{val!r} foes not match type {param!r}", e)
 
     @staticmethod
