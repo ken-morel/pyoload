@@ -76,4 +76,28 @@ These are what pyoload adds to the standard annotations:
 > [!NOTE]
 > The added annotations are still not mergeable with the standard types.
 
-###
+### `pyoload.Values`
+
+A simple `tuple` subclass, use them as annotation and it will validate only
+included values.
+
+### `pyoload.Cast`
+
+This performs recursive casting of the passed arguments into the specified type
+It supports `dict` generic aliases as `dict[str, int | str] ` and tries cast in
+the specified order when the type is a Union.
+
+### `pyoload.Checks`
+
+Permits You tou use custom checker methods, e.g
+
+```python
+from pyoload import *
+
+test = lambda val: True  # put your check here
+
+def foo(a: Checks(func=test):
+    ...
+```
+
+You can register your own checks or use some other builtin checks
