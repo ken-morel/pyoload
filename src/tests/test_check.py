@@ -67,6 +67,8 @@ def test_check():
             if pyoload.get_name(check).split('.')[0] == 'tests':
                 continue
             pyoload.Checks(**{name: NotImplemented})(24)
+            pyoload.Checks(**{name: int})(11)
+            pyoload.Checks(**{name: 3})(11)
         except pyoload.Check.CheckError:
             pass
         else:

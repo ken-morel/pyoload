@@ -675,6 +675,8 @@ def annotate(
 
     :returns: the wrapper function
     """
+    if not hasattr(func, '__annotations__'):
+        return func
     if isclass(func):
         return annotateClass(func)
     if len(func.__annotations__) == 0:
@@ -717,7 +719,7 @@ def annotate(
         if len(errors) > 0:
             raise AnnotationErrors(errors)
 
-        ret = func(*pargs, **kw)
+        ret = func(**args.arguments)
 
         if sign.return_annotation is not _empty:
             ann = sign.return_annotation
@@ -748,10 +750,12 @@ def unannotate(func: Callable) -> Callable:
 def unannotable(func: Callable) -> Callable:
     func = unannotate(func)
     func.__pyod_annotable__ = False
+    return func
 
 
 def annotable(func: Callable) -> Callable:
     func.__pyod_annotable__ = True
+    return func
 
 
 def is_annotable(func):
