@@ -7,15 +7,14 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
-<title>examples | pyoload 2.0.0 documentation</title>
-<meta content="examples | pyoload 2.0.0 documentation" property="og:title"/>
-<meta content="examples | pyoload 2.0.0 documentation" name="twitter:title"/>
+<title>What’s new | pyoload 2.0.0 documentation</title>
+<meta content="What’s new | pyoload 2.0.0 documentation" property="og:title"/>
+<meta content="What’s new | pyoload 2.0.0 documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=8d216cef" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
-<link href="usage.html" rel="next" title="usage"/>
-<link href="index.html" rel="prev" title="Welcome to pyoload v|version| documentation!"/>
+<link href="installation.html" rel="prev" title="Installation"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -69,11 +68,11 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s new</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What’s new</a></li>
 </ul>
 </nav>
 </div>
@@ -93,43 +92,20 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">examples</span>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">What’s new</span>
 </nav>
 <div id="content" role="main">
-<section id="examples">
-<h1>examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h1>
-<section id="person-address-pyoload-cast-pyoload-checkedattr">
-<h2>Person address (<code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span></code>, <code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">CheckedAttr</span></code>)<a class="headerlink" href="#person-address-pyoload-cast-pyoload-checkedattr" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#person-address-pyoload-cast-pyoload-checkedattr'">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span id="line-2"><span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
-</span><span id="line-3">    <span class="n">name</span> <span class="o">=</span> <span class="n">CheckedAttr</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-</span><span id="line-4">    <span class="n">phone</span> <span class="o">=</span> <span class="n">CastedAttr</span><span class="p">(</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
-</span><span id="line-5">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">phone</span><span class="p">):</span>
-</span><span id="line-6">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-</span><span id="line-7">        <span class="bp">self</span><span class="o">.</span><span class="n">phone</span> <span class="o">=</span> <span class="n">phone</span>
-</span></code></pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">temeze</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s1">'17R'</span><span class="p">,</span> <span class="s2">"678936798"</span><span class="p">)</span>
-</span><span id="line-2"><span class="gp">&gt;&gt;&gt;</span>
-</span><span id="line-3"><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">temeze</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>  <span class="c1"># 17</span>
-</span><span id="line-4"><span class="gt">Traceback (most recent call last):</span>
-</span><span id="line-5">  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
-</span><span id="line-6"><span class="gr">AttributeError</span>: <span class="n">'Person' object has no attribute 'age'</span>
-</span><span id="line-7"><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">temeze</span><span class="o">.</span><span class="n">phone</span><span class="p">)</span>  <span class="c1"># (6, 7, 8, 9, 3, 6, 7, 9, 8)</span>
-</span><span id="line-8"><span class="go">(6, 7, 8, 9, 3, 6, 7, 9, 8)</span>
-</span><span id="line-9"><span class="gp">&gt;&gt;&gt;</span>
-</span><span id="line-10"><span class="gp">&gt;&gt;&gt; </span><span class="n">mballa</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"123456"</span><span class="p">)</span>
-</span><span id="line-11"><span class="gt">Traceback (most recent call last):</span>
-</span><span id="line-12"><span class="w">  </span><span class="c">...</span>
-</span><span id="line-13"><span class="gr">TypeError</span>: <span class="n">object of type 'int' has no len()</span>
-</span></code></pre></div>
-</div>
+<section id="what-s-new">
+<h1>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
+<section id="pyoload-v2-0-0">
+<h2>pyoload v2.0.0<a class="headerlink" href="#pyoload-v2-0-0" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-v2-0-0'">¶</a></h2>
+<p>Corrected</p>
 </section>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#person-address-pyoload-cast-pyoload-checkedattr'" class="reference internal" href="#person-address-pyoload-cast-pyoload-checkedattr">Person address (<code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span></code>, <code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">CheckedAttr</span></code>)</a></li>
+<li><a :data-current="activeSection === '#pyoload-v2-0-0'" class="reference internal" href="#pyoload-v2-0-0">pyoload v2.0.0</a></li>
 </ul>
 </div>
 </aside>

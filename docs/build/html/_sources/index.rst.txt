@@ -28,8 +28,38 @@ Welcome to pyoload v|version| documentation!
   :alt: Hit count
 
 
-welcome to pyoloads documentation, a python module for typechecking and
-casting of complex to simple datatypes.
+Hy pythonista, here is `pyoload`, what is?
+
+  A python module to integrate function arguments typechecking, and multiple
+  dispatching in python.
+
+It uses the beauty and ease of use of decorators and python scopes to provide
+an easy to use tool. here some quick examples.
+
+.. code-block:: python
+
+    source
+
+    python
+    from pyoload import *
+
+    @annotate
+    def greater_than(a: int | float, b: int | float) -> bool:
+        return a > b
+
+    @multimethod
+    def foo(a, b=3, c: int = 5):
+        ...
+
+    @multimethod
+    def foo(a: int, b: Cast(str)):
+        ...
+
+    @multimethod
+    def foo(a) -> Cast(str):
+        return repr(a)
+
+  foo(4)
 
 
 * :ref:`genindex`
@@ -42,3 +72,5 @@ casting of complex to simple datatypes.
   examples
   usage
   api
+  installation
+  whatsnew

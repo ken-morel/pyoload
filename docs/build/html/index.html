@@ -71,6 +71,8 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s new</a></li>
 </ul>
 </nav>
 </div>
@@ -94,8 +96,37 @@
 <a class="reference external image-reference" href="https://pyoload.readthedocs.io"><img alt="Documentation Status" src="https://readthedocs.org/projects/pyoload/badge/?version=latest"/></a>
 <a class="reference external image-reference" href="https://pypi.org/project/pyoload"><img alt="Pypi downloads" src="https://img.shields.io/pypi/dd/pyoload"/></a>
 <a class="reference external image-reference" href="https://portfolio-ken-morel-projects.vercel.app/"><img alt="Hit count" src="https://ken-morel-api.up.railway.app/counters/pyoload-docs/add.svg"/></a>
-<p>welcome to pyoloads documentation, a python module for typechecking and
-casting of complex to simple datatypes.</p>
+<p>Hy pythonista, here is <cite>pyoload</cite>, what is?</p>
+<blockquote>
+<div><p>A python module to integrate function arguments typechecking, and multiple
+dispatching in python.</p>
+</div></blockquote>
+<p>It uses the beauty and ease of use of decorators and python scopes to provide
+an easy to use tool. here some quick examples.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">  <span class="n">source</span>
+</span><span id="line-2">
+</span><span id="line-3">  <span class="n">python</span>
+</span><span id="line-4">  <span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span id="line-5">
+</span><span id="line-6">  <span class="nd">@annotate</span>
+</span><span id="line-7">  <span class="k">def</span> <span class="nf">greater_than</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-8">      <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
+</span><span id="line-9">
+</span><span id="line-10">  <span class="nd">@multimethod</span>
+</span><span id="line-11">  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+</span><span id="line-12">      <span class="o">...</span>
+</span><span id="line-13">
+</span><span id="line-14">  <span class="nd">@multimethod</span>
+</span><span id="line-15">  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">str</span><span class="p">)):</span>
+</span><span id="line-16">      <span class="o">...</span>
+</span><span id="line-17">
+</span><span id="line-18">  <span class="nd">@multimethod</span>
+</span><span id="line-19">  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cast</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+</span><span id="line-20">      <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span><span id="line-21">
+</span><span id="line-22"><span class="n">foo</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
@@ -105,6 +136,8 @@ casting of complex to simple datatypes.</p>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s new</a></li>
 </ul>
 </div>
 </section>

@@ -14,6 +14,7 @@
 <link href="_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
+<link href="installation.html" rel="next" title="Installation"/>
 <link href="usage.html" rel="prev" title="usage"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
@@ -71,6 +72,8 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s new</a></li>
 </ul>
 </nav>
 </div>
@@ -108,6 +111,17 @@ adds support for:
 <li><p><a href="#id11"><span class="problematic" id="id12">:py:`pyoload.Checks`</span></a></p></li>
 </ul>
 </div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Authors<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ken-morel</p>
+</dd>
+<dt class="field-even">Version<span class="colon">:</span></dt>
+<dd class="field-even"><p>2.0.0</p>
+</dd>
+<dt class="field-odd">Dedication<span class="colon">:</span></dt>
+<dd class="field-odd"><p>To the pythonista.</p>
+</dd>
+</dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.AnnotationError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">AnnotationError</span></span><a class="headerlink" href="#pyoload.AnnotationError" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.AnnotationError'">¶</a></dt>
@@ -328,6 +342,11 @@ assignment, E.G</p>
 <dd><p>A tuple subclass which holds several values as possible annotations</p>
 </dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="pyoload.annotable">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">annotable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.annotable" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.annotable'">¶</a></dt>
+<dd><p>Marks a function to be annotatble by <a href="#id19"><span class="problematic" id="id20">:py:`annotate`</span></a> and <a href="#id21"><span class="problematic" id="id22">:py:`overload`</span></a></p>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="pyoload.annotate">
 <span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">annotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.annotate" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.annotate'">¶</a></dt>
 <dd><p>returns a wrapper over the passed function
@@ -346,8 +365,18 @@ which typechecks arguments on each call.</p>
 </dl>
 </dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="pyoload.is_annotable">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">is_annotable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.is_annotable" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.is_annotable'">¶</a></dt>
+<dd><p>Returns if the function posses the unannotable mark.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.is_annoted">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">is_annoted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyoload.is_annoted" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.is_annoted'">¶</a></dt>
+<dd><p>Determines if a function has been annotated.</p>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="pyoload.multimethod">
-<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">multimethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.multimethod" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.multimethod'">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">multimethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.multimethod" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.multimethod'">¶</a></dt>
 <dd><p>returns a wrapper over the passed function
 which typechecks arguments on each call
 and finds the function instance with same name which does not raise
@@ -363,6 +392,7 @@ which will register to the specified name.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>func</strong> – the function to annotate</p></li>
 <li><p><strong>name</strong> – optional name under which to register.</p></li>
+<li><p><strong>force</strong> – overloads even unnanotable functions</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -372,7 +402,7 @@ which will register to the specified name.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.overload">
-<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">overload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.overload" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.overload'">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">overload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.overload" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.overload'">¶</a></dt>
 <dd><p>returns a wrapper over the passed function
 which typechecks arguments on each call
 and finds the function instance with same name which does not raise
@@ -388,6 +418,7 @@ which will register to the specified name.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>func</strong> – the function to annotate</p></li>
 <li><p><strong>name</strong> – optional name under which to register.</p></li>
+<li><p><strong>force</strong> – overloads even unnanotable functions</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -405,6 +436,27 @@ which will register to the specified name.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.unannotable">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">unannotable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.unannotable" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.unannotable'">¶</a></dt>
+<dd><p>Marks a function to be not annotable, the function will then not be wrapped
+by <a href="#id23"><span class="problematic" id="id24">:py:`annotate`</span></a> or <a href="#id25"><span class="problematic" id="id26">:py:`multimethod`</span></a>, except <a href="#id27"><span class="problematic" id="id28">:py:`force=True`</span></a> argument
+specified.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyoload.unannotate">
+<span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">unannotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.unannotate" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.unannotate'">¶</a></dt>
+<dd><p>Returns the underlying function returned by <a href="#id29"><span class="problematic" id="id30">:py:`annotate`</span></a>,
+if not annotated it returns the passed function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> – the function to unwrap</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The unwrapped function</p>
 </dd>
 </dl>
 </dd></dl>
@@ -430,10 +482,15 @@ which will register to the specified name.</p>
 <li><a :data-current="activeSection === '#pyoload.CheckedAttr'" class="reference internal" href="#pyoload.CheckedAttr"><code class="docutils literal notranslate"><span class="pre">CheckedAttr</span></code></a></li>
 <li><a :data-current="activeSection === '#pyoload.Checks'" class="reference internal" href="#pyoload.Checks"><code class="docutils literal notranslate"><span class="pre">Checks</span></code></a></li>
 <li><a :data-current="activeSection === '#pyoload.Values'" class="reference internal" href="#pyoload.Values"><code class="docutils literal notranslate"><span class="pre">Values</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.annotable'" class="reference internal" href="#pyoload.annotable"><code class="docutils literal notranslate"><span class="pre">annotable()</span></code></a></li>
 <li><a :data-current="activeSection === '#pyoload.annotate'" class="reference internal" href="#pyoload.annotate"><code class="docutils literal notranslate"><span class="pre">annotate()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.is_annotable'" class="reference internal" href="#pyoload.is_annotable"><code class="docutils literal notranslate"><span class="pre">is_annotable()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.is_annoted'" class="reference internal" href="#pyoload.is_annoted"><code class="docutils literal notranslate"><span class="pre">is_annoted()</span></code></a></li>
 <li><a :data-current="activeSection === '#pyoload.multimethod'" class="reference internal" href="#pyoload.multimethod"><code class="docutils literal notranslate"><span class="pre">multimethod()</span></code></a></li>
 <li><a :data-current="activeSection === '#pyoload.overload'" class="reference internal" href="#pyoload.overload"><code class="docutils literal notranslate"><span class="pre">overload()</span></code></a></li>
 <li><a :data-current="activeSection === '#pyoload.resove_annotations'" class="reference internal" href="#pyoload.resove_annotations"><code class="docutils literal notranslate"><span class="pre">resove_annotations()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.unannotable'" class="reference internal" href="#pyoload.unannotable"><code class="docutils literal notranslate"><span class="pre">unannotable()</span></code></a></li>
+<li><a :data-current="activeSection === '#pyoload.unannotate'" class="reference internal" href="#pyoload.unannotate"><code class="docutils literal notranslate"><span class="pre">unannotate()</span></code></a></li>
 </ul>
 </div>
 </aside>

@@ -12,13 +12,13 @@ using pip
 from pypi
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-using `pip install pyoload`
+using :py:`pip install pyoload`
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 from github source
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-using `pip install git+https://github.com/ken-morel/pyoload.git`
+using `pip install got+github.com/ken-morel/pyoload.git`
 
 .. warning:: github installation
 
