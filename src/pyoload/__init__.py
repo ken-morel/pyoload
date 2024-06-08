@@ -160,80 +160,24 @@ class Check:
 
         used as:
 
-        >>> @Check.register('integer_not_equal neq')  # can register on multiple names seperated by spaces
-        ... def _(param, val):
-        ...     """
+        >>> @Check.register('integer_not_equal neq') # can register on multiple
+        ... def _(param, val):                      # names seperated by spaces
+        ...     '''
         ...     :param param: The parameter passed as kwarg
         ...     :param val: The value passed as argument
-        ...     """
+        ...     '''
         ...     assert param != val  # using assertions
         ...     if not isinstance(param, int) or isinstance(val, int):
-        ...         raise TypeError()  # using typeError, handles even unwanted errors in case wrong value passed
-        ...     if param == val:
-        ...         raise Check.CheckError(f"values {param=!r} and {val=!r} not equal")
+        ...         raise TypeError()  # using typeError, handles even unwanted
+        ...     if param == val:        # errors in case wrong value passed
+        ...         raise Check.CheckError(f"values {param=!r} and {val=!r} no\
+t equal")
         ...
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-          File "C:\pyoload\src\pyoload\__init__.py", line 146, in register
-            name = cls.name
-                ^^^^^^^^^^^^
-        pyoload.Check.CheckNameAlreadyExistsError: integer_not_equal
-        >>> Checks(neq=3)(1)
-        Traceback (most recent call last):
-          File "C:\pyoload\src\pyoload\__init__.py", line 172, in check
-
-          File "<stdin>", line 10, in _
-        TypeError
-
-        The above exception was the direct cause of the following exception:
-
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-          File "C:\pyoload\src\pyoload\__init__.py", line 291, in __call__
-            """
-
-          File "C:\pyoload\src\pyoload\__init__.py", line 174, in check
-            for name in names:
-            ^^^^^^^^^^^^^^^^^^^
-        pyoload.Check.CheckError
-        >>> Checks(neq=3)(1)
-        Traceback (most recent call last):
-          File "C:\pyoload\src\pyoload\__init__.py", line 172, in check
-
-          File "<stdin>", line 10, in _
-        TypeError
-
-        The above exception was the direct cause of the following exception:
-
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-          File "C:\pyoload\src\pyoload\__init__.py", line 291, in __call__
-            """
-
-          File "C:\pyoload\src\pyoload\__init__.py", line 174, in check
-            for name in names:
-            ^^^^^^^^^^^^^^^^^^^
-        pyoload.Check.CheckError
-        >>> Check.check_list['neq']
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-        AttributeError: type object 'Check' has no attribute 'check_list'. Did you mean: 'checks_list'?
-        >>> Check.checks_list['neq']
-        <function _ at 0x01ACABB8>
-        >>> Check.checks_list['neq'](1)
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-        TypeError: _() missing 1 required positional argument: 'val'
-        >>> Check.checks_list['neq'](3, 1)
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-          File "<stdin>", line 10, in _
-        TypeError
         >>> Checks(neq=3)
         <Checks(neq=3)>
         >>> Checks(neq=3)(3)
         Traceback (most recent call last):
-          File "C:\pyoload\src\pyoload\__init__.py", line 172, in check
+          File "C:\\pyoload\\src\\pyoload\\__init__.py", line 172, in check
 
           File "<stdin>", line 8, in _
         AssertionError
@@ -242,13 +186,14 @@ class Check:
 
         Traceback (most recent call last):
           File "<stdin>", line 1, in <module>
-          File "C:\pyoload\src\pyoload\__init__.py", line 291, in __call__
-            """
+          File "C:\\pyoload\\src\\pyoload\\__init__.py", line 291, in __call__
+            '''
 
-          File "C:\pyoload\src\pyoload\__init__.py", line 174, in check
+          File "C:\\pyoload\\src\\pyoload\\__init__.py", line 174, in check
             for name in names:
             ^^^^^^^^^^^^^^^^^^^
         pyoload.Check.CheckError
+
 
         :param cls: the Check class
         :param name: the name to be registerred as.
@@ -260,7 +205,7 @@ class Check:
             if name in cls.checks_list:
                 raise Check.CheckNameAlreadyExistsError(name)
 
-        def inner(func: Callable[Any, Any]) -> Callable:
+        def inner(func: Callable) -> Callable:
             for name in names:
                 cls.checks_list[name] = func
             return func
@@ -274,11 +219,11 @@ class Check:
         the specified value
 
         :param cls: pyoload.Check class
-        :param name: The registerred name of the check
+        :param name: One of the registerred name of the check
         :param params: The parameters to pass to the check
         :param val: The value to check
 
-        :returns: `None`
+        :returns: :py:`None`
         """
         check = cls.checks_list.get(name)
         if check is None:
@@ -304,75 +249,108 @@ class Check:
         """
 
 
-@Check.register("len")
-def len_check(params, val):
-    if isinstance(params, int):
-        if not len(val) == params:
-            raise Check.CheckError(f"length of {val!r} not eq {params!r}")
-    elif isinstance(params, slice):
-        if params.start is not None:
-            if not len(val) >= params.start:
-                raise Check.CheckError(
-                    f"length of {val!r} not gt {params.start!r} not in:"
-                    f" {params!r}"
-                )
-        if params.stop is not None:
-            if not len(val) < params.stop:
-                raise Check.CheckError(
-                    f"length of {val!r} not lt {params.stop!r} not in:"
-                    f" {params!r}",
-                )
-    else:
-        raise Check.CheckError(f'wrong {params=!r} for len')
+class BuiltinChecks:
+    """
+    This class holds the check definitions and callables for the varios builtin
+    checks.
+    """
+    @staticmethod
+    @Check.register("len")
+    def len_check(params: Union[int, slice], val):
+        """
+        This check performs a length check, and may receive as parameter
+        an integer, where in search for equity between the length and the
+        integer, on a :py:`slice` instance where it tries to fit the length
+        in the slice provided parameters, which are optional.
+        Note:
+          it is been evaluated as :py:`slice.start <= val < slice.stop`
+        """
+        if isinstance(params, int):
+            if not len(val) == params:
+                raise Check.CheckError(f"length of {val!r} not eq {params!r}")
+        elif isinstance(params, slice):
+            if params.start is not None:
+                if not len(val) >= params.start:
+                    raise Check.CheckError(
+                        f"length of {val!r} not gt {params.start!r} not in:"
+                        f" {params!r}"
+                    )
+            if params.stop is not None:
+                if not len(val) < params.stop:
+                    raise Check.CheckError(
+                        f"length of {val!r} not lt {params.stop!r} not in:"
+                        f" {params!r}",
+                    )
+        else:
+            raise Check.CheckError(f'wrong {params=!r} for len')
 
+    @staticmethod
+    @Check.register("lt")
+    def lt_check(param: int, val: int):
+        """
+        performs `lt(lesser than)` check
+        """
+        if not val < param:
+            raise Check.CheckError(f"{val!r} not lt {param!r}")
 
-@Check.register("lt")
-def lt_check(param, val):
-    if not val < param:
-        raise Check.CheckError(f"{val!r} not lt {param!r}")
+    @staticmethod
+    @Check.register("le")
+    def le_check(param: int, val: int):
+        """
+        performs `le(lesser or equal to)` check
+        """
+        if not val <= param:
+            raise Check.CheckError(f"{val!r} not gt {param!r}")
 
+    @staticmethod
+    @Check.register("ge")
+    def ge_check(param: int, val: int):
+        """
+        performs `ge(greater or equal to)` check
+        """
+        if not val >= param:
+            raise Check.CheckError(f"{val!r} not ge {param!r}")
 
-@Check.register("le")
-def le_check(param, val):
-    if not val <= param:
-        raise Check.CheckError(f"{val!r} not gt {param!r}")
+    @staticmethod
+    @Check.register("gt")
+    def gt_check(param: int, val: int):
+        """
+        performs `gt(greater than)` check
+        """
+        if not val > param:
+            raise Check.CheckError(f"{val!r} not gt {param!r}")
 
+    @staticmethod
+    @Check.register("eq")
+    def eq_check(param: int, val: int):
+        """
+        Checks the two passed values are equal
+        """
+        if not val == param:
+            raise Check.CheckError(f"{val!r} not eq {param!r}")
 
-@Check.register("ge")
-def ge_check(param, val):
-    if not val >= param:
-        raise Check.CheckError(f"{val!r} not ge {param!r}")
+    @staticmethod
+    @Check.register("func")
+    def func_check(param: Callable[[Any], bool], val: Any):
+        """
+        Uses the function passed as parameter.
+        The function should return a boolean
+        """
+        if not param(val):
+            raise Check.CheckError(f"{param!r} call returned false on {val!r}")
 
+    @staticmethod
+    @Check.register("type")
+    def matches_check(param, val):
+        m, e = type_match(val, param)
+        if m:
+            raise Check.CheckError(f"{val!r} foes not match type {param!r}", e)
 
-@Check.register("gt")
-def gt_check(param, val):
-    if not val > param:
-        raise Check.CheckError(f"{val!r} not gt {param!r}")
-
-
-@Check.register("eq")
-def eq_check(param, val):
-    if not val == param:
-        raise Check.CheckError(f"{val!r} not eq {param!r}")
-
-
-@Check.register("func")
-def func_check(param, val):
-    if not param(val):
-        raise Check.CheckError(f"{param!r} call returned false on {val!r}")
-
-
-@Check.register("type")
-def matches_check(param, val):
-    m, e = typeMatch(val, param)
-    if m:
-        raise Check.CheckError(f"{val!r} foes not match type {param!r}", e)
-
-
-@Check.register("isinstance")
-def instance_check(param, val):
-    if not isinstance(val, param):
-        raise Check.CheckError(f"{val!r} foes no instance of {param!r}")
+    @staticmethod
+    @Check.register("isinstance")
+    def instance_check(param, val):
+        if not isinstance(val, param):
+            raise Check.CheckError(f"{val!r} foes no instance of {param!r}")
 
 
 class Checks(PyoloadAnnotation):
@@ -595,7 +573,7 @@ class CastedAttr(Cast):
         self.value = self(value)
 
 
-def typeMatch(val: Any, spec: Any) -> tuple:
+def type_match(val: Any, spec: Any) -> tuple:
     """
     recursively checks if type matches
 
@@ -637,10 +615,10 @@ def typeMatch(val: Any, spec: Any) -> tuple:
                 return (True, None)
 
             for k, v in val.items():
-                k, e = typeMatch(k, kt)
+                k, e = type_match(k, kt)
                 if not k:
                     return (k, e)
-                v, e = typeMatch(v, vt)
+                v, e = type_match(v, vt)
                 if not v:
                     return (False, e)
             else:
@@ -648,14 +626,14 @@ def typeMatch(val: Any, spec: Any) -> tuple:
         else:
             sub = get_args(spec)[0]
             for val in val:
-                m, e = typeMatch(val, sub)
+                m, e = type_match(val, sub)
                 if not m:
                     return (False, e)
             else:
                 return (True, None)
 
 
-def resolveAnnotations(obj: Callable) -> None:
+def resove_annotations(obj: Callable) -> None:
     """
     Evaluates all the stringized annotations of the argument
 
@@ -721,7 +699,7 @@ def annotate(
     @wraps(func)
     def wrapper(*pargs, **kw):
         if str in map(type, func.__annotations__.values()):
-            resolveAnnotations(func)
+            resove_annotations(func)
         sign = signature(func)
         try:
             args = sign.bind(*pargs, **kw)
@@ -740,7 +718,7 @@ def annotate(
             if isinstance(param.annotation, Cast):
                 args.arguments[k] = param.annotation(v)
                 continue
-            if not typeMatch(v, param.annotation)[0]:
+            if not type_match(v, param.annotation)[0]:
                 if oload:
                     raise InternalAnnotationError()
                 errors.append(
@@ -760,7 +738,7 @@ def annotate(
 
             if isinstance(ann, Cast):
                 return ann(ret)
-            m, e = typeMatch(ret, ann)
+            m, e = type_match(ret, ann)
             if not m:
                 raise AnnotationError(
                     f"return value: {ret!r} does not match annotation:"
@@ -885,7 +863,7 @@ def annotateClass(cls: Any, recur: bool = True):
     @wraps(cls.__setattr__)
     def new_setter(self: Any, name: str, value: Any) -> Any:
         if str in map(type, self.__annotations__.values()):
-            resolveAnnotations(self)
+            resove_annotations(self)
 
         if name not in self.__annotations__:
             return setter(self, name, value)  # do not check if no annotations
@@ -893,7 +871,7 @@ def annotateClass(cls: Any, recur: bool = True):
             return setter(self, name, self.__annotations__[name](value))
 
         else:
-            m, e = typeMatch(value, self.__annotations__[name])
+            m, e = type_match(value, self.__annotations__[name])
             if not m:
                 raise AnnotationError(
                     f"value {value!r} does not match annotation"
@@ -906,6 +884,11 @@ def annotateClass(cls: Any, recur: bool = True):
     cls.__setattr__ = new_setter
     return cls
 
+
+__all__ = [
+    'annotate', 'overload', 'Checks', 'Check', 'annotable', 'unannotable',
+    'unannotate', 'is_annotable', 'is_annoted', 'resove_annotations'
+]
 
 __version__ = "2.0.0"
 __author__ = "ken-morel"
