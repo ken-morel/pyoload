@@ -9,6 +9,12 @@ adds support for:
   - :py:`pyoload.Cast`
   - :py:`pyoload.Values`
   - :py:`pyoload.Checks`
+
+:Authors:
+  ken-morel
+
+:Version: 2.0.0
+:Dedication: To the pythonista.
 """
 
 from functools import partial

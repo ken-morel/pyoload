@@ -70,3 +70,5 @@ foo(4)
   examples
   usage
   api
+  installation
+  whatsnew
