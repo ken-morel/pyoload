@@ -368,6 +368,7 @@ class Checks(PyoloadAnnotation):
     """
     Pyoload annotation holding several checks called on typechecking.
     """
+    __slots__ = ('checks',)
 
     def __init__(
         self: PyoloadAnnotation,
@@ -408,7 +409,7 @@ class CheckedAttr(Checks):
     """
     A descriptor class providing attributes which are checked on assignment
     """
-
+    __slots__ = ('name', 'value')
     name: str
     value: Any
 
@@ -443,6 +444,7 @@ class Cast(PyoloadAnnotation):
     """
     Holds a cast object which describes the casts to be performed
     """
+    __slots__ = ('type',)
 
     @staticmethod
     def cast(val: Any, totype: Any) -> Any:
@@ -528,8 +530,7 @@ class CastedAttr(Cast):
     """
     A descriptor class providing attributes which are casted on assignment
     """
-
-    name: str
+    __slots__ = ('value')
     value: Any
 
     def __init__(self: Cast, type: Any) -> Cast:
@@ -555,7 +556,6 @@ class CastedAttr(Cast):
         super().__init__(type)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
-        self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):

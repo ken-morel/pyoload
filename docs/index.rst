@@ -27,7 +27,6 @@ Welcome to pyoload v|version| documentation!
   :target: https://portfolio-ken-morel-projects.vercel.app/
   :alt: Hit count
 
-
 Hy pythonista, here is `pyoload`, what is?
 
   A python module to integrate function arguments typechecking, and multiple
@@ -62,9 +61,7 @@ an easy to use tool. here some quick examples.
   foo(4)
 
 
-* :ref:`genindex`
-* :ref:`modindex`
-
+You could look at the title lower for more documentation.
 
 .. toctree::
   :maxdepth: 1
@@ -74,3 +71,6 @@ an easy to use tool. here some quick examples.
   api
   installation
   whatsnew
+  report
+  genindex
+  modindex
