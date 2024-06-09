@@ -1,5 +1,6 @@
 import pyoload
 
+from pyoload import AnnotationError
 from pyoload import AnnotationResolutionError
 from pyoload import Cast
 from pyoload import annotable
@@ -68,7 +69,16 @@ def test_annotate():
         pass
     else:
         raise Exception()
+    try:
+        @annotate
+        def footy() -> 'int':
+            pass
 
+        footy(2)
+    except AnnotationError:
+        pass
+    else:
+        raise Exception()
     try:
         assert type_match({3: None}, dict[str]) == (True, None)
     except Exception:
