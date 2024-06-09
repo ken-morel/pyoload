@@ -141,6 +141,15 @@ def test_check():
     pyoload.Checks(len=slice(3, None))((1, 2, 3))
     pyoload.Checks(len=slice(3))((1, 2))
 
+    try:
+        Checks(type=str)(3)
+    except Check.CheckError:
+        pass
+    try:
+        Checks(isinstance=str)(3)
+    except Check.CheckError:
+        pass
+
 
 if __name__ == "__main__":
     test_check()

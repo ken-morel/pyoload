@@ -1,7 +1,7 @@
-type_match vs isinstance on int:True  1.8029011ms
-type_match vs isinstance on int:False  1.9367615000000002ms
-type_match on dict[str, int]*50:True  264.507885ms
-type_match on dict[str, int]*50:False  17.7091622ms
-Cast str->int: 10.5837726ms
-Cast complex->int | str: 0.37535457ms
-Cast dict[int,list[str]*10]*10->dict[str,tuple[float]]: 12.165085790000001ms
+type_match vs isinstance on int:True  1.4384856ms
+type_match vs isinstance on int:False  2.3996007ms
+type_match on dict[str, int]*50:True  264.8990402ms
+type_match on dict[str, int]*50:False  17.6305638ms
+Cast str->int: 10.889522999999999ms
+Cast complex->int | str: 0.5091771ms
+Cast dict[int,list[str]*10]*10->dict[str,tuple[float]]: 11.79795839ms

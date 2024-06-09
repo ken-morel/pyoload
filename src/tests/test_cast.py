@@ -1,12 +1,13 @@
 import pyoload
 
+from pyoload import AnnotationError
 from pyoload import Any
 from pyoload import Cast
 from pyoload import CastedAttr
+from pyoload import CastingError
+from pyoload import Union
 from pyoload import annotate
 from pyoload import type_match
-from pyoload import AnnotationError
-from pyoload import Union
 
 assert pyoload.__version__ == "2.0.0"
 
@@ -47,6 +48,12 @@ def test_cast():
     else:
         raise Exception()
 
+    try:
+        Cast(int | float)(1j)
+    except CastingError:
+        pass
+    else:
+        raise Exception()
 
 if __name__ == "__main__":
     test_cast()

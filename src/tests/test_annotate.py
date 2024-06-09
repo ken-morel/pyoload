@@ -23,7 +23,7 @@ def foo(a, b=3, c: str = "R") -> Cast(int):
     return '3'
 
 
-def foo1(a: Cast(str)):
+def foo1(a: Cast(str)) -> None:
     return a
 
 
@@ -112,6 +112,10 @@ def test_annotate():
         pass
     else:
         raise Exception()
+
+    assert type_match(3, dict[str | int])
+    assert type_match({3: '4'}, dict[int, int])
+    assert type_match({'3': 4}, dict[int, int])
 
 
 if __name__ == "__main__":

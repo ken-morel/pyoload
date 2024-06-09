@@ -616,13 +616,11 @@ def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
                 kt, vt = args
             elif len(args) == 1:
                 kt, vt = args[0], Any
-            else:
-                return (True, None)
 
             for k, v in val.items():
                 k, e = type_match(k, kt)
                 if not k:
-                    return (k, e)
+                    return (False, e)
                 v, e = type_match(v, vt)
                 if not v:
                     return (False, e)
@@ -723,8 +721,6 @@ def annotate(
         for k, v in args.arguments.items():
             param = sign.parameters.get(k)
             if param.annotation is _empty:
-                continue
-            if param.annotation is None:
                 continue
             if isinstance(param.annotation, Cast):
                 args.arguments[k] = param.annotation(v)
