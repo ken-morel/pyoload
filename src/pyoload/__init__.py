@@ -22,14 +22,16 @@ from functools import wraps
 from inspect import _empty
 from inspect import getmodule
 from inspect import isclass
+from inspect import isfunction
+from inspect import ismethod
 from inspect import signature
-from typing import get_origin
-from typing import get_args
 from typing import Any
 from typing import Callable
 from typing import GenericAlias
-from typing import Union
 from typing import Type
+from typing import Union
+from typing import get_args
+from typing import get_origin
 
 NoneType = type(None)
 try:
@@ -648,23 +650,7 @@ def resove_annotations(obj: Callable) -> None:
         raise AnnotationResolutionError(
             f"object {obj=!r} does not have `.__annotations__`",
         )
-    if isclass(obj) or hasattr(obj, "__class__"):
-        for k, v in obj.__annotations__.items():
-            if isinstance(v, str):
-                try:
-                    obj.__annotations__[k] = eval(
-                        v,
-                        dict(vars(getmodule(obj))),
-                        dict(vars(obj)),
-                    )
-                except Exception as e:
-                    raise AnnotationResolutionError(
-                        (
-                            f"Exception: {e!s} while resolving"
-                            f" annotation {e}={v!r} of object {obj!r}"
-                        ),
-                    ) from e
-    elif callable(obj):
+    if isfunction(obj):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
                 try:
@@ -675,8 +661,22 @@ def resove_annotations(obj: Callable) -> None:
                         f" annotation {v!r} of function {obj!r}",
                         f"globals: {obj.__globals__}",
                     ) from e
-    else:
-        raise AnnotationResolutionError(f"unknown resolution method for {obj}")
+    elif isclass(obj) or hasattr(obj, "__class__"):
+        for k, v in obj.__annotations__.items():
+            if isinstance(v, str):
+                try:
+                    obj.__annotations__[k] = eval(
+                        v,
+                        dict(vars(getmodule(obj))),
+                        dict(vars(obj)) if hasattr(obj, '__dict__') else None,
+                    )
+                except Exception as e:
+                    raise AnnotationResolutionError(
+                        (
+                            f"Exception: {e!s} while resolving"
+                            f" annotation {e}={v!r} of object {obj!r}"
+                        ),
+                    ) from e
 
 
 def annotate(

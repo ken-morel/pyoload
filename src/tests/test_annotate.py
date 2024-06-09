@@ -28,8 +28,8 @@ def foo1(a: Cast(str)):
 @annotate
 class MyCLass:
     __slots__ = ('a', 'b')
-    a: int
-    b: str
+    a: 'int'
+    b: 'str'
 
 
 def test_annotate():
@@ -53,7 +53,17 @@ def test_annotate():
             pass
 
         footy(2)
-    except Exception:
+    except AnnotationResolutionError:
+        pass
+    else:
+        raise Exception()
+    try:
+        @annotate
+        class Footy:
+            a: 'Nothing here'
+
+        Footy().a = 4
+    except AnnotationResolutionError:
         pass
     else:
         raise Exception()
