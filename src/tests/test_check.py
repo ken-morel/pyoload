@@ -131,12 +131,11 @@ def test_check():
             if pyoload.get_name(check).split(".")[0] == "tests":
                 continue
             pyoload.Checks(**{name: 3})(11)
+            pyoload.Checks(**{name: 11})(3)
         except pyoload.Check.CheckError:
-            if name in ('ge', 'gt'):
-                raise Exception()
+            pass
         else:
-            if name not in ('ge', 'gt'):
-                raise Exception(name, check)
+            raise Exception(name, check)
     pyoload.Checks(len=3)((1, 2, 3))
     pyoload.Checks(len=2)((1, 2))
     pyoload.Checks(len=slice(3, None))((1, 2, 3))

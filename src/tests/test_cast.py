@@ -33,6 +33,9 @@ def test_cast():
     q.foo = {1234: {"5", 16j}}
     assert type_match(q.foo, dict[str, tuple[Union[int, str]]])
     assert type_match(q.bar, list[tuple[float]])
+    assert Cast(dict[int])({'3': '7'}) == {3: '7'}
+    assert Cast(dict[Any, int])({'3': '7'}) == {'3': 7}
+    assert Cast(tuple[int | str])(('3', 2.5, 1j, '/6')) == (3, 2, '1j', '/6')
 
     try:
         @annotate

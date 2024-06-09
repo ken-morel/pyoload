@@ -1,10 +1,12 @@
 import pyoload
 
+from pyoload import AnnotationResolutionError
 from pyoload import Cast
 from pyoload import annotable
 from pyoload import annotate
 from pyoload import is_annotable
 from pyoload import is_annoted
+from pyoload import resove_annotations
 from pyoload import type_match
 from pyoload import unannotable
 from pyoload import unannotate
@@ -69,6 +71,24 @@ def test_annotate():
     except Exception:
         obj.a = 3
         obj.b = '7'
+    else:
+        raise Exception()
+
+    try:
+        resove_annotations(None)
+    except AnnotationResolutionError:
+        pass
+    else:
+        raise Exception()
+
+    @annotate
+    def fooar(a: 'str', b: 'int'):
+        pass
+    fooar('4', 3)
+    try:
+        fooar('4', '4')
+    except Exception:
+        pass
     else:
         raise Exception()
 

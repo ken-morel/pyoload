@@ -32,6 +32,10 @@ from typing import Union
 from typing import Type
 
 NoneType = type(None)
+try:
+    from types import UnionType
+except ImportError:
+    UnionType = Union
 
 
 class AnnotationError(ValueError):
@@ -467,6 +471,8 @@ class Cast(PyoloadAnnotation):
 
         :returns: An instance of the casting type
         """
+        if totype == Any:
+            return val
         if isinstance(totype, GenericAlias):
             args = get_args(totype)
             if get_origin(totype) == dict:
@@ -478,7 +484,7 @@ class Cast(PyoloadAnnotation):
             else:
                 sub = args[0]
                 return get_origin(totype)([Cast.cast(v, sub) for v in val])
-        if get_origin(totype) is Union:
+        if get_origin(totype) is Union or get_origin(totype) is UnionType:
             errors = []
             for subtype in get_args(totype):
                 try:
@@ -638,6 +644,10 @@ def resove_annotations(obj: Callable) -> None:
 
     :returns: None
     """
+    if not hasattr(obj, '__annotations__'):
+        raise AnnotationResolutionError(
+            f"object {obj=!r} does not have `.__annotations__`",
+        )
     if isclass(obj) or hasattr(obj, "__class__"):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
@@ -666,7 +676,7 @@ def resove_annotations(obj: Callable) -> None:
                         f"globals: {obj.__globals__}",
                     ) from e
     else:
-        raise AnnotationError(f"unknown resolution method for {obj}")
+        raise AnnotationResolutionError(f"unknown resolution method for {obj}")
 
 
 def annotate(
