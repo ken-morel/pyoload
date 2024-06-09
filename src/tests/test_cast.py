@@ -55,5 +55,7 @@ def test_cast():
     else:
         raise Exception()
 
+    assert str(Cast(int)) == f"pyoload.Cast({int!r})"
+
 if __name__ == "__main__":
     test_cast()

@@ -535,7 +535,7 @@ class Cast(PyoloadAnnotation):
             ) from e
 
     def __str__(self):
-        return f"pyoload.Cast({self.type!s})"
+        return f"pyoload.Cast({self.type!r})"
 
 
 class CastedAttr(Cast):
