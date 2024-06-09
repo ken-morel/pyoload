@@ -48,6 +48,37 @@ def test_check():
     else:
         raise Exception()
 
+    Checks(bool)(1)
+    try:
+        Checks(bool)(0)
+    except Exception:
+        pass
+    else:
+        raise Exception()
+    try:
+        Checks(len=3)(0)
+    except Exception:
+        pass
+    else:
+        raise Exception()
+    try:
+        Checks(len=3)((0,))
+    except Exception:
+        pass
+    else:
+        raise Exception()
+    try:
+        Checks(len=slice(3, None))((0,))
+    except Exception:
+        Checks(len=slice(3, None))((0, 1, 2))
+    else:
+        raise Exception()
+    try:
+        Checks(len=slice(3))((0, 1, 2))
+    except Exception:
+        Checks(len=slice(3))((0, 1))
+    else:
+        raise Exception()
     Checks(test1=3)(3)
     Checks(test2=4)(4)
     Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
@@ -64,15 +95,33 @@ def test_check():
 
     for name, check in pyoload.Check.checks_list.items():
         try:
-            if pyoload.get_name(check).split('.')[0] == 'tests':
+            if pyoload.get_name(check).split(".")[0] == "tests":
                 continue
             pyoload.Checks(**{name: NotImplemented})(24)
-            pyoload.Checks(**{name: int})(11)
-            pyoload.Checks(**{name: 3})(11)
         except pyoload.Check.CheckError:
             pass
         else:
             raise Exception(name, check)
+        try:
+            if pyoload.get_name(check).split(".")[0] == "tests":
+                continue
+            pyoload.Checks(**{name: int})(11)
+        except pyoload.Check.CheckError:
+            if name in ('func', 'type'):
+                raise Exception()
+        else:
+            if name not in ('func', 'type'):
+                raise Exception(name, check)
+        try:
+            if pyoload.get_name(check).split(".")[0] == "tests":
+                continue
+            pyoload.Checks(**{name: 3})(11)
+        except pyoload.Check.CheckError:
+            if name in ('ge', 'gt'):
+                raise Exception()
+        else:
+            if name not in ('ge', 'gt'):
+                raise Exception(name, check)
     pyoload.Checks(len=3)((1, 2, 3))
     pyoload.Checks(len=2)((1, 2))
     pyoload.Checks(len=slice(3, None))((1, 2, 3))

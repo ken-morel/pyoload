@@ -1,7 +1,7 @@
 import pyoload
 
 
-assert pyoload.__version__ == '2.0.0'
+assert pyoload.__version__ == "2.0.0"
 
 
 errors = (
@@ -30,7 +30,7 @@ def test_errors():
     v(2)
     str(v)
 
-    assert pyoload.get_name(test_errors).endswith('test_errors')
+    assert pyoload.get_name(test_errors).endswith("test_errors")
 
     class Custom(pyoload.Check):
         def __call__(self, a, b):
@@ -48,13 +48,13 @@ def test_errors():
         raise Exception()
 
     try:
-        pyoload.Check.register('Custom')
+        pyoload.Check.register("Custom")
     except pyoload.Check.CheckNameAlreadyExistsError:
         pass
     else:
         raise Exception()
 
-    @pyoload.Check.register('c2 c3')
+    @pyoload.Check.register("c2 c3")
     def _(a, b):
         assert a == b
 
@@ -70,6 +70,7 @@ def test_errors():
         raise Exception()
 
     try:
+
         @pyoload.annotate
         def bar(c: pyoload.Checks(rub=3)):
             raise Exception(c)

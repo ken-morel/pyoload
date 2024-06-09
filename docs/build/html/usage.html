@@ -74,6 +74,9 @@
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report An Issue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py-modindex.html">Module Index</a></li>
 </ul>
 </nav>
 </div>
@@ -98,8 +101,8 @@
 <div id="content" role="main">
 <section id="usage">
 <h1>usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h1>
-<section id="pyoload-annotate">
-<h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">annotate</span><span class="p">()</span></code><a class="headerlink" href="#pyoload-annotate" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-annotate'">¶</a></h2>
+<section id="python-pyoload-annotate">
+<h2><a href="#id1"><span class="problematic" id="id2">:python:`pyoload.annotate()`</span></a><a class="headerlink" href="#python-pyoload-annotate" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#python-pyoload-annotate'">¶</a></h2>
 <p>It is a simple decorator.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="o">*</span>
 </span><span id="line-2">
@@ -111,33 +114,33 @@
 <ul class="simple">
 <li><p>The return type is optional.</p></li>
 <li><p>The parameter annotations must be specified.</p></li>
-<li><p>It raises a <code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">AnnotationError</span></code> when type mismatch</p></li>
+<li><p>It raises a <a href="#id3"><span class="problematic" id="id4">:python:`pyoload.AnnotationError`</span></a> when type mismatch</p></li>
 </ul>
-<section id="pyod-annotate">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code><a class="headerlink" href="#pyod-annotate" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyod-annotate'">¶</a></h3>
+<section id="python-pyod-annotate">
+<h3><a href="#id5"><span class="problematic" id="id6">:python:`.__pyod_annotate__`</span></a><a class="headerlink" href="#python-pyod-annotate" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#python-pyod-annotate'">¶</a></h3>
 <p>The raw function which was annotated.</p>
 </section>
 </section>
-<section id="pyoload-overload">
-<h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">overload</span></code><a class="headerlink" href="#pyoload-overload" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-overload'">¶</a></h2>
+<section id="python-pyoload-overload">
+<h2><a href="#id7"><span class="problematic" id="id8">:python:`pyoload.overload`</span></a><a class="headerlink" href="#python-pyoload-overload" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#python-pyoload-overload'">¶</a></h2>
 <p>It is another decorator</p>
 <p>It accepts all the arguments of annotate.</p>
 <p>The return function support these arguments:</p>
-<section id="id1">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code><a class="headerlink" href="#id1" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#id1'">¶</a></h3>
+<section id="id11">
+<h3><a href="#id9"><span class="problematic" id="id10">:python:`.__pyod_annotate__`</span></a><a class="headerlink" href="#id11" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#id11'">¶</a></h3>
 <p>The raw function which was annotated.</p>
 </section>
-<section id="pyod-overloads">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads__</span></code><a class="headerlink" href="#pyod-overloads" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyod-overloads'">¶</a></h3>
+<section id="python-pyod-overloads">
+<h3><a href="#id12"><span class="problematic" id="id13">:python:`.__pyod_overloads__`</span></a><a class="headerlink" href="#python-pyod-overloads" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#python-pyod-overloads'">¶</a></h3>
 <p>The list of the annotated overloads of the function</p>
 </section>
-<section id="pyod-overloads-name">
-<h3><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads_name__</span></code><a class="headerlink" href="#pyod-overloads-name" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyod-overloads-name'">¶</a></h3>
+<section id="python-pyod-overloads-name">
+<h3><a href="#id14"><span class="problematic" id="id15">:python:`.__pyod_overloads_name__`</span></a><a class="headerlink" href="#python-pyod-overloads-name" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#python-pyod-overloads-name'">¶</a></h3>
 <p>The dictionary key under which the overloads was registered.</p>
 </section>
 </section>
-<section id="pyoload-cast-type">
-<h2><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></code><a class="headerlink" href="#pyoload-cast-type" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-cast-type'">¶</a></h2>
+<section id="python-pyoload-cast-type">
+<h2><a href="#id16"><span class="problematic" id="id17">:python:`pyoload.Cast(Type)`</span></a><a class="headerlink" href="#python-pyoload-cast-type" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#python-pyoload-cast-type'">¶</a></h2>
 <p>It receives a type as argument, it is the type
 in which the object will cast.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="n">Cast</span>
@@ -148,21 +151,101 @@ in which the object will cast.</p>
 </span></code></pre></div>
 </div>
 </section>
+<section id="annotables-and-unnanotables">
+<h2>annotables and unnanotables<a class="headerlink" href="#annotables-and-unnanotables" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#annotables-and-unnanotables'">¶</a></h2>
+<p>Not wanting a specific function be annotated?, <span class="xref std std-ref">pyoload.annotable</span> and
+<span class="xref std std-ref">pyoload.unannotable</span> will mark your function with a special attribute which
+will prevent <span class="xref std std-ref">pyoload.annotate</span> from having effect on them, and to return
+the empty functions.</p>
+<p><cite>pyoload.is_annotable</cite> is the function used by pyoload to check for the
+unnanotable marks paused by <span class="xref std std-ref">pyoload.unannotable</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The functions marked py <span class="xref std std-ref">pyoload.unannotable</span> could still be annotated
+if the <code class="code highlight py python docutils literal highlight-python"><span class="n">force</span><span class="o">=</span><span class="kc">True</span></code> argument specified.</p>
+</div>
+</section>
+<section id="checks">
+<h2>Checks<a class="headerlink" href="#checks" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#checks'">¶</a></h2>
+<p><cite>pyoload</cite> provides this method for writing your own checks and use them
+anywhere in your code.</p>
+<p>to register a class as a check, simply subclass <span class="xref std std-ref">pyoload.Check</span>,
+The class will be instantiated, and it’s instances should be callables.
+- The name of the check will be taken from the instances <cite>.name</cite> attribute</p>
+<blockquote>
+<div><p>or the classes name if the <cite>.name</cite> attribute not present.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>The class instance will then be used as a function and called with the value
+as argument.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the <cite>.name</cite> attribute is not implemented and the classes name is used.
+<strong>the class name is not lowercased</strong></p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span id="line-2">
+</span><span id="line-3"><span class="k">class</span> <span class="nc">MyCheck</span><span class="p">(</span><span class="n">Check</span><span class="p">):</span>
+</span><span id="line-4">    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-5">    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="line-6">        <span class="n">MyCheck</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="line-7">        <span class="k">assert</span> <span class="n">MyCheck</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="n">value</span>
+</span><span id="line-8">
+</span><span id="line-9"><span class="nd">@annotate</span>
+</span><span id="line-10"><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Checks</span><span class="p">(</span><span class="n">MyCheck</span><span class="o">=</span><span class="mi">0</span><span class="p">)):</span>
+</span><span id="line-11">    <span class="k">return</span> <span class="kc">True</span>
+</span></code></pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="line-2"><span class="gt">Traceback (most recent call last):</span>
+</span><span id="line-3">  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+</span><span id="line-4">  File <span class="nb">"C:\pyoload\src\pyoload\__init__.py"</span>, line <span class="m">726</span>, in <span class="n">wrapper</span>
+</span><span id="line-5"><span class="w">    </span><span class="k">raise</span> <span class="n">AnnotationErrors</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+</span><span id="line-6"><span class="gr">pyoload.AnnotationErrors</span>: <span class="n">[AnnotationError("Value: 1 does not match annotation: &lt;Checks(MyCheck=0)&gt; for argument 'a' of function __main__.foo")]</span>
+</span><span id="line-7"><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="line-8"><span class="go">True</span>
+</span><span id="line-9"><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="line-10"><span class="go">True</span>
+</span><span id="line-11"><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span><span id="line-12"><span class="gt">Traceback (most recent call last):</span>
+</span><span id="line-13">  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+</span><span id="line-14">  File <span class="nb">"C:\pyoload\src\pyoload\__init__.py"</span>, line <span class="m">726</span>, in <span class="n">wrapper</span>
+</span><span id="line-15"><span class="w">    </span><span class="k">raise</span> <span class="n">AnnotationErrors</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+</span><span id="line-16"><span class="gr">pyoload.AnnotationErrors</span>: <span class="n">[AnnotationError("Value: 4 does not match annotation: &lt;Checks(MyCheck=0)&gt; for argument 'a' of function __main__.foo")]</span>
+</span><span id="line-17"><span class="gp">&gt;&gt;&gt; </span><span class="n">MyCheck</span><span class="o">.</span><span class="n">count</span>
+</span><span id="line-18"><span class="go">4</span>
+</span></code></pre></div>
+</div>
+<p>Functions are registered with the implicit <code class="code highlight py python docutils literal highlight-python"><span class="n">Check</span><span class="o">.</span><span class="n">register</span></code>,
+here the same logic as above</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span> <span class="nn">pyoload</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span id="line-2">
+</span><span id="line-3"><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-4"><span class="nd">@Check</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">'MyCheck'</span><span class="p">)</span>
+</span><span id="line-5"><span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+</span><span id="line-6">    <span class="k">global</span> <span class="n">count</span><span class="p">;</span> <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="line-7">    <span class="k">assert</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="n">val</span>
+</span></code></pre></div>
+</div>
+</section>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#pyoload-annotate'" class="reference internal" href="#pyoload-annotate"><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">annotate</span><span class="p">()</span></code></a><ul>
-<li><a :data-current="activeSection === '#pyod-annotate'" class="reference internal" href="#pyod-annotate"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code></a></li>
+<li><a :data-current="activeSection === '#python-pyoload-annotate'" class="reference internal" href="#python-pyoload-annotate">:python:`pyoload.annotate()`</a><ul>
+<li><a :data-current="activeSection === '#python-pyod-annotate'" class="reference internal" href="#python-pyod-annotate">:python:`.__pyod_annotate__`</a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#pyoload-overload'" class="reference internal" href="#pyoload-overload"><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">overload</span></code></a><ul>
-<li><a :data-current="activeSection === '#id1'" class="reference internal" href="#id1"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_annotate__</span></code></a></li>
-<li><a :data-current="activeSection === '#pyod-overloads'" class="reference internal" href="#pyod-overloads"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads__</span></code></a></li>
-<li><a :data-current="activeSection === '#pyod-overloads-name'" class="reference internal" href="#pyod-overloads-name"><code class="code highlight python docutils literal highlight-python"><span class="o">.</span><span class="n">__pyod_overloads_name__</span></code></a></li>
+<li><a :data-current="activeSection === '#python-pyoload-overload'" class="reference internal" href="#python-pyoload-overload">:python:`pyoload.overload`</a><ul>
+<li><a :data-current="activeSection === '#id11'" class="reference internal" href="#id11">:python:`.__pyod_annotate__`</a></li>
+<li><a :data-current="activeSection === '#python-pyod-overloads'" class="reference internal" href="#python-pyod-overloads">:python:`.__pyod_overloads__`</a></li>
+<li><a :data-current="activeSection === '#python-pyod-overloads-name'" class="reference internal" href="#python-pyod-overloads-name">:python:`.__pyod_overloads_name__`</a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#pyoload-cast-type'" class="reference internal" href="#pyoload-cast-type"><code class="code highlight python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></code></a></li>
+<li><a :data-current="activeSection === '#python-pyoload-cast-type'" class="reference internal" href="#python-pyoload-cast-type">:python:`pyoload.Cast(Type)`</a></li>
+<li><a :data-current="activeSection === '#annotables-and-unnanotables'" class="reference internal" href="#annotables-and-unnanotables">annotables and unnanotables</a></li>
+<li><a :data-current="activeSection === '#checks'" class="reference internal" href="#checks">Checks</a></li>
 </ul>
 </div>
 </aside>

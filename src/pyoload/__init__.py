@@ -261,6 +261,7 @@ class BuiltinChecks:
     This class holds the check definitions and callables for the varios builtin
     checks.
     """
+
     @staticmethod
     @Check.register("len")
     def len_check(params: Union[int, slice], val):
@@ -289,7 +290,7 @@ class BuiltinChecks:
                         f" {params!r}",
                     )
         else:
-            raise Check.CheckError(f'wrong {params=!r} for len')
+            raise Check.CheckError(f"wrong {params=!r} for len")
 
     @staticmethod
     @Check.register("lt")
@@ -349,8 +350,7 @@ class BuiltinChecks:
     @staticmethod
     @Check.register("type")
     def matches_check(param, val):
-        """Uses `type_match(val, param)` to check the value
-        """
+        """Uses `type_match(val, param)` to check the value"""
         m, e = type_match(val, param)
         if not m:
             raise Check.CheckError(f"{val!r} foes not match type {param!r}", e)
@@ -358,8 +358,7 @@ class BuiltinChecks:
     @staticmethod
     @Check.register("isinstance")
     def instance_check(param, val):
-        """uses :py:`isinstance(val, param)` to check the value
-        """
+        """uses :py:`isinstance(val, param)` to check the value"""
         if not isinstance(val, param):
             raise Check.CheckError(f"{val!r} foes no instance of {param!r}")
 
@@ -368,10 +367,13 @@ class Checks(PyoloadAnnotation):
     """
     Pyoload annotation holding several checks called on typechecking.
     """
-    __slots__ = ('checks',)
+
+    __slots__ = ("checks",)
 
     def __init__(
         self: PyoloadAnnotation,
+        __check_func__=None,
+        /,
         **checks: dict[str, Callable[[Any, Any], NoneType]],
     ) -> Any:
         """
@@ -384,6 +386,8 @@ class Checks(PyoloadAnnotation):
 
         :returns: self
         """
+        if __check_func__ is not None:
+            checks['func'] = __check_func__
         self.checks = checks
 
     def __call__(self: PyoloadAnnotation, val: Any) -> None:
@@ -409,7 +413,8 @@ class CheckedAttr(Checks):
     """
     A descriptor class providing attributes which are checked on assignment
     """
-    __slots__ = ('name', 'value')
+
+    __slots__ = ("name", "value")
     name: str
     value: Any
 
@@ -444,7 +449,8 @@ class Cast(PyoloadAnnotation):
     """
     Holds a cast object which describes the casts to be performed
     """
-    __slots__ = ('type',)
+
+    __slots__ = ("type",)
 
     @staticmethod
     def cast(val: Any, totype: Any) -> Any:
@@ -468,9 +474,7 @@ class Cast(PyoloadAnnotation):
                     kt, vt = args
                 elif len(args) == 1:
                     kt, vt = args[0], Any
-                return {
-                    Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
-                }
+                return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
             else:
                 sub = args[0]
                 return get_origin(totype)([Cast.cast(v, sub) for v in val])
@@ -530,7 +534,8 @@ class CastedAttr(Cast):
     """
     A descriptor class providing attributes which are casted on assignment
     """
-    __slots__ = ('value')
+
+    __slots__ = "value"
     value: Any
 
     def __init__(self: Cast, type: Any) -> Cast:
@@ -681,10 +686,12 @@ def annotate(
 
     :returns: the wrapper function
     """
-    if not hasattr(func, '__annotations__'):
+    if isinstance(func, bool):
+        return partial(annotate, force=True)
+    if not hasattr(func, "__annotations__"):
         return func
     if isclass(func):
-        return annotateClass(func)
+        return annotate_class(func)
     if len(func.__annotations__) == 0:
         return func
     if not is_annotable(func) and not force:
@@ -738,7 +745,7 @@ def annotate(
                     f"return value: {ret!r} does not match annotation:"
                     f" {ann!r} for "
                     f"of function {get_name(func)}",
-                    e
+                    e,
                 )
         return ret
 
@@ -797,11 +804,7 @@ def is_annoted(func):
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def multimethod(
-    func: Callable,
-    name: str = None,
-    force: bool = False
-) -> Callable:
+def multimethod(func: Callable, name: str = None, force: bool = False) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -856,7 +859,7 @@ def multimethod(
 overload = multimethod
 
 
-def annotateClass(cls: Any, recur: bool = True):
+def annotate_class(cls: Any, recur: bool = True):
     """
     Annotates a class object, wrapping and replacing over it's __setattr__
     and typechecking over each attribute assignment.
@@ -867,7 +870,7 @@ def annotateClass(cls: Any, recur: bool = True):
     """
 
     if isinstance(cls, bool):
-        return partial(annotateClass, recur=cls)
+        return partial(annotate_class, recur=cls)
     if not hasattr(cls, "__annotations__"):
         cls.__annotations__ = {}
     recur = not hasattr(cls, "__pyod_norecur__") and recur
@@ -912,10 +915,23 @@ def annotateClass(cls: Any, recur: bool = True):
 
 
 __all__ = [
-    'annotate', 'overload', 'multimethod', 'Checks', 'Check', 'annotable',
-    'unannotable', 'unannotate', 'is_annotable', 'is_annoted',
-    'resove_annotations', 'Cast', 'CastedAttr', 'CheckedAttr', 'Values',
-    'AnnotationResolutionError', 'AnnotationError',
+    "annotate",
+    "overload",
+    "multimethod",
+    "Checks",
+    "Check",
+    "annotable",
+    "unannotable",
+    "unannotate",
+    "is_annotable",
+    "is_annoted",
+    "resove_annotations",
+    "Cast",
+    "CastedAttr",
+    "CheckedAttr",
+    "Values",
+    "AnnotationResolutionError",
+    "AnnotationError",
 ]
 
 __version__ = "2.0.0"

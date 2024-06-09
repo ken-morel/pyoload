@@ -74,6 +74,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report An Issue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py-modindex.html">Module Index</a></li>
 </ul>
 </nav>
 </div>
@@ -100,15 +103,15 @@
 <span id="api"></span><h1>API<a class="headerlink" href="#module-pyoload" title="Link to this heading">¶</a></h1>
 <p><cite>pyoload</cite> is a python module which will help you type check your function
 arguments and object attribute types on function call and attribute assignment.</p>
-<p>It supports the various builtin data types supported by <a href="#id1"><span class="problematic" id="id2">:py:`isinstance`</span></a> and
+<p>It supports the various builtin data types supported by <code class="code highlight py python docutils literal highlight-python"><span class="nb">isinstance</span></code> and
 adds support for:
-- <a href="#id3"><span class="problematic" id="id4">:py:`typing.GenericAlias`</span></a>
-- <a href="#id5"><span class="problematic" id="id6">:py:`pyoload.PyoloadAnnoation`</span></a> subclasses as:</p>
+- <code class="code highlight py python docutils literal highlight-python"><span class="n">typing</span><span class="o">.</span><span class="n">GenericAlias</span></code>
+- <code class="code highlight py python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">PyoloadAnnoation</span></code> subclasses as:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><a href="#id7"><span class="problematic" id="id8">:py:`pyoload.Cast`</span></a></p></li>
-<li><p><a href="#id9"><span class="problematic" id="id10">:py:`pyoload.Values`</span></a></p></li>
-<li><p><a href="#id11"><span class="problematic" id="id12">:py:`pyoload.Checks`</span></a></p></li>
+<li><p><code class="code highlight py python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Cast</span></code></p></li>
+<li><p><code class="code highlight py python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Values</span></code></p></li>
+<li><p><code class="code highlight py python docutils literal highlight-python"><span class="n">pyoload</span><span class="o">.</span><span class="n">Checks</span></code></p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -210,9 +213,9 @@ e.g</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">Check</span></span><a class="headerlink" href="#pyoload.Check" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.Check'">¶</a></dt>
 <dd><p>A class basicly abstract which holds registerred checks in pyoload
 A new check can be registerred by subclassing whith a non-initializing
-callable class, the name will be gotten from the classes <a href="#id13"><span class="problematic" id="id14">:py:`.name`</span></a>
+callable class, the name will be gotten from the classes <code class="code highlight py python docutils literal highlight-python"><span class="o">.</span><span class="n">name</span></code>
 attribute or the basename of the class if not present.</p>
-<p>A <a href="#id15"><span class="problematic" id="id16">:py:`Check.CheckNameAlreadyExistsError`</span></a> is raised if the check is already
+<p>A <code class="code highlight py python docutils literal highlight-python"><span class="n">Check</span><span class="o">.</span><span class="n">CheckNameAlreadyExistsError</span></code> is raised if the check is already
 registerred.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyoload.Check.CheckDoesNotExistError">
@@ -244,7 +247,7 @@ the specified value</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><a href="#id17"><span class="problematic" id="id18">:py:`None`</span></a></p>
+<dd class="field-even"><p><code class="code highlight py python docutils literal highlight-python"><span class="kc">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -344,7 +347,7 @@ assignment, E.G</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.annotable">
 <span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">annotable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.annotable" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.annotable'">¶</a></dt>
-<dd><p>Marks a function to be annotatble by <a href="#id19"><span class="problematic" id="id20">:py:`annotate`</span></a> and <a href="#id21"><span class="problematic" id="id22">:py:`overload`</span></a></p>
+<dd><p>Marks a function to be annotatble by <code class="code highlight py python docutils literal highlight-python"><span class="n">annotate</span></code> and <code class="code highlight py python docutils literal highlight-python"><span class="n">overload</span></code></p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.annotate">
@@ -443,13 +446,13 @@ which will register to the specified name.</p>
 <dt class="sig sig-object py" id="pyoload.unannotable">
 <span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">unannotable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.unannotable" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.unannotable'">¶</a></dt>
 <dd><p>Marks a function to be not annotable, the function will then not be wrapped
-by <a href="#id23"><span class="problematic" id="id24">:py:`annotate`</span></a> or <a href="#id25"><span class="problematic" id="id26">:py:`multimethod`</span></a>, except <a href="#id27"><span class="problematic" id="id28">:py:`force=True`</span></a> argument
+by <code class="code highlight py python docutils literal highlight-python"><span class="n">annotate</span></code> or <code class="code highlight py python docutils literal highlight-python"><span class="n">multimethod</span></code>, except <code class="code highlight py python docutils literal highlight-python"><span class="n">force</span><span class="o">=</span><span class="kc">True</span></code> argument
 specified.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyoload.unannotate">
 <span class="sig-prename descclassname"><span class="pre">pyoload.</span></span><span class="sig-name descname"><span class="pre">unannotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a></span></span><a class="headerlink" href="#pyoload.unannotate" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload.unannotate'">¶</a></dt>
-<dd><p>Returns the underlying function returned by <a href="#id29"><span class="problematic" id="id30">:py:`annotate`</span></a>,
+<dd><p>Returns the underlying function returned by <code class="code highlight py python docutils literal highlight-python"><span class="n">annotate</span></code>,
 if not annotated it returns the passed function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

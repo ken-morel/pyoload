@@ -100,4 +100,29 @@ def foo(a: Checks(func=test):
     ...
 ```
 
-You can register your own checks or use some other builtin checks
+You can register your own checks using `Check.register`, as
+
+```python
+@Check.register('mycheck')
+def _(param, value):
+    print(param, value)
+
+Checks(mycheck='param')('val')  # Will raise error on check failure
+
+@annotate
+def foo(a: Checks(mycheck='param')):
+    ...
+```
+
+### Checked and casted attributes
+
+`CheckedAttr` and `CastedAttr`, are simple descriptors which will perform
+the casting or checks on assignment.
+
+```python
+from pyoload import *
+
+class address:
+    number = CastedAttr(tuple[int])
+    
+```

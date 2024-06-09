@@ -14,6 +14,7 @@
 <link href="_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
+<link href="report.html" rel="next" title="Report An Issue"/>
 <link href="installation.html" rel="prev" title="Installation"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
@@ -73,6 +74,9 @@
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Report An Issue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py-modindex.html">Module Index</a></li>
 </ul>
 </nav>
 </div>
@@ -97,9 +101,38 @@
 <div id="content" role="main">
 <section id="what-s-new">
 <h1>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
+<p>Lot’s have been done since I started the project
+to when I write this doc now, about</p>
+<img alt="https://wakatime.com/badge/user/dbe5b692-a03c-4ea8-b663-a3e6438148b6/project/ab01ce70-02f0-4c96-9912-bafa41a0aa54.svg" src="https://wakatime.com/badge/user/dbe5b692-a03c-4ea8-b663-a3e6438148b6/project/ab01ce70-02f0-4c96-9912-bafa41a0aa54.svg"/><p>These are the highlights</p>
 <section id="pyoload-v2-0-0">
 <h2>pyoload v2.0.0<a class="headerlink" href="#pyoload-v2-0-0" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#pyoload-v2-0-0'">¶</a></h2>
-<p>Corrected</p>
+<ol class="arabic">
+<li><p>Greatly worked on the docs to make them more undetsandable and increase coverage.</p></li>
+<li><p>Renamed overload to multiple dispatch or multimethod as required, since
+As from <span class="xref std std-ref">Overload or multimethod</span>.</p></li>
+<li><p>Added new options to <span class="xref std std-ref">pyoload.Checks</span> such as registerring under multiple names.</p></li>
+<li><p>Increased the pytest coverage to ensure the full functionality of <cite>pyoload</cite>
+on the several supported python versions.</p></li>
+<li><p>Greatly improved performance using <cite>inspect.Signature</cite>. Providing support
+for partial annotating of function.(Yes, from v2.0.0 some annotations may be ommited).</p></li>
+<li><p>Added helper methods for interacting with annotated functions,
+They include</p>
+<ul class="simple">
+<li><p><span class="xref std std-ref">pyoload.annotable</span></p></li>
+<li><p><span class="xref std std-ref">pyoload.unannotable</span></p></li>
+<li><p><span class="xref std std-ref">pyoload.is_annotable</span></p></li>
+<li><p><span class="xref std std-ref">pyoload.is_annotated</span></p></li>
+</ul>
+<p>Those methods will help you prevent some functions from being annotated.</p>
+</li>
+<li><p>Improved support for python 3.9 and 3.10</p></li>
+<li><p>renamed functions as the previous <cite>pyoload.typeMatch</cite> to <span class="xref std std-ref">pyoload.type_match</span> to follow
+the snake case system of nomenclature.</p></li>
+<li><p><span class="xref std std-ref">pyoload.type_match</span> returns a tuple of the matchin status and errors
+which may have lead to type mismatch, thosse errors are added to traceback
+to ease debugging.</p></li>
+<li><p>Now most classes implement <cite>__slots__</cite> to improve memory size.</p></li>
+</ol>
 </section>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">

@@ -34,6 +34,16 @@ def test_cast():
     assert type_match(q.foo, dict[str, tuple[Union[int, str]]])
     assert type_match(q.bar, list[tuple[float]])
 
+    try:
+        @annotate
+        def foo2(a: 'Cast(None)'):
+            pass
+        foo2(3)
+    except Exception:
+        pass
+    else:
+        raise Exception()
+
 
 if __name__ == "__main__":
     test_cast()

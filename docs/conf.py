@@ -27,7 +27,7 @@ master_doc = "index"
 # -- General configuration ---------------------------------------------------
 autosummary_generate = True
 
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "_templates"]
+exclude_patterns = ["build", "_build", "Thumbs.db", ".DS_Store", "_templates"]
 
 html_static_path = ["_static"]
 
@@ -69,7 +69,7 @@ html_theme = "sphinxawesome_theme"
 epub_show_urls = "footnote"
 
 rst_prolog = """\
-.. role:: python(code)
+.. role:: py(code)
   :language: python
 
 """
