@@ -1,5 +1,5 @@
 
-Welcome to pyoload v|version| documentation!
+Welcome to pyoload v |version| documentation!
 ===================================
 
 .. image:: https://github.com/ken-morel/pyoload/actions/workflows/python-publish.yml/badge.svg
@@ -74,3 +74,4 @@ You could look at the title lower for more documentation.
   report
   genindex
   modindex
+  oload-or-multi
