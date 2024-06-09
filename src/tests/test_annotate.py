@@ -5,6 +5,7 @@ from pyoload import annotable
 from pyoload import annotate
 from pyoload import is_annotable
 from pyoload import is_annoted
+from pyoload import type_match
 from pyoload import unannotable
 from pyoload import unannotate
 
@@ -52,6 +53,13 @@ def test_annotate():
         footy(2)
     except Exception:
         pass
+    else:
+        raise Exception()
+
+    try:
+        assert type_match({3: None}, dict[str]) == (True, None)
+    except Exception:
+        assert type_match({3: None}, dict[int]) == (True, None)
     else:
         raise Exception()
 

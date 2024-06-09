@@ -607,7 +607,7 @@ def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
             if len(args) == 2:
                 kt, vt = args
             elif len(args) == 1:
-                kt, vt = Any, args[1]
+                kt, vt = args[0], Any
             else:
                 return (True, None)
 

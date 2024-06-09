@@ -11,7 +11,6 @@ src = Path(__file__).resolve().parent
 
 
 def test_speed():
-    return
     f = open(src / "logs.yaml", "w")
     speedtype_match(f)
     speedCast(f)

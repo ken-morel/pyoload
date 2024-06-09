@@ -12,7 +12,8 @@ assert pyoload.__version__ == "2.0.0"
 
 @annotate
 class foo:
-    foo = CheckedAttr(len=(3, None))
+    foo = CheckedAttr(len=slice(3, None))
+    foow = CheckedAttr(len=(3, None))
     bar: Checks(ge=3)
 
     def __init__(self: Any, bar: Checks(func=bool)) -> Any:
@@ -41,6 +42,20 @@ def test_check():
 
     obj = foo(2)
     obj.bar = 3
+    obj.foo = ('1', 2, 3)
+    try:
+        obj.foow = None
+    except Exception:
+        pass
+    else:
+        raise Exception()
+    try:
+        obj.foo = ('1', 2)
+    except Check.CheckError:
+        pass
+    else:
+        raise Exception()
+
     try:
         obj.bar = 2.9
     except AnnotationError:
@@ -107,10 +122,10 @@ def test_check():
                 continue
             pyoload.Checks(**{name: int})(11)
         except pyoload.Check.CheckError:
-            if name in ('func', 'type'):
+            if name in ('func', 'type', 'isinstance'):
                 raise Exception()
         else:
-            if name not in ('func', 'type'):
+            if name not in ('func', 'type', 'isinstance'):
                 raise Exception(name, check)
         try:
             if pyoload.get_name(check).split(".")[0] == "tests":
