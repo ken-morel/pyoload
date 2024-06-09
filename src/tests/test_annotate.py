@@ -4,6 +4,7 @@ from pyoload import AnnotationResolutionError
 from pyoload import Cast
 from pyoload import annotable
 from pyoload import annotate
+from pyoload import annotate_class
 from pyoload import is_annotable
 from pyoload import is_annoted
 from pyoload import resove_annotations
@@ -25,7 +26,7 @@ def foo1(a: Cast(str)):
     return a
 
 
-@annotate
+@annotate_class(False)
 class MyCLass:
     __slots__ = ('a', 'b')
     a: 'int'

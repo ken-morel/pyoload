@@ -881,8 +881,6 @@ def annotate_class(cls: Any, recur: bool = True):
 
     if isinstance(cls, bool):
         return partial(annotate_class, recur=cls)
-    if not hasattr(cls, "__annotations__"):
-        cls.__annotations__ = {}
     recur = not hasattr(cls, "__pyod_norecur__") and recur
     setter = cls.__setattr__
     if recur:
