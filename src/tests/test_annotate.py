@@ -74,7 +74,7 @@ def test_annotate():
         def footy() -> 'int':
             pass
 
-        footy(2)
+        footy()
     except AnnotationError:
         pass
     else:
