@@ -1,6 +1,20 @@
 """
-pyoload is a little python script to incorporate some features of
- typechecking and casting in python.
+`pyoload` is a python module which will help you type check your function
+arguments and object attribute types on function call and attribute assignment.
+
+It supports the various builtin data types supported by :py:`isinstance` and
+adds support for:
+- :py:`typing.GenericAlias`
+- :py:`pyoload.PyoloadAnnoation` subclasses as:
+  - :py:`pyoload.Cast`
+  - :py:`pyoload.Values`
+  - :py:`pyoload.Checks`
+
+:Authors:
+  ken-morel
+
+:Version: 2.0.0
+:Dedication: To the pythonista.
 """
 
 from functools import partial
@@ -8,43 +22,50 @@ from functools import wraps
 from inspect import _empty
 from inspect import getmodule
 from inspect import isclass
+from inspect import isfunction
+from inspect import ismethod
 from inspect import signature
-from types import NoneType
-from types import UnionType
 from typing import Any
 from typing import Callable
 from typing import GenericAlias
 from typing import Type
+from typing import Union
+from typing import get_args
+from typing import get_origin
+
+NoneType = type(None)
+try:
+    from types import UnionType
+except ImportError:
+    UnionType = Union
 
 
 class AnnotationError(ValueError):
     """
-    base exception for most pyoload errors
+    base exception for most pyoload errors is raised when a non-subclassable
+    error occurs.
     """
 
 
 class AnnotationErrors(AnnotationError):
     """
-    Hosts a list of AnnotationError
+    Hosts a list of `AnnotationError` instances.
     """
 
 
 class InternalAnnotationError(Exception):
-    """
-    **internal**
-    raised by overloads on type mismatch
-    """
+    pass
 
 
 class CastingError(TypeError):
     """
-    Error during casting
+    Error during casting, holds the actual error
     """
 
 
 class OverloadError(TypeError):
     """
-    Error in or during overload
+    Error in or during overload calling.
     """
 
 
@@ -71,6 +92,16 @@ class Values(PyoloadAnnotation, tuple):
         """
         Checks if the tuple containes the specified value.
 
+        >>> isPrimaryColor = Values(('red', 'green', 'blue'))
+        >>> isPrimaryColor
+        Values('red', 'green', 'blue')
+        >>> isPrimaryColor('red')
+        True
+        >>> isPrimaryColor('orange')
+        False
+        >>> isPrimaryColor(4)
+        False
+
         :param val: the value to be checked
 
         :returns: if the value `val` is contained in `self`
@@ -88,29 +119,49 @@ def get_name(funcOrCls: Any) -> str:
     Gives a class or function name, possibly unique gotten from
     it's module name and qualifier name
 
+    >>> def foo():
+    ...     pass
+    ...
+    >>> get_name(foo)
+    '__main__.foo'
+    >>> get_name(get_name)
+    'pyoload.get_name'
+    >>> get_name(print)
+    'builtins.print'
+
     :param funcOrCls: The object who's name to return
 
     :returns: modulename + qualname
     """
-    return funcOrCls.__module__ + "." + funcOrCls.__qualname__
+    mod = funcOrCls.__module__
+    name = funcOrCls.__qualname__
+    return mod + "." + name
 
 
 class Check:
     """
     A class basicly abstract which holds registerred checks in pyoload
+    A new check can be registerred by subclassing whith a non-initializing
+    callable class, the name will be gotten from the classes :py:`.name`
+    attribute or the basename of the class if not present.
+
+    A :py:`Check.CheckNameAlreadyExistsError` is raised if the check is already
+    registerred.
     """
 
     checks_list = {}
 
     def __init_subclass__(cls: Any):
         """
-        register's subclasses as chexks
+        register's subclasses as checks
         """
         if hasattr(cls, "name"):
             name = cls.name
         else:
             name = cls.__name__
-        Check.register(name)(cls())
+        obj = cls()
+        obj.__qualname__ = cls.__qualname__
+        Check.register(name)(obj)
 
     @classmethod
     def register(
@@ -120,17 +171,54 @@ class Check:
         """
         returns a callable which registers a new checker method
 
+        used as:
+
+        >>> @Check.register('integer_not_equal neq') # can register on multiple
+        ... def _(param, val):                      # names seperated by spaces
+        ...     '''
+        ...     :param param: The parameter passed as kwarg
+        ...     :param val: The value passed as argument
+        ...     '''
+        ...     assert param != val  # using assertions
+        ...     if not isinstance(param, int) or isinstance(val, int):
+        ...         raise TypeError()  # using typeError, handles even unwanted
+        ...     if param == val:        # errors in case wrong value passed
+        ...         raise Check.CheckError(f"values {param=!r} and {val=!r} no\
+t equal")
+        ...
+        >>> Checks(neq=3)
+        <Checks(neq=3)>
+        >>> Checks(neq=3)(3)
+        Traceback (most recent call last):
+          File "C:\\pyoload\\src\\pyoload\\__init__.py", line 172, in check
+
+          File "<stdin>", line 8, in _
+        AssertionError
+
+        The above exception was the direct cause of the following exception:
+
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "C:\\pyoload\\src\\pyoload\\__init__.py", line 291, in __call__
+            '''
+
+          File "C:\\pyoload\\src\\pyoload\\__init__.py", line 174, in check
+            for name in names:
+            ^^^^^^^^^^^^^^^^^^^
+        pyoload.Check.CheckError
+
+
         :param cls: the Check class
         :param name: the name to be registerred as.
 
         :returns: a function which registers the check under the name
         """
-        names = [x for x in name.split(" ") if x.strip() != ""]
+        names = [x.strip() for x in name.split(" ") if x.strip() != ""]
         for name in names:
             if name in cls.checks_list:
                 raise Check.CheckNameAlreadyExistsError(name)
 
-        def inner(func: Callable[Any, Any]) -> Callable:
+        def inner(func: Callable) -> Callable:
             for name in names:
                 cls.checks_list[name] = func
             return func
@@ -144,16 +232,19 @@ class Check:
         the specified value
 
         :param cls: pyoload.Check class
-        :param name: The registerred name of the check
+        :param name: One of the registerred name of the check
         :param params: The parameters to pass to the check
         :param val: The value to check
 
-        :returns: `None`
+        :returns: :py:`None`
         """
         check = cls.checks_list.get(name)
         if check is None:
             raise Check.CheckDoesNotExistError(name)
-        check(params, val)
+        try:
+            check(params, val)
+        except (AssertionError, TypeError) as e:
+            raise Check.CheckError(e) from e
 
     class CheckNameAlreadyExistsError(ValueError):
         """
@@ -171,68 +262,111 @@ class Check:
         """
 
 
-@Check.register("len")
-def len_check(params, val):
-    if isinstance(params, int):
-        if not len(val) == params:
-            raise Check.CheckError(f"length of {val!r} not eq {params!r}")
-    elif isinstance(params, tuple) and len(params) > 0:
-        mi = ma = None
-        mi, ma = params
-        if mi is not None:
-            if not len(val) > mi:
-                raise Check.CheckError(f"length of {val!r} not gt {mi!r}")
-        if ma is not None:
-            if not len(val) < ma:
-                raise Check.CheckError(f"length of {val!r} not lt {mi!r}")
+class BuiltinChecks:
+    """
+    This class holds the check definitions and callables for the varios builtin
+    checks.
+    """
 
+    @staticmethod
+    @Check.register("len")
+    def len_check(params: Union[int, slice], val):
+        """
+        This check performs a length check, and may receive as parameter
+        an integer, where in search for equity between the length and the
+        integer, on a :py:`slice` instance where it tries to fit the length
+        in the slice provided parameters, which are optional.
+        Note:
+          it is been evaluated as :py:`slice.start <= val < slice.stop`
+        """
+        if isinstance(params, int):
+            if not len(val) == params:
+                raise Check.CheckError(f"length of {val!r} not eq {params!r}")
+        elif isinstance(params, slice):
+            if params.start is not None:
+                if not len(val) >= params.start:
+                    raise Check.CheckError(
+                        f"length of {val!r} not gt {params.start!r} not in:"
+                        f" {params!r}"
+                    )
+            if params.stop is not None:
+                if not len(val) < params.stop:
+                    raise Check.CheckError(
+                        f"length of {val!r} not lt {params.stop!r} not in:"
+                        f" {params!r}",
+                    )
+        else:
+            raise Check.CheckError(f"wrong {params=!r} for len")
 
-@Check.register("lt")
-def lt_check(param, val):
-    if not val < param:
-        raise Check.CheckError(f"{val!r} not lt {param!r}")
+    @staticmethod
+    @Check.register("lt")
+    def lt_check(param: int, val: int):
+        """
+        performs `lt(lesser than)` check
+        """
+        if not val < param:
+            raise Check.CheckError(f"{val!r} not lt {param!r}")
 
+    @staticmethod
+    @Check.register("le")
+    def le_check(param: int, val: int):
+        """
+        performs `le(lesser or equal to)` check
+        """
+        if not val <= param:
+            raise Check.CheckError(f"{val!r} not gt {param!r}")
 
-@Check.register("le")
-def le_check(param, val):
-    if not val <= param:
-        raise Check.CheckError(f"{val!r} not gt {param!r}")
+    @staticmethod
+    @Check.register("ge")
+    def ge_check(param: int, val: int):
+        """
+        performs `ge(greater or equal to)` check
+        """
+        if not val >= param:
+            raise Check.CheckError(f"{val!r} not ge {param!r}")
 
+    @staticmethod
+    @Check.register("gt")
+    def gt_check(param: int, val: int):
+        """
+        performs `gt(greater than)` check
+        """
+        if not val > param:
+            raise Check.CheckError(f"{val!r} not gt {param!r}")
 
-@Check.register("ge")
-def ge_check(param, val):
-    if not val >= param:
-        raise Check.CheckError(f"{val!r} not ge {param!r}")
+    @staticmethod
+    @Check.register("eq")
+    def eq_check(param: int, val: int):
+        """
+        Checks the two passed values are equal
+        """
+        if not val == param:
+            raise Check.CheckError(f"{val!r} not eq {param!r}")
 
+    @staticmethod
+    @Check.register("func")
+    def func_check(param: Callable[[Any], bool], val: Any):
+        """
+        Uses the function passed as parameter.
+        The function should return a boolean
+        """
+        if not param(val):
+            raise Check.CheckError(f"{param!r} call returned false on {val!r}")
 
-@Check.register("gt")
-def gt_check(param, val):
-    if not val > param:
-        raise Check.CheckError(f"{val!r} not gt {param!r}")
+    @staticmethod
+    @Check.register("type")
+    def matches_check(param, val):
+        """Uses `type_match(val, param)` to check the value"""
+        m, e = type_match(val, param)
+        if not m:
+            raise Check.CheckError(f"{val!r} foes not match type {param!r}", e)
 
-
-@Check.register("eq")
-def eq_check(param, val):
-    if not val == param:
-        raise Check.CheckError(f"{val!r} not eq {param!r}")
-
-
-@Check.register("func")
-def func_check(param, val):
-    if not param(val):
-        raise Check.CheckError(f"{param!r} call returned false on {val!r}")
-
-
-@Check.register("type")
-def matches_check(param, val):
-    if not typeMatch(val, param):
-        raise Check.CheckError(f"{val!r} foes not match type {param!r}")
-
-
-@Check.register("isinstance")
-def instance_check(param, val):
-    if not isinstance(val, param):
-        raise Check.CheckError(f"{val!r} not instance of {param!r}")
+    @staticmethod
+    @Check.register("isinstance")
+    def instance_check(param, val):
+        """uses :py:`isinstance(val, param)` to check the value"""
+        if not isinstance(val, param):
+            raise Check.CheckError(f"{val!r} foes no instance of {param!r}")
 
 
 class Checks(PyoloadAnnotation):
@@ -240,8 +374,12 @@ class Checks(PyoloadAnnotation):
     Pyoload annotation holding several checks called on typechecking.
     """
 
+    __slots__ = ("checks",)
+
     def __init__(
         self: PyoloadAnnotation,
+        __check_func__=None,
+        /,
         **checks: dict[str, Callable[[Any, Any], NoneType]],
     ) -> Any:
         """
@@ -254,6 +392,8 @@ class Checks(PyoloadAnnotation):
 
         :returns: self
         """
+        if __check_func__ is not None:
+            checks['func'] = __check_func__
         self.checks = checks
 
     def __call__(self: PyoloadAnnotation, val: Any) -> None:
@@ -280,6 +420,7 @@ class CheckedAttr(Checks):
     A descriptor class providing attributes which are checked on assignment
     """
 
+    __slots__ = ("name", "value")
     name: str
     value: Any
 
@@ -299,22 +440,13 @@ class CheckedAttr(Checks):
         super().__init__(**checks)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
-        """
-        sets the name of the attribute
-        """
         self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):
-        """
-        returns the value in `self.value`
-        """
         return self.value
 
     def __set__(self: Any, obj: Any, value: Any):
-        """
-        Performs checks then assigns the new value
-        """
         self(value)
         self.value = value
 
@@ -324,10 +456,12 @@ class Cast(PyoloadAnnotation):
     Holds a cast object which describes the casts to be performed
     """
 
+    __slots__ = ("type",)
+
     @staticmethod
     def cast(val: Any, totype: Any) -> Any:
         """
-        The gratest deal.
+        **The gratest deal.**
         Recursively casts the given value to the specified structure or type
         e.g
 
@@ -339,21 +473,22 @@ class Cast(PyoloadAnnotation):
 
         :returns: An instance of the casting type
         """
+        if totype == Any:
+            return val
         if isinstance(totype, GenericAlias):
-            if totype.__origin__ == dict:
-                if len(totype.__args__) == 2:
-                    kt, vt = totype.__args__
-                elif len(totype.__args__) == 1:
-                    kt, vt = Any, totype.__args__[1]
-                return {
-                    Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
-                }
+            args = get_args(totype)
+            if get_origin(totype) == dict:
+                if len(args) == 2:
+                    kt, vt = args
+                elif len(args) == 1:
+                    kt, vt = args[0], Any
+                return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
             else:
-                sub = totype.__args__[0]
-                return totype.__origin__([Cast.cast(v, sub) for v in val])
-        if isinstance(totype, UnionType):
+                sub = args[0]
+                return get_origin(totype)([Cast.cast(v, sub) for v in val])
+        if get_origin(totype) is Union or get_origin(totype) is UnionType:
             errors = []
-            for subtype in totype.__args__:
+            for subtype in get_args(totype):
                 try:
                     return Cast.cast(val, subtype)
                 except Exception as e:
@@ -400,7 +535,7 @@ class Cast(PyoloadAnnotation):
             ) from e
 
     def __str__(self):
-        return f"pyoload.Cast({self.type!s})"
+        return f"pyoload.Cast({self.type!r})"
 
 
 class CastedAttr(Cast):
@@ -408,7 +543,7 @@ class CastedAttr(Cast):
     A descriptor class providing attributes which are casted on assignment
     """
 
-    name: str
+    __slots__ = "value"
     value: Any
 
     def __init__(self: Cast, type: Any) -> Cast:
@@ -426,7 +561,6 @@ class CastedAttr(Cast):
         17
         >>> print(temeze.phone)
         (6, 7, 8, 9, 3, 6, 7, 9, 8)
-        >>>
         >>> mballa = Person(0, "123456")
         Traceback (most recent call last):
           ...
@@ -435,79 +569,74 @@ class CastedAttr(Cast):
         super().__init__(type)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
-        """def __set_name__(self: Any, obj: Any, name: str, typo: Any = None)
-        setd the name of the attribute
-        """
-        self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):
-        """def __get__(self: Any, obj: Any, type: Any)
-        returns the value in `self.value`
-        """
         return self.value
 
     def __set__(self: Any, obj: Any, value: Any):
-        """def __set__(self: Any, obj: Any, value: Any)
-        Performs checks then assigns the new value
-        """
         self.value = self(value)
 
 
-def typeMatch(val: Any, spec: Any) -> bool:
+def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
     """
     recursively checks if type matches
 
     :param val: The value to typecheck
     :param spec: The type specifier
 
-    :return: A boolean
+    :returns: A tuple of the match status and the optional errors
     """
     try:
-        return isinstance(val, spec)
+        return (isinstance(val, spec), None)
     except TypeError:
         pass
     if spec is any:
         raise TypeError("May be have you confused `Any` and `any`")
 
     if spec is Any or spec is _empty or spec is None or val is None:
-        return True
+        return (True, None)
     if isinstance(spec, Values):
-        return spec(val)
+        return (spec(val), None)
     elif isinstance(spec, Checks):
         try:
             spec(val)
-        except Check.CheckError:
-            return False
+        except Check.CheckError as e:
+            return (False, e)
         else:
-            return True
+            return (True, None)
     elif isinstance(spec, GenericAlias):
-        if not isinstance(val, spec.__origin__):
-            return False
+        orig = get_origin(spec)
+        if not isinstance(val, orig):
+            return (False, None)
 
-        if spec.__origin__ == dict:
-            if len(spec.__args__) == 2:
-                kt, vt = spec.__args__
-            elif len(spec.__args__) == 1:
-                kt, vt = Any, spec.__args__[1]
-            else:
-                return True
+        if orig == dict:
+            args = get_args(spec)
+            if len(args) == 2:
+                kt, vt = args
+            elif len(args) == 1:
+                kt, vt = args[0], Any
 
             for k, v in val.items():
-                if not typeMatch(k, kt) or not typeMatch(v, vt):
-                    return False
+                k, e = type_match(k, kt)
+                if not k:
+                    return (False, e)
+                v, e = type_match(v, vt)
+                if not v:
+                    return (False, e)
             else:
-                return True
+                return (True, None)
         else:
-            sub = spec.__args__[0]
+            sub = get_args(spec)[0]
             for val in val:
-                if not typeMatch(val, sub):
-                    return False
+                m, e = type_match(val, sub)
+                if not m:
+                    return (False, e)
             else:
-                return True
+                return (True, None)
 
 
-def resolveAnnotations(obj: Type | Callable) -> None:
+def resove_annotations(obj: Callable) -> None:
     """
     Evaluates all the stringized annotations of the argument
 
@@ -515,23 +644,11 @@ def resolveAnnotations(obj: Type | Callable) -> None:
 
     :returns: None
     """
-    if isclass(obj) or hasattr(obj, "__class__"):
-        for k, v in obj.__annotations__.items():
-            if isinstance(v, str):
-                try:
-                    obj.__annotations__[k] = eval(
-                        v,
-                        dict(vars(getmodule(obj))),
-                        dict(vars(obj)),
-                    )
-                except Exception as e:
-                    raise AnnotationResolutionError(
-                        (
-                            f"Exception: {e!s} while resolving"
-                            f" annotation {e}={v!r} of object {obj!r}"
-                        ),
-                    ) from e
-    elif callable(obj):
+    if not hasattr(obj, '__annotations__'):
+        raise AnnotationResolutionError(
+            f"object {obj=!r} does not have `.__annotations__`",
+        )
+    if isfunction(obj):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
                 try:
@@ -542,8 +659,22 @@ def resolveAnnotations(obj: Type | Callable) -> None:
                         f" annotation {v!r} of function {obj!r}",
                         f"globals: {obj.__globals__}",
                     ) from e
-    else:
-        raise AnnotationError(f"unknown resolution method for {obj}")
+    elif isclass(obj) or hasattr(obj, "__class__"):
+        for k, v in obj.__annotations__.items():
+            if isinstance(v, str):
+                try:
+                    obj.__annotations__[k] = eval(
+                        v,
+                        dict(vars(getmodule(obj))),
+                        dict(vars(obj)) if hasattr(obj, '__dict__') else None,
+                    )
+                except Exception as e:
+                    raise AnnotationResolutionError(
+                        (
+                            f"Exception: {e!s} while resolving"
+                            f" annotation {e}={v!r} of object {obj!r}"
+                        ),
+                    ) from e
 
 
 def annotate(
@@ -563,8 +694,14 @@ def annotate(
 
     :returns: the wrapper function
     """
+    if isinstance(func, bool):
+        return partial(annotate, force=True)
+    if not hasattr(func, "__annotations__"):
+        return func
+    if is_annoted(func):
+        return func
     if isclass(func):
-        return annotateClass(func)
+        return annotate_class(func)
     if len(func.__annotations__) == 0:
         return func
     if not is_annotable(func) and not force:
@@ -573,7 +710,7 @@ def annotate(
     @wraps(func)
     def wrapper(*pargs, **kw):
         if str in map(type, func.__annotations__.values()):
-            resolveAnnotations(func)
+            resove_annotations(func)
         sign = signature(func)
         try:
             args = sign.bind(*pargs, **kw)
@@ -587,12 +724,10 @@ def annotate(
             param = sign.parameters.get(k)
             if param.annotation is _empty:
                 continue
-            if param.annotation is None:
-                continue
             if isinstance(param.annotation, Cast):
                 args.arguments[k] = param.annotation(v)
                 continue
-            if not typeMatch(v, param.annotation):
+            if not type_match(v, param.annotation)[0]:
                 if oload:
                     raise InternalAnnotationError()
                 errors.append(
@@ -605,18 +740,20 @@ def annotate(
         if len(errors) > 0:
             raise AnnotationErrors(errors)
 
-        ret = func(*pargs, **kw)
+        ret = func(**args.arguments)
 
         if sign.return_annotation is not _empty:
             ann = sign.return_annotation
 
             if isinstance(ann, Cast):
                 return ann(ret)
-            if not typeMatch(ret, ann):
+            m, e = type_match(ret, ann)
+            if not m:
                 raise AnnotationError(
                     f"return value: {ret!r} does not match annotation:"
                     f" {ann!r} for "
                     f"of function {get_name(func)}",
+                    e,
                 )
         return ret
 
@@ -625,33 +762,57 @@ def annotate(
 
 
 def unannotate(func: Callable) -> Callable:
-    if hasattr(func, '__pyod_annotate__'):
+    """
+    Returns the underlying function returned by :py:`annotate`,
+    if not annotated it returns the passed function.
+
+    :param func: the function to unwrap
+
+    :returns: The unwrapped function
+    """
+    if hasattr(func, "__pyod_annotate__"):
         return func.__pyod_annotate__
     else:
         return func
 
 
 def unannotable(func: Callable) -> Callable:
+    """
+    Marks a function to be not annotable, the function will then not be wrapped
+    by :py:`annotate` or :py:`multimethod`, except :py:`force=True` argument
+    specified.
+    """
     func = unannotate(func)
     func.__pyod_annotable__ = False
+    return func
 
 
 def annotable(func: Callable) -> Callable:
+    """
+    Marks a function to be annotatble by :py:`annotate` and :py:`overload`
+    """
     func.__pyod_annotable__ = True
+    return func
 
 
 def is_annotable(func):
-    return not hasattr(func, '__pyod_annotable__') or func.__pyod_annotable__
+    """
+    Returns if the function posses the unannotable mark.
+    """
+    return not hasattr(func, "__pyod_annotable__") or func.__pyod_annotable__
 
 
 def is_annoted(func):
-    return hasattr(func, '__pyod_annotate__')
+    """
+    Determines if a function has been annotated.
+    """
+    return hasattr(func, "__pyod_annotate__")
 
 
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def overload(func: Callable, name: str | None = None) -> Callable:
+def multimethod(func: Callable, name: str = None, force: bool = False) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -662,22 +823,23 @@ def overload(func: Callable, name: str | None = None) -> Callable:
 
     The decorated function takes some new attributes:
     - __pyod_annotate__: The raw function
-    - __pyod_overloads__: The list of the function overloads
-    - overload(func: Callable) registers the passed function under the same \
+    - __pyod_dispatches__: The list of the function overloads
+    - multimethod(func: Callable) registers the passed function under the same\
       name.
 
     :param func: the function to annotate
     :param name: optional name under which to register.
+    :param force: overloads even unnanotable functions
 
-    :return: the wrapper function
+    :returns: the wrapper function
     """
     if isinstance(func, str):
-        return partial(overload, name=func)
+        return partial(multimethod, name=func)
     if name is None or not isinstance(name, str):
         name = get_name(func)
     if name not in __overloads__:
         __overloads__[name] = []
-    __overloads__[name].append(annotate(func, oload=True))
+    __overloads__[name].append(annotate(func, oload=True, force=force))
 
     @wraps(func)
     def wrapper(*args, **kw):
@@ -695,14 +857,17 @@ def overload(func: Callable, name: str | None = None) -> Callable:
             )
         return val
 
-    wrapper.__pyod_overloads__ = __overloads__[name]
+    wrapper.__pyod_dispatches__ = __overloads__[name]
     wrapper.__pyod_overloads_name__ = name
-    wrapper.overload = partial(overload, name=name)
+    wrapper.overload = wrapper.add = partial(overload, name=name)
 
     return wrapper
 
 
-def annotateClass(cls: Any):
+overload = multimethod
+
+
+def annotate_class(cls: Any, recur: bool = True):
     """
     Annotates a class object, wrapping and replacing over it's __setattr__
     and typechecking over each attribute assignment.
@@ -711,46 +876,68 @@ def annotateClass(cls: Any):
     it recursively annotates the classes methods except `__pyod_norecur__`
     attribute is defines
     """
-    if not hasattr(cls, "__annotations__"):
-        cls.__annotations__ = {}
+
     if isinstance(cls, bool):
-        return partial(annotate, recur=cls)
-    recur = not hasattr(cls, "__pyod_norecur__")
+        return partial(annotate_class, recur=cls)
+    recur = not hasattr(cls, "__pyod_norecur__") and recur
     setter = cls.__setattr__
     if recur:
-        for x in dir(cls):
-            if hasattr(getattr(cls, x), "__annotations__"):
+        for x in vars(cls):
+            if x[:2] == x[-2:] == "__":
+                continue
+            if hasattr(vars(cls).get(x), "__annotations__"):
                 setattr(
                     cls,
                     x,
                     annotate(
-                        getattr(
-                            cls,
-                            x,
-                        ),
+                        vars(cls).get(x)
                     ),
                 )
 
     @wraps(cls.__setattr__)
     def new_setter(self: Any, name: str, value: Any) -> Any:
-        if any(isinstance(x, str) for x in self.__annotations__.values()):
-            resolveAnnotations(self)
+        if str in map(type, self.__annotations__.values()):
+            resove_annotations(self)
 
         if name not in self.__annotations__:
             return setter(self, name, value)  # do not check if no annotations
         elif isinstance(self.__annotations__[name], Cast):
             return setter(self, name, self.__annotations__[name](value))
-        elif not typeMatch(value, self.__annotations__[name]):
-            raise AnnotationError(
-                f"value {value!r} does not match annotation"
-                f"of attribute: {name!r}:{self.__annotations__[name]!r}"
-                f" of object of class {get_name(cls)}",
-            )
+
+        else:
+            m, e = type_match(value, self.__annotations__[name])
+            if not m:
+                raise AnnotationError(
+                    f"value {value!r} does not match annotation"
+                    f"of attribute: {name!r}:{self.__annotations__[name]!r}"
+                    f" of object of class {get_name(cls)}",
+                    e,
+                )
         return setter(self, name, value)
 
     cls.__setattr__ = new_setter
     return cls
 
 
-__version__ = "2.0.0"
+__all__ = [
+    "annotate",
+    "overload",
+    "multimethod",
+    "Checks",
+    "Check",
+    "annotable",
+    "unannotable",
+    "unannotate",
+    "is_annotable",
+    "is_annoted",
+    "resove_annotations",
+    "Cast",
+    "CastedAttr",
+    "CheckedAttr",
+    "Values",
+    "AnnotationResolutionError",
+    "AnnotationError",
+]
+
+__version__ = "2.0.1"
 __author__ = "ken-morel"

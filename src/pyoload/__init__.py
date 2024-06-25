@@ -698,6 +698,8 @@ def annotate(
         return partial(annotate, force=True)
     if not hasattr(func, "__annotations__"):
         return func
+    if is_annoted(func):
+        return func
     if isclass(func):
         return annotate_class(func)
     if len(func.__annotations__) == 0:
@@ -880,16 +882,15 @@ def annotate_class(cls: Any, recur: bool = True):
     recur = not hasattr(cls, "__pyod_norecur__") and recur
     setter = cls.__setattr__
     if recur:
-        for x in dir(cls):
-            if hasattr(getattr(cls, x), "__annotations__"):
+        for x in vars(cls):
+            if x[:2] == x[-2:] == "__":
+                continue
+            if hasattr(vars(cls).get(x), "__annotations__"):
                 setattr(
                     cls,
                     x,
                     annotate(
-                        getattr(
-                            cls,
-                            x,
-                        ),
+                        vars(cls).get(x)
                     ),
                 )
 
@@ -938,5 +939,5 @@ __all__ = [
     "AnnotationError",
 ]
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 __author__ = "ken-morel"
