@@ -13,7 +13,7 @@ from pyoload import type_match
 from pyoload import unannotable
 from pyoload import unannotate
 
-assert pyoload.__version__ == "2.0.0"
+assert pyoload.__version__ == "2.0.1"
 
 
 @annotate
@@ -116,6 +116,7 @@ def test_annotate():
     assert type_match(3, dict[str | int])
     assert type_match({3: '4'}, dict[int, int])
     assert type_match({'3': 4}, dict[int, int])
+    assert type_match((3, 4.0), tuple[int, float])
 
 
 if __name__ == "__main__":

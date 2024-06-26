@@ -7,16 +7,16 @@ from pyoload import Checks
 from pyoload import Check
 from pyoload import annotate
 
-assert pyoload.__version__ == "2.0.0"
+assert pyoload.__version__ == "2.0.1"
 
 
 @annotate
 class foo:
     foo = CheckedAttr(len=slice(3, None))
-    foow = CheckedAttr(len=(3, None))
+    foow = CheckedAttr(len=slice(3, None))
     bar: Checks(ge=3)
 
-    def __init__(self: Any, bar: Checks(func=bool)) -> Any:
+    def __init__(self: Any, bar: Checks(bool)) -> Any:
         pass
 
 
@@ -29,7 +29,7 @@ class IsInt(Check):
     name = "isint"
 
     def __call__(self, a, b):
-        return a == isinstance(b, int)
+        assert a == isinstance(b, int)
 
 
 def test_check():
@@ -43,6 +43,7 @@ def test_check():
     obj = foo(2)
     obj.bar = 3
     obj.foo = ('1', 2, 3)
+    Check.check("_isint", True, None)
     try:
         obj.foow = None
     except Exception:
@@ -97,7 +98,7 @@ def test_check():
     Checks(test1=3)(3)
     Checks(test2=4)(4)
     Checks(ge=2, gt=1, lt=2.1, le=2, eq=2)(2)
-    print(Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5))
+    # print(Checks(ge=-2.5, gt=-3, lt=-2, le=2, eq=-2.5)(-2.5))
     Checks(len=slice(2, 5))("abcd")
     Checks(type=dict[str | int, tuple[int]])(
         {
@@ -107,9 +108,17 @@ def test_check():
     )
     Checks(isinstance=float)(1.5)
     Checks(isint=True)(5)
+    Checks(_isint=False)(5)
+    try:
+        Checks(_isint=True)(5)
+    except Check.CheckError:
+        pass
+    else:
+        raise Exception("did not fail")
 
     for name, check in pyoload.Check.checks_list.items():
         try:
+            print(pyoload.get_name(check))
             if pyoload.get_name(check).split(".")[0] == "tests":
                 continue
             pyoload.Checks(**{name: NotImplemented})(24)

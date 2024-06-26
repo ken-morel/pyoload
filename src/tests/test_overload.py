@@ -5,7 +5,7 @@ from pyoload import OverloadError
 from pyoload import get_name
 from pyoload import overload
 
-assert pyoload.__version__ == "2.0.0"
+assert pyoload.__version__ == "2.0.1"
 
 
 @overload

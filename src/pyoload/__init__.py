@@ -215,7 +215,7 @@ t equal")
         """
         names = [x.strip() for x in name.split(" ") if x.strip() != ""]
         for name in names:
-            if name in cls.checks_list:
+            if name.lstrip("_") in cls.checks_list:
                 raise Check.CheckNameAlreadyExistsError(name)
 
         def inner(func: Callable) -> Callable:
@@ -233,18 +233,33 @@ t equal")
 
         :param cls: pyoload.Check class
         :param name: One of the registerred name of the check
+        if preceded by an underscore, it will be negated
         :param params: The parameters to pass to the check
         :param val: The value to check
 
         :returns: :py:`None`
         """
+        neg = False
+        if name.startswith("_"):
+            name = name[1:]
+            neg = True
         check = cls.checks_list.get(name)
         if check is None:
             raise Check.CheckDoesNotExistError(name)
         try:
             check(params, val)
-        except (AssertionError, TypeError) as e:
-            raise Check.CheckError(e) from e
+        except (AssertionError, TypeError, ValueError) as e:
+            if not neg:
+                raise Check.CheckError(e) from e
+        except Check.CheckError:
+            if not neg:
+                raise
+        else:
+            if neg:
+                raise Check.CheckError(
+                    f"check {name} did not fail on: {val!r}"
+                    f" for params: {params!r}"
+                )
 
     class CheckNameAlreadyExistsError(ValueError):
         """
@@ -393,7 +408,7 @@ class Checks(PyoloadAnnotation):
         :returns: self
         """
         if __check_func__ is not None:
-            checks['func'] = __check_func__
+            checks["func"] = __check_func__
         self.checks = checks
 
     def __call__(self: PyoloadAnnotation, val: Any) -> None:
@@ -440,13 +455,16 @@ class CheckedAttr(Checks):
         super().__init__(**checks)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
+        print("...", self, obj, name, typo)
         self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):
+        print("getting")
         return self.value
 
     def __set__(self: Any, obj: Any, value: Any):
+        print("ran checks", self)
         self(value)
         self.value = value
 
@@ -483,6 +501,9 @@ class Cast(PyoloadAnnotation):
                 elif len(args) == 1:
                     kt, vt = args[0], Any
                 return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
+            elif get_origin(totype) == tuple and len(args := get_args(totype)) > 1:
+                args = get_args(totype)
+                return tuple(Cast.cast(val, ann) for val, ann in zip(val, args))
             else:
                 sub = args[0]
                 return get_origin(totype)([Cast.cast(v, sub) for v in val])
@@ -626,6 +647,14 @@ def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
                     return (False, e)
             else:
                 return (True, None)
+        elif orig == tuple and len(args := get_args(spec)) > 1:
+            vals = zip(val, args)
+            for val, ann in vals:
+                b, e = type_match(val, ann)
+                if not b:
+                    return b, e
+            else:
+                return (True, None)
         else:
             sub = get_args(spec)[0]
             for val in val:
@@ -644,7 +673,7 @@ def resove_annotations(obj: Callable) -> None:
 
     :returns: None
     """
-    if not hasattr(obj, '__annotations__'):
+    if not hasattr(obj, "__annotations__"):
         raise AnnotationResolutionError(
             f"object {obj=!r} does not have `.__annotations__`",
         )
@@ -666,7 +695,7 @@ def resove_annotations(obj: Callable) -> None:
                     obj.__annotations__[k] = eval(
                         v,
                         dict(vars(getmodule(obj))),
-                        dict(vars(obj)) if hasattr(obj, '__dict__') else None,
+                        dict(vars(obj)) if hasattr(obj, "__dict__") else None,
                     )
                 except Exception as e:
                     raise AnnotationResolutionError(
@@ -696,6 +725,8 @@ def annotate(
     """
     if isinstance(func, bool):
         return partial(annotate, force=True)
+    if not callable(func):
+        return func
     if not hasattr(func, "__annotations__"):
         return func
     if is_annoted(func):
@@ -883,15 +914,13 @@ def annotate_class(cls: Any, recur: bool = True):
     setter = cls.__setattr__
     if recur:
         for x in vars(cls):
-            if x[:2] == x[-2:] == "__":
+            if x[:2] == x[-2:] == "__" and x != "__init__":
                 continue
-            if hasattr(vars(cls).get(x), "__annotations__"):
+            if hasattr(getattr(cls, x), "__annotations__"):
                 setattr(
                     cls,
                     x,
-                    annotate(
-                        vars(cls).get(x)
-                    ),
+                    annotate(vars(cls).get(x)),
                 )
 
     @wraps(cls.__setattr__)
@@ -921,6 +950,7 @@ def annotate_class(cls: Any, recur: bool = True):
 
 __all__ = [
     "annotate",
+    "annotate_class",
     "overload",
     "multimethod",
     "Checks",
@@ -937,6 +967,9 @@ __all__ = [
     "Values",
     "AnnotationResolutionError",
     "AnnotationError",
+    "Type",
+    "Any",
+    "type_match",
 ]
 
 __version__ = "2.0.1"

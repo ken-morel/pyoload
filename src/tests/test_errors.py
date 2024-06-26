@@ -1,7 +1,7 @@
 import pyoload
 
 
-assert pyoload.__version__ == "2.0.0"
+assert pyoload.__version__ == "2.0.1"
 
 
 errors = (

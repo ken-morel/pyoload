@@ -9,7 +9,7 @@ from pyoload import Union
 from pyoload import annotate
 from pyoload import type_match
 
-assert pyoload.__version__ == "2.0.0"
+assert pyoload.__version__ == "2.0.1"
 
 
 @annotate
@@ -37,6 +37,7 @@ def test_cast():
     assert Cast(dict[int])({'3': '7'}) == {3: '7'}
     assert Cast(dict[Any, int])({'3': '7'}) == {'3': 7}
     assert Cast(tuple[int | str])(('3', 2.5, 1j, '/6')) == (3, 2, '1j', '/6')
+    assert Cast(tuple[float, int | str])((3, 3j)) == (3.0, str(3j))
 
     try:
         @annotate

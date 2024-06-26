@@ -393,7 +393,7 @@ class Checks(PyoloadAnnotation):
         :returns: self
         """
         if __check_func__ is not None:
-            checks['func'] = __check_func__
+            checks["func"] = __check_func__
         self.checks = checks
 
     def __call__(self: PyoloadAnnotation, val: Any) -> None:
@@ -483,6 +483,9 @@ class Cast(PyoloadAnnotation):
                 elif len(args) == 1:
                     kt, vt = args[0], Any
                 return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
+            elif get_origin(totype) == tuple:
+                args = get_args(totype)
+                return tuple(Cast.cast(val, ann) for val, ann in zip(args, val))
             else:
                 sub = args[0]
                 return get_origin(totype)([Cast.cast(v, sub) for v in val])
@@ -626,6 +629,13 @@ def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
                     return (False, e)
             else:
                 return (True, None)
+        elif orig == tuple:
+            args = get_args(spec)
+            vals = zip(args, val)
+            for val, ann in vals:
+                b, e = type_match(val, ann)
+                if not b:
+                    return b, e
         else:
             sub = get_args(spec)[0]
             for val in val:
@@ -644,7 +654,7 @@ def resove_annotations(obj: Callable) -> None:
 
     :returns: None
     """
-    if not hasattr(obj, '__annotations__'):
+    if not hasattr(obj, "__annotations__"):
         raise AnnotationResolutionError(
             f"object {obj=!r} does not have `.__annotations__`",
         )
@@ -666,7 +676,7 @@ def resove_annotations(obj: Callable) -> None:
                     obj.__annotations__[k] = eval(
                         v,
                         dict(vars(getmodule(obj))),
-                        dict(vars(obj)) if hasattr(obj, '__dict__') else None,
+                        dict(vars(obj)) if hasattr(obj, "__dict__") else None,
                     )
                 except Exception as e:
                     raise AnnotationResolutionError(
@@ -696,6 +706,8 @@ def annotate(
     """
     if isinstance(func, bool):
         return partial(annotate, force=True)
+    if not callable(func):
+        return func
     if not hasattr(func, "__annotations__"):
         return func
     if is_annoted(func):
@@ -889,9 +901,7 @@ def annotate_class(cls: Any, recur: bool = True):
                 setattr(
                     cls,
                     x,
-                    annotate(
-                        vars(cls).get(x)
-                    ),
+                    annotate(vars(cls).get(x)),
                 )
 
     @wraps(cls.__setattr__)
@@ -921,6 +931,7 @@ def annotate_class(cls: Any, recur: bool = True):
 
 __all__ = [
     "annotate",
+    "annotate_class",
     "overload",
     "multimethod",
     "Checks",
@@ -937,6 +948,9 @@ __all__ = [
     "Values",
     "AnnotationResolutionError",
     "AnnotationError",
+    "Type",
+    "Any",
+    "type_match",
 ]
 
 __version__ = "2.0.1"
