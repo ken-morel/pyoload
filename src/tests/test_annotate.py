@@ -39,7 +39,7 @@ def test_annotate():
     assert annotate(foo1)(3) == "3"
     assert unannotate(annotate(foo1))(3) == 3
     assert annotate(unannotable(foo1))(3) == 3
-    assert annotate(unannotable(foo1))(3) == 3
+    assert annotate(True)(unannotable(foo1))(3) == "3"
     assert annotate(unannotable(foo1), force=True)(3) == "3"
     assert annotate(annotable(unannotable(foo1)))(3) == "3"
     assert is_annotable(foo1)
@@ -48,6 +48,14 @@ def test_annotate():
     assert not is_annotable(unannotable(foo1))
     assert is_annoted(annotate(foo1, force=True))
     assert not is_annoted(foo1)
+    annotate(annotate(annotable(foo1)))
+    annotate(3)
+    try:
+        annotate(True)(foo1)(1, 2, 3, 4, 5)
+    except Exception:
+        pass
+    else:
+        raise Exception()
 
     try:
         @annotate
@@ -77,8 +85,17 @@ def test_annotate():
         footy()
     except AnnotationError:
         pass
+    try:
+        type_match(3, any)
+    except TypeError:
+        pass
     else:
         raise Exception()
+    type_match(3, int | tuple[int])
+    assert type_match((1, 2), tuple[int, int])[0]
+    assert not type_match((1, 3.0), tuple[int, int])[0]
+    assert type_match((1, "st"), tuple[int, str])[0]
+    assert not type_match((3, 4, 5.0), tuple[int])[0]
     try:
         assert type_match({3: None}, dict[str]) == (True, None)
     except Exception:
@@ -117,6 +134,8 @@ def test_annotate():
     assert type_match({3: '4'}, dict[int, int])
     assert type_match({'3': 4}, dict[int, int])
     assert type_match((3, 4.0), tuple[int, float])
+    assert type_match((3, 4.0), int | tuple[int, float])[0]
+    assert not type_match((" 3", 4.0), int | tuple[int, float])[0]
 
 
 if __name__ == "__main__":

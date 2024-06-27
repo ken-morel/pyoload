@@ -33,7 +33,7 @@ def foo(
     a: str,     # this has an annotation
     b=3,        # this uses a default value
     c: int = 0  # here both
-) -> None:  # The return type
+) -> tuple[str, int]:  # The return type
     ...
 ```
 
@@ -80,12 +80,26 @@ These are what pyoload adds to the standard annotations:
 
 A simple `tuple` subclass, use them as annotation and it will validate only
 included values.
+```python
+@annotate
+def foo(bar: Values(range(5))):
+    ...
+```
 
 ### `pyoload.Cast`
 
 This performs recursive casting of the passed arguments into the specified type
 It supports `dict` generic aliases as `dict[str, int | str] ` and tries cast in
 the specified order when the type is a Union.
+
+```python
+@annotate
+def foo(bar: Cast(tuple[int | str])):
+    print(bar)
+
+foo((3, "3"))  # (3, 3)
+foo((3j, " "))  # ('3j', ' ')
+```
 
 ### `pyoload.Checks`
 
@@ -100,6 +114,8 @@ def foo(a: Checks(func=test):
     ...
 ```
 
+If the check name is prepended with a `_`, it will be negated, and an exception
+is raised if it fails.
 You can register your own checks using `Check.register`, as
 
 ```python
@@ -113,6 +129,28 @@ Checks(mycheck='param')('val')  # Will raise error on check failure
 def foo(a: Checks(mycheck='param')):
     ...
 ```
+
+Checks can be used as annotations;
+called using `pyoload.Checks` as `Checks(foo=bar)(val)`; or
+Invoked directly using `pyoload.Checks` as:
+`Check.check(name, param, arg)`
+
+#### len
+
+Receives as argument an integer value specified the expected length or
+a slice in which the length should be found
+
+#### gt, lt, eq
+
+Compares grater than, less than and aqual to from the parameter
+to the value.
+
+#### func
+
+Uses a function for validation, the function could return a boolean
+or raise an error.
+It could be passed directly as positional arguments to pyoload.Checks
+as: `Checks(func1, func2, foo=bar, foo2=bar2)`
 
 ### Checked and casted attributes
 

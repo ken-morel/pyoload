@@ -393,8 +393,7 @@ class Checks(PyoloadAnnotation):
 
     def __init__(
         self: PyoloadAnnotation,
-        __check_func__=None,
-        /,
+        *__check_funcs__,
         **checks: dict[str, Callable[[Any, Any], NoneType]],
     ) -> Any:
         """
@@ -407,8 +406,7 @@ class Checks(PyoloadAnnotation):
 
         :returns: self
         """
-        if __check_func__ is not None:
-            checks["func"] = __check_func__
+        self.__func__ = __check_funcs__
         self.checks = checks
 
     def __call__(self: PyoloadAnnotation, val: Any) -> None:
@@ -417,11 +415,15 @@ class Checks(PyoloadAnnotation):
 
         :param val: The value to check
         """
+        for func in self.__func__:
+            Check.check("func", func, val)
         for name, params in self.checks.items():
             Check.check(name, params, val)
 
     def __str__(self: Any) -> str:
         ret = "<Checks("
+        for func in self.__func__:
+            ret += get_name(func) + ", "
         for k, v in self.checks.items():
             ret += f"{k}={v!r}, "
         ret = ret[:-2] + ")>"
@@ -626,6 +628,18 @@ def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
             return (False, e)
         else:
             return (True, None)
+    elif get_origin(spec) in (Union, UnionType):
+        errs = []
+        for arg in get_args(spec):
+            m, e = type_match(val, arg)
+            if m:
+                del errs
+                return m, e
+            else:
+                errs.append(e)
+        else:
+            return (False, errs)
+
     elif isinstance(spec, GenericAlias):
         orig = get_origin(spec)
         if not isinstance(val, orig):
@@ -663,6 +677,7 @@ def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
                     return (False, e)
             else:
                 return (True, None)
+    raise AnnotationError(f"could not match type {spec=!r} to {val=!r}")
 
 
 def resove_annotations(obj: Callable) -> None:
@@ -725,24 +740,26 @@ def annotate(
     """
     if isinstance(func, bool):
         return partial(annotate, force=True)
-    if not callable(func):
-        return func
-    if not hasattr(func, "__annotations__"):
+    if not callable(func) or not hasattr(func, "__annotations__"):
         return func
     if is_annoted(func):
         return func
     if isclass(func):
         return annotate_class(func)
-    if len(func.__annotations__) == 0:
-        return func
     if not is_annotable(func) and not force:
         return func
+    func.__pyod_signature__ = signature(func)
+    annotations = func.__annotations__.copy()
 
     @wraps(func)
     def wrapper(*pargs, **kw):
         if str in map(type, func.__annotations__.values()):
             resove_annotations(func)
-        sign = signature(func)
+        if annotations != func.__annotations__:
+            annotations.clear()
+            annotations.update(func.__annotations__)
+            func.__pyod_signature__ = signature(func)
+        sign = func.__pyod_signature__
         try:
             args = sign.bind(*pargs, **kw)
         except Exception:

@@ -11,6 +11,17 @@ to when I write this doc now, about
 These are the highlights
 
 --------------------------------------------------
+pyoload v2.0.1
+--------------------------------------------------
+
+1. Corrected bug when using Unions of Generic Aliases
+2. Inspect.signature called only once, but called again if annotations are
+   modified.
+3. Added checks negation by prepending with `_`
+4. A list of functions checks could now be passed as positional arguments
+   to `pyoload.Checks`
+
+--------------------------------------------------
 pyoload v2.0.0
 --------------------------------------------------
 
