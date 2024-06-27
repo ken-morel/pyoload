@@ -164,3 +164,8 @@ class address:
     number = CastedAttr(tuple[int])
     
 ```
+
+The values are checked or casted on assignment
+
+> [!NOTE]
+> The attributes will return `None` if not yet initialized

@@ -20,6 +20,7 @@ pyoload v2.0.1
 3. Added checks negation by prepending with `_`
 4. A list of functions checks could now be passed as positional arguments
    to `pyoload.Checks`
+5. Increases the coverage to 99%
 
 --------------------------------------------------
 pyoload v2.0.0
