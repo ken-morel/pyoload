@@ -9,7 +9,7 @@ from pyoload import Union
 from pyoload import annotate
 from pyoload import type_match
 
-assert pyoload.__version__ == "2.0.1"
+assert pyoload.__version__ == "2.0.2"
 
 
 @annotate

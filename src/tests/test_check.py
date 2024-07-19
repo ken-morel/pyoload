@@ -7,7 +7,7 @@ from pyoload import Checks
 from pyoload import Check
 from pyoload import annotate
 
-assert pyoload.__version__ == "2.0.1"
+assert pyoload.__version__ == "2.0.2"
 
 
 @annotate

@@ -13,7 +13,7 @@ from pyoload import type_match
 from pyoload import unannotable
 from pyoload import unannotate
 
-assert pyoload.__version__ == "2.0.1"
+assert pyoload.__version__ == "2.0.2"
 
 
 @annotate
