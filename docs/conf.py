@@ -38,8 +38,8 @@ project = "pyoload"
 copyright = "2024, ken-morel"
 author = "ken-morel"
 
-release = "2.0.1"
-version = "2.0.1"
+release = "2.0.2"
+version = "2.0.2"
 
 # -- General configuration
 
@@ -50,7 +50,13 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosectionlabel",
+    "notfound.extension",
 ]
+
+notfound_context = {
+    'title': 'Page not found',
+    'body': "<h1>Page not found</h1>\n\nUnfortunately we couldn't find the content you were looking for.",
+}
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),

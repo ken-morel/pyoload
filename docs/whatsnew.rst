@@ -11,6 +11,12 @@ to when I write this doc now, about
 These are the highlights
 
 --------------------------------------------------
+pyoload v2.0.2
+--------------------------------------------------
+
+1. Added support for python built-in `Iterable`, `Iterator` and `Mapping`
+
+--------------------------------------------------
 pyoload v2.0.1
 --------------------------------------------------
 

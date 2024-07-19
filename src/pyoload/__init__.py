@@ -17,13 +17,16 @@ adds support for:
 :Dedication: To the pythonista.
 """
 
+
+from collections.abc import Iterable
+from collections.abc import Iterator
+from collections.abc import Mapping
 from functools import partial
 from functools import wraps
 from inspect import _empty
 from inspect import getmodule
 from inspect import isclass
 from inspect import isfunction
-from inspect import ismethod
 from inspect import signature
 from typing import Any
 from typing import Callable
@@ -32,6 +35,7 @@ from typing import Type
 from typing import Union
 from typing import get_args
 from typing import get_origin
+
 
 NoneType = type(None)
 try:
@@ -502,10 +506,17 @@ class Cast(PyoloadAnnotation):
                     kt, vt = args
                 elif len(args) == 1:
                     kt, vt = args[0], Any
-                return {Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()}
-            elif get_origin(totype) == tuple and len(args := get_args(totype)) > 1:
+                return {
+                    Cast.cast(k, kt): Cast.cast(v, vt) for k, v in val.items()
+                }
+            elif (
+                get_origin(totype) == tuple
+                and len(args := get_args(totype)) > 1
+            ):
                 args = get_args(totype)
-                return tuple(Cast.cast(val, ann) for val, ann in zip(val, args))
+                return tuple(
+                    Cast.cast(val, ann) for val, ann in zip(val, args)
+                )
             else:
                 sub = args[0]
                 return get_origin(totype)([Cast.cast(v, sub) for v in val])
@@ -639,13 +650,16 @@ def type_match(val: Any, spec: Union[Type, PyoloadAnnotation]) -> tuple:
                 errs.append(e)
         else:
             return (False, errs)
-
-    elif isinstance(spec, GenericAlias):
+    elif isinstance(spec, GenericAlias) or get_origin(spec) in (
+        Iterable,
+        Iterator,
+        Mapping,
+    ):
         orig = get_origin(spec)
         if not isinstance(val, orig):
             return (False, None)
 
-        if orig == dict:
+        if orig in (dict, Mapping):
             args = get_args(spec)
             if len(args) == 2:
                 kt, vt = args
@@ -696,12 +710,13 @@ def resove_annotations(obj: Callable) -> None:
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
                 try:
-                    obj.__annotations__[k] = eval(v, obj.__globals__)
+                    obj.__annotations__[k] = eval(
+                        v, obj.__globals__, dict(vars(getmodule(obj)))
+                    )
                 except Exception as e:
                     raise AnnotationResolutionError(
-                        f"Exception: {k!s} while resolving"
+                        f"Exception: `{e!s}` while resolving"
                         f" annotation {v!r} of function {obj!r}",
-                        f"globals: {obj.__globals__}",
                     ) from e
     elif isclass(obj) or hasattr(obj, "__class__"):
         for k, v in obj.__annotations__.items():
@@ -860,7 +875,9 @@ def is_annoted(func):
 __overloads__: dict[str, list[Callable]] = {}
 
 
-def multimethod(func: Callable, name: str = None, force: bool = False) -> Callable:
+def multimethod(
+    func: Callable, name: str = None, force: bool = False
+) -> Callable:
     """
     returns a wrapper over the passed function
     which typechecks arguments on each call
@@ -989,5 +1006,5 @@ __all__ = [
     "type_match",
 ]
 
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 __author__ = "ken-morel"
