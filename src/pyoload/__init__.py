@@ -461,16 +461,13 @@ class CheckedAttr(Checks):
         super().__init__(**checks)
 
     def __set_name__(self: Any, obj: Any, name: str, typo: Any = None):
-        print("...", self, obj, name, typo)
         self.name = name
         self.value = None
 
     def __get__(self: Any, obj: Any, type: Any):
-        print("getting")
         return self.value
 
     def __set__(self: Any, obj: Any, value: Any):
-        print("ran checks", self)
         self(value)
         self.value = value
 
