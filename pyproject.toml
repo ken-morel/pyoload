@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyoload"
+version = "3.0.0"
+dependencies = [
+]
+authors = [
+    {name = "Engon Ken Morel", email = "engonken8@gmail.com"}
+]
+maintainers = [
+    {name = "Engon Ken Morel", email = "engonken8@gmail.com"}
+]
+description = "Runtime typechecking debugging module."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["annotations", "pyoload", "debug"]
+classifiers = [
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 4 - Beta",
+
+    # Indicate who your project is intended for
+    "Intended Audience :: Developers",
+    # "Topic :: Software Development :: Build Tools",
+
+    # Pick your license as you wish (see also "license" above)
+    "License :: OSI Approved :: MIT License",
+
+    # Specify the Python versions you support here.
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Homepage = "https://github.com/ken-morel/pyoload"
+Repository = "https://github.com/ken-morel/pyoload.git"
+Issues = "https://github.com/ken-morel/pyoload/issues"
