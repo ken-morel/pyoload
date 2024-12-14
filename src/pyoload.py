@@ -4,11 +4,38 @@ Pyload to help you debug your modules by adding some runtime type checking.
 Built to support builting python types and those from :py:`typing` module.
 """
 
+
 import collections.abc
+import enum
 import functools
 import inspect
 import types
 import typing
+import warnings
+
+
+class Mode(enum.Enum):
+    DEBUG = enum.auto()
+    DEV = enum.auto()
+    PROD = enum.auto()
+
+
+MODE = Mode.PROD
+
+
+def dev():
+    global MODE
+    MODE = Mode.DEV
+
+
+def debug():
+    global MODE
+    MODE = Mode.DEBUG
+
+
+def prod():
+    global MODE
+    MODE = Mode.PROD
 
 
 def get_name(funcOrCls: typing.Any) -> str:
@@ -17,7 +44,6 @@ def get_name(funcOrCls: typing.Any) -> str:
 
     Possibly unique gotten from
     it's module name and qualifier name.
-
     >>> def foo():
     ...     pass
     ...
@@ -29,8 +55,15 @@ def get_name(funcOrCls: typing.Any) -> str:
     'builtins.print'
     """
     mod = funcOrCls.__module__
-    name = funcOrCls.__qualname__
+    try:
+        name = funcOrCls.__qualname__
+    except AttributeError:
+        name = type(funcOrCls).__qualname__
     return mod + "." + name
+
+
+""
+None
 
 
 def type_match(
@@ -50,6 +83,9 @@ def type_match(
         return (isinstance(val, spec), None)
     except TypeError:
         pass
+
+    if spec is typing.Any:
+        return (True, None)
 
     if typing.get_origin(spec) in (typing.Union, types.UnionType):
         message = None
@@ -104,7 +140,7 @@ def type_match(
                     + f"(Note e.g tuple[int, str] is considered as:"
                     + " (1, 'r'), (78, 'wel'), ...)",
                 )
-            for idx, (sub_value, sub_type) in enumerate(zip(val, args)):
+            for idx, (sub_value, sub_type) in enumerate(zip(val, type_args)):
                 matches, message = type_match(sub_value, sub_type)
                 if not matches:
                     return (
@@ -147,6 +183,10 @@ def resove_annotations(obj: typing.Callable):
         raise TypeError(
             f"object {obj=!r} does not have `.__annotations__`",
         )
+    if None in obj.__annotations__.values():
+        for k, v in obj.__annotations__.items():
+            if v is None:
+                obj.__annotations__[k] = types.NoneType
     if inspect.isfunction(obj):
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
@@ -156,7 +196,9 @@ def resove_annotations(obj: typing.Callable):
                     )
                 except Exception as e:
                     raise Exception(
-                        f"Name `{k}` could not be resolved."
+                        f"Annotation of attribute `{k}`of {get_name(obj)}"
+                        + " could not be resolved.",
+                        e,
                     ) from e
     elif inspect.isclass(obj) or hasattr(obj, "__class__"):
         for k, v in obj.__annotations__.items():
@@ -170,8 +212,8 @@ def resove_annotations(obj: typing.Callable):
                     )
                 except Exception as e:
                     raise Exception(
-                        f"Annotation of attribute `{k}` "
-                        + "could not be resolved.",
+                        f"Annotation of attribute `{k}` of {get_name(obj)}"
+                        + " could not be resolved.",
                         e,
                     ) from e
     else:
@@ -183,17 +225,30 @@ def is_annoted(func: typing.Callable) -> bool:
     return hasattr(func, "__pyod_annotate__")
 
 
+WARN_RET = set()
+
+
 def annotate(
-    obj: typing.Union[typing.Callable | bool],
+    obj: typing.Optional[typing.Union[typing.Callable | bool]] = None,
     *,
     max_iter: typing.Optional[int] = None,
     recur: bool = False,
+    comments: dict[str, str] = {},
 ) -> typing.Callable:
     """
     Wrap over and typechecks arguments on each call.
 
     :param obj: the object to annotate
+    :param max_iter: max iterations to perform in case of iterables.
+    :param comments: A mapping from parameter names to optional explicative
+    comments about annotation.
     """
+    if obj is None:
+        return functools.partial(
+            annotate, max_iter=max_iter, recur=recur, comments=comments
+        )
+    if MODE is Mode.PROD:
+        return obj
     if isinstance(obj, bool):
         return functools.partial(annotate, recur=obj)
     if not callable(obj) or not hasattr(obj, "__annotations__"):
@@ -212,11 +267,23 @@ def annotate(
 
         @functools.wraps(obj)
         def wrapper(*call_posargs, **call_kwargs):
-            nonlocal signature, obj
+            nonlocal signature, obj, comments
             if str in map(type, obj.__annotations__.values()):
                 resove_annotations(obj)
                 signature = inspect.signature(obj)
-            args = signature.bind(*call_posargs, **call_kwargs)
+            try:
+                args = signature.bind(*call_posargs, **call_kwargs)
+            except TypeError as e:  # inspect got argument error
+                try:
+                    obj(*call_posargs, **call_kwargs)
+                except Exception as se:
+                    raise se from e
+                else:
+                    raise TypeError(
+                        f"Exception while binding args to"
+                        + f"{get_name(obj)}",
+                        e,
+                    ) from e
             for parameter, argument in args.arguments.items():
                 param = signature.parameters.get(parameter)
                 if param.annotation is inspect._empty:
@@ -226,7 +293,12 @@ def annotate(
                     raise TypeError(
                         f"Argument: {argument!r} does not match annotation for"
                         + f" parameter {parameter!r}:{param.annotation!r}"
-                        + f" of function {get_name(obj)} (#{message})",
+                        + f" of function {get_name(obj)} (#{message})"
+                        + (
+                            f". {comments[parameter]}"
+                            if parameter in comments
+                            else ". No comment."
+                        ),
                     )
 
             ret = obj(*call_posargs, **call_kwargs)
@@ -239,6 +311,12 @@ def annotate(
                         + f" {signature.return_annotation!r}"
                         + f" of function {get_name(obj)} (#{message})",
                     )
+            elif ret is not None and get_name(obj) not in WARN_RET:
+                warnings.warn(
+                    f"Function {get_name(obj)}"
+                    + " returned a value but had no return annotation."
+                )
+                WARN_RET.add(get_name(obj))
             return ret
 
         return wrapper
@@ -254,6 +332,10 @@ def annotate_class(cls: typing.Any, recur: bool = True):
     it annotates the classes methods except `__pyod_norecur__`
     attribute is defines
     """
+    try:
+        resove_annotations(obj)
+    except Exception:
+        pass
     if isinstance(cls, bool):
         return functools.partial(annotate_class, recur=cls)
     recur = not hasattr(cls, "__pyod_norecur__") and recur
@@ -288,4 +370,4 @@ def annotate_class(cls: typing.Any, recur: bool = True):
     return cls
 
 
-__all__ = ["annotate"]
+__all__ = ["annotate", "type_match"]
