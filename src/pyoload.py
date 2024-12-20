@@ -201,15 +201,22 @@ def resove_annotations(obj: typing.Callable):
                         e,
                     ) from e
     elif inspect.isclass(obj) or hasattr(obj, "__class__"):
+        if not inspect.isclass(obj):
+            objclass = type(obj)
+        else:
+            objclass = obj
+        namespace = dict(vars(objclass))
+        bases = set(objclass.__bases__)
+        bases.add(objclass)
+        while len(bases) > 0:
+            base = bases.pop()
+            namespace.update(vars(inspect.getmodule(base)))
+            if hasattr(base, "bases"):
+                bases.update(set(base.bases))
         for k, v in obj.__annotations__.items():
             if isinstance(v, str):
                 try:
-                    obj.__annotations__[k] = eval(
-                        v,
-                        dict(vars(obj))
-                        | dict(vars(type(obj)))
-                        | dict(vars(inspect.getmodule(obj))),
-                    )
+                    obj.__annotations__[k] = eval(v, namespace)
                 except Exception as e:
                     raise Exception(
                         f"Annotation of attribute `{k}` of {get_name(obj)}"
@@ -225,7 +232,7 @@ def is_annoted(func: typing.Callable) -> bool:
     return hasattr(func, "__pyod_annotate__")
 
 
-WARN_RET = set()
+WARNED_ABOUT_NO_RETURN_TYPE = set()
 
 
 def annotate(
@@ -311,12 +318,15 @@ def annotate(
                         + f" {signature.return_annotation!r}"
                         + f" of function {get_name(obj)} (#{message})",
                     )
-            elif ret is not None and get_name(obj) not in WARN_RET:
+            elif (
+                ret is not None
+                and get_name(obj) not in WARNED_ABOUT_NO_RETURN_TYPE
+            ):
                 warnings.warn(
                     f"Function {get_name(obj)}"
                     + " returned a value but had no return annotation."
                 )
-                WARN_RET.add(get_name(obj))
+                WARNED_ABOUT_NO_RETURN_TYPE.add(get_name(obj))
             return ret
 
         return wrapper
