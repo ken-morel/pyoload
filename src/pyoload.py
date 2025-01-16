@@ -9,6 +9,8 @@ import collections.abc
 import enum
 import functools
 import inspect
+import os
+import sys
 import types
 import typing
 import warnings
@@ -38,6 +40,20 @@ def prod():
     MODE = Mode.PROD
 
 
+def init():
+    if (mode := os.getenv("PYOLOAD_MODE")) is not None:
+        if mode.lower() == "prod":
+            prod()
+        elif mode.lower() == "debug":
+            debug()
+        elif mode.lower() == "dev":
+            dev()
+        else:
+            raise ValueError(
+                f"Wrong value for env var 'PYOLOAD_MODE', {mode!r}"
+            )
+
+
 def get_name(funcOrCls: typing.Any) -> str:
     """
     Get a class or function name.
@@ -62,10 +78,6 @@ def get_name(funcOrCls: typing.Any) -> str:
     return mod + "." + name
 
 
-""
-None
-
-
 def type_match(
     val: typing.Any,
     spec: typing.Type,
@@ -79,6 +91,8 @@ def type_match(
 
     :returns: A tuple of the match status and the optional comment.
     """
+    if isinstance(val, bool) and spec is int:
+        return (False, None)
     try:
         return (isinstance(val, spec), None)
     except TypeError:
@@ -131,7 +145,7 @@ def type_match(
             if not isinstance(val, tuple):
                 return (
                     False,
-                    f"Value {keyvalue!r} is not a tuple so cannot be {spec!r}",
+                    f"Value {val!r} is not a tuple so cannot be {spec!r}",
                 )
             if len(type_args) != len(val):
                 return (
@@ -236,11 +250,12 @@ WARNED_ABOUT_NO_RETURN_TYPE = set()
 
 
 def annotate(
-    obj: typing.Optional[typing.Union[typing.Callable | bool]] = None,
+    obj: typing.Optional[typing.Callable] = None,
     *,
     max_iter: typing.Optional[int] = None,
-    recur: bool = False,
-    comments: dict[str, str] = {},
+    validators: dict[
+        str, typing.Callable[[typing.Any], typing.Optional[str]]
+    ] = {},
 ) -> typing.Callable:
     """
     Wrap over and typechecks arguments on each call.
@@ -250,89 +265,113 @@ def annotate(
     :param comments: A mapping from parameter names to optional explicative
     comments about annotation.
     """
-    if obj is None:
-        return functools.partial(
-            annotate, max_iter=max_iter, recur=recur, comments=comments
-        )
-    if MODE is Mode.PROD:
-        return obj
-    if isinstance(obj, bool):
-        return functools.partial(annotate, recur=obj)
     if not callable(obj) or not hasattr(obj, "__annotations__"):
+        warnings.warn(f"Annotate was passed {obj!r} named {get_name(obj)}.")
         return obj
     if is_annoted(obj):
         return obj
-    if inspect.isclass(obj):
+    if MODE is MODE.DEBUG and inspect.isclass(obj):
+        warnings.warn(
+            f"Class {obj!r}({get_name(obj)}) may have been passed to"
+            + " pyoload.annotate instead of annotate_class."
+        )
         return annotate_class(obj, recur=recur)
-    else:
-        try:
+    try:
+        resove_annotations(obj)
+    except Exception:
+        pass
+    finally:
+        signature = inspect.signature(obj)
+    for param in signature.parameters.values():
+        if param.default is inspect._empty:
+            continue
+        matches, msg = type_match(param.default, param.annotation)
+        if not matches:
+            warnings.warn(
+                f"Default value for parameter {param.name} of function"
+                f" {get_name(obj)} does not match it's annotation, {msg}"
+            )
+            if MODE is Mode.DEBUG and param.name in validators:
+                msg = validators[param.name](param.default)
+                if msg:
+                    warnings.warn(
+                        f"Default value for parameter {param.name} of function"
+                        f" {get_name(obj)} failed validation, {msg}"
+                    )
+
+    @functools.wraps(obj)
+    def wrapper(*call_posargs, **call_kwargs):
+        nonlocal signature, obj
+        if str in map(type, obj.__annotations__.values()):
             resove_annotations(obj)
-        except Exception:
-            pass
-        finally:
             signature = inspect.signature(obj)
-
-        @functools.wraps(obj)
-        def wrapper(*call_posargs, **call_kwargs):
-            nonlocal signature, obj, comments
-            if str in map(type, obj.__annotations__.values()):
-                resove_annotations(obj)
-                signature = inspect.signature(obj)
+        try:
+            args = signature.bind(*call_posargs, **call_kwargs)
+        except TypeError as e:  # inspect got argument error
             try:
-                args = signature.bind(*call_posargs, **call_kwargs)
-            except TypeError as e:  # inspect got argument error
-                try:
-                    obj(*call_posargs, **call_kwargs)
-                except Exception as se:
-                    raise se from e
-                else:
-                    raise TypeError(
-                        f"Exception while binding args to"
-                        + f"{get_name(obj)}",
-                        e,
-                    ) from e
-            for parameter, argument in args.arguments.items():
-                param = signature.parameters.get(parameter)
-                if param.annotation is inspect._empty:
-                    continue
-                matches, message = type_match(argument, param.annotation)
-                if not matches:
-                    raise TypeError(
-                        f"Argument: {argument!r} does not match annotation for"
-                        + f" parameter {parameter!r}:{param.annotation!r}"
-                        + f" of function {get_name(obj)} (#{message})"
-                        + (
-                            f". {comments[parameter]}"
-                            if parameter in comments
-                            else ". No comment."
-                        ),
-                    )
-
-            ret = obj(*call_posargs, **call_kwargs)
-
-            if signature.return_annotation is not inspect._empty:
-                matches, message = type_match(ret, signature.return_annotation)
-                if not matches:
-                    raise ValueError(
-                        f"return value: {ret!r} does not match return type:"
-                        + f" {signature.return_annotation!r}"
-                        + f" of function {get_name(obj)} (#{message})",
-                    )
-            elif (
-                ret is not None
-                and get_name(obj) not in WARNED_ABOUT_NO_RETURN_TYPE
-            ):
-                warnings.warn(
-                    f"Function {get_name(obj)}"
-                    + " returned a value but had no return annotation."
+                obj(*call_posargs, **call_kwargs)
+            except Exception as se:
+                raise se from e
+            else:
+                raise TypeError(
+                    f"Exception while binding args to" + f"{get_name(obj)}",
+                    e,
+                ) from e
+        for parameter, argument in args.arguments.items():
+            param = signature.parameters.get(parameter)
+            if param.annotation is inspect._empty:
+                continue
+            matches, message = type_match(argument, param.annotation)
+            if not matches:
+                raise TypeError(
+                    f"Argument: {argument!r} does not match annotation for"
+                    + f" parameter {parameter!r}:{param.annotation!r}"
+                    + f" of function {get_name(obj)} (#{message})"
                 )
-                WARNED_ABOUT_NO_RETURN_TYPE.add(get_name(obj))
-            return ret
+            if MODE is Mode.DEBUG and parameter in validators:
+                msg = validators[parameter](argument)
+                if msg:
+                    raise ValueError(
+                        f"Argument for parameter {parameter} of function"
+                        f" {get_name(obj)} failed validation, {msg}"
+                    )
 
-        return wrapper
+        ret = obj(*call_posargs, **call_kwargs)
+
+        if signature.return_annotation is not inspect._empty:
+            matches, message = type_match(ret, signature.return_annotation)
+            if not matches:
+                raise ValueError(
+                    f"return value: {ret!r} does not match return type:"
+                    + f" {signature.return_annotation!r}"
+                    + f" of function {get_name(obj)} (#{message})",
+                )
+            if MODE is Mode.DEBUG and "return" in validators:
+                msg = validators["return"](ret)
+                if msg:
+                    raise ValueError(
+                        f"Return value of function"
+                        f" {get_name(obj)} failed validation, {msg}"
+                    )
+        elif (
+            ret is not None
+            and get_name(obj) not in WARNED_ABOUT_NO_RETURN_TYPE
+        ):
+            warnings.warn(
+                f"Function {get_name(obj)}"
+                + " returned a value but had no return annotation."
+            )
+            WARNED_ABOUT_NO_RETURN_TYPE.add(get_name(obj))
+        return ret
+
+    return wrapper
 
 
-def annotate_class(cls: typing.Any, recur: bool = True):
+def annotate_class(
+    cls: typing.Any,
+    recur: bool = True,
+    validators: dict[str, typing.Callable] = {},
+):
     """
     Annotate a class object, wrapping and replacing over it's __setattr__.
 
@@ -343,7 +382,7 @@ def annotate_class(cls: typing.Any, recur: bool = True):
     attribute is defines
     """
     try:
-        resove_annotations(obj)
+        resove_annotations(cls)
     except Exception:
         pass
     if isinstance(cls, bool):
@@ -352,7 +391,7 @@ def annotate_class(cls: typing.Any, recur: bool = True):
     initial_setter = cls.__setattr__
     if recur:
         for x in vars(cls):
-            if x[1] == "_":
+            if x[1] == "_" and x != "__init__":
                 continue
             if hasattr(getattr(cls, x), "__annotations__"):
                 setattr(
@@ -365,14 +404,20 @@ def annotate_class(cls: typing.Any, recur: bool = True):
     def new_setter(self, name, value):
         if str in map(type, self.__annotations__.values()):
             resove_annotations(self)
-
         if name in self.__annotations__:
             matches, message = type_match(value, self.__annotations__[name])
             if not matches:
                 raise TypeError(
                     f"value {value!r} does not match type spec"
                     f"of attribute: {name!r}:{self.__annotations__[name]!r}"
-                    f" of object of class {get_name(cls)}  (#{message})",
+                    f" of object of class {get_name(cls)}  (#{message})"
+                )
+        if MODE is Mode.DEBUG and name in validators:
+            msg = validators[name](value)
+            if msg:
+                raise TypeError(
+                    f"Value assigned to attribute {name} of object of type"
+                    f" {get_name(type(obj))} failed validation, {msg}"
                 )
         return initial_setter(self, name, value)
 
@@ -380,4 +425,42 @@ def annotate_class(cls: typing.Any, recur: bool = True):
     return cls
 
 
-__all__ = ["annotate", "type_match"]
+def pyoload(
+    obj: typing.Any = None,
+    recur: bool = True,
+    validators: dict[str, typing.Callable] = {},
+) -> typing.Any:
+    """
+    Check between pyoload methods and uses the appropriate one.
+
+    :param object: The object to annotate.
+    :param recur: Should annotate further methods in case of a class.
+    :param validators: Better validates arguments.
+    """
+    if obj is None:
+        return functools.partial(pyoload, recur=recur, validators=validators)
+    if MODE == Mode.PROD:
+        return obj
+    if inspect.isclass(obj):
+        return annotate_class(obj, recur=recur, validators=validators)
+    else:
+        return annotate(obj, validators=validators)
+
+
+class PyoloadModule(types.ModuleType):
+    def __init__(self):
+        super().__init__(__name__)
+        PyoloadModule.module = sys.modules[__name__]
+        sys.modules[__name__] = self
+        init()
+
+    def __getattr__(self, attr):
+        return getattr(PyoloadModule.module, attr)
+
+    def __setattr__(self, attr, val):
+        return setattr(PyoloadModule.module, attr, val)
+
+    __call__ = staticmethod(pyoload)
+
+
+PyoloadModule()
