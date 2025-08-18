@@ -6,6 +6,7 @@
 [![Documentation Status](https://readthedocs.org/projects/pyoload/badge/?version=latest)](https://pyoload.readthedocs.io)
 [![Pypi downloads](https://img.shields.io/pypi/dd/pyoload)](https://pypi.org/project/pyoload)
 [![Pypi downloads](https://img.shields.io/pypi/dw/pyoload)](https://pypi.org/project/pyoload)
+[![wakatime](https://wakatime.com/badge/github/ken-morel/pyoload.svg)](https://wakatime.com/badge/github/ken-morel/pyoload)
 
 # pyoload
 
