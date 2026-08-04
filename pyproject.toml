@@ -4,9 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyoload"
-version = "3.0.0"
+version = "4.0.0"
 dependencies = [
 ]
+package-data = { pyoload = ["py.typed", "*.pyi"] }
 authors = [
     {name = "Engon Ken Morel", email = "engonken8@gmail.com"}
 ]
